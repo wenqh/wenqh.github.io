@@ -1,6 +1,17 @@
-<html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+</head>
 <body>
-hello world
-  <a href="http://1c197aa4.r8.cpolar.top/read">Kindle2</a>
+    Google<input id="q"><button id="search">搜索</button>
 </body>
+
+<script>
+    document.getElementById('search').addEventListener('click', function () {
+        const value = document.getElementById('q').value;
+        const url = 'https://www.google.com.hk/search?q=' + value;
+        location.href = 'https://66.112.212.234/r?url=' + encodeURIComponent(url)
+    });
+</script>
 </html>
