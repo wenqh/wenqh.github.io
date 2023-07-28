@@ -10,7 +10,7 @@
 </body>
 
 <script>
-    document.getElementById('search').onsubmit(function () {
+    document.getElementById('search').addEventListener("submit", function () {
         const value = document.getElementById('q').value;
         const url = 'https://www.google.com.hk/search?q=' + value;
         location.href = 'https://66.112.212.234/r?url=' + encodeURIComponent(url);
