@@ -4,16 +4,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 </head>
 <body>
-    <form>
-        Google<input id="q"><button id="search">搜索</button>
+    <form id="search">
+        Google<input id="q"><button>搜索</button>
     </form>
 </body>
 
 <script>
-    document.getElementById('search').addEventListener('click', function () {
+    document.getElementById('search').onsubmit(function () {
         const value = document.getElementById('q').value;
         const url = 'https://www.google.com.hk/search?q=' + value;
-        location.href = 'https://66.112.212.234/r?url=' + encodeURIComponent(url)
+        location.href = 'https://66.112.212.234/r?url=' + encodeURIComponent(url);
+        return false;
     });
 </script>
 </html>
