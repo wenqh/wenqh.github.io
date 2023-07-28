@@ -10,11 +10,11 @@
 </body>
 
 <script>
-    document.getElementById('search').addEventListener("submit", function () {
+    document.getElementById('search').addEventListener("submit", function (e) {
+        e.preventDefault();
         const value = document.getElementById('q').value;
         const url = 'https://www.google.com.hk/search?q=' + value;
         location.href = 'https://66.112.212.234/r?url=' + encodeURIComponent(url);
-        return false;
     });
 </script>
 </html>
