@@ -1,23 +1,15 @@
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 </head>
 <body>
-    <form id="search">
-        Google<input id="q"><button>搜索</button>
-    </form>
-    <div>
-        <a href="https://66.112.212.234/r">最新阅读页</a>
-    </div>
+    <ul>
+        <li><label>百度</label><input onkeydown="if(event.keyCode === 13) {location.href = '#https://www.baidu.com/s?wd=' + value}"></li>
+        <li><label>贴吧</label><input onkeydown="if(event.keyCode === 13) {location.href = '#https://tieba.baidu.com/f?kw=' + value}"></li>
+    </ul>
 </body>
 
 <script>
-    document.getElementById('search').addEventListener("submit", function (e) {
-        e.preventDefault();
-        const value = document.getElementById('q').value;
-        const url = 'https://www.google.com.hk/search?q=' + value;
-        location.href = 'https://66.112.212.234/r?url=' + encodeURIComponent(url);
-    });
 </script>
 </html>
