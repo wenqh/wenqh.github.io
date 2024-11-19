@@ -4,10 +4,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 </head>
 <body>
-    <ul>
-        <li><label>百度</label><input onkeydown="if(event.keyCode === 13) {location.href = '#https://www.baidu.com/s?wd=' + value}"></li>
-        <li><label>贴吧</label><input onkeydown="if(event.keyCode === 13) {location.href = '#https://tieba.baidu.com/f?kw=' + value}"></li>
-    </ul>
+    <div>
+        <label>
+            <input type="radio" name="type" value="https://www.baidu.com/s?wd=" checked> 百度
+        </label>
+        <label>
+            <input type="radio" name="type" value="https://tieba.baidu.com/f?kw="> 贴吧
+        </label>
+        <label>
+            <input type="radio" name="type" value="https://www.google.com/search?q="> 谷歌
+        </label>
+    </div>
+    <input type="text" id="searchInput" placeholder=""
+           onkeydown="if(event.keyCode === 13) {location.href = '#' + document.querySelector('input[name=type]:checked').value + value}"/>
 </body>
 
 <script>
