@@ -22,7 +22,7 @@
         </label>
     </div>
     <input type="text" id="input" placeholder=""
-           onkeydown="if(event.keyCode === 13) {location.href = '#' + document.querySelector('input[name=type]:checked').value + value}"/>
+           onkeydown="if(event.keyCode === 13) {location.href = '#' + document.querySelector('input[name=type]:checked').value + value; this.blur()}"/>
 </body>
 
 <script>
