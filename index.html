@@ -6,32 +6,33 @@
 <body>
     <div>
         <label>
-            <input type="radio" name="type" style="width: 40px"
-                   onclick="document.getElementById('searchInput').focus()"
+            <input type="radio" name="type" style="width: 40px; height: 40px"
+                   onclick="go()"
                    value="https://www.baidu.com/s?wd=" checked> 百度
         </label>
         <label>
-            <input type="radio" name="type" style="width: 40px"
-                   onclick="document.getElementById('searchInput').focus()"
+            <input type="radio" name="type" style="width: 40px; height: 40px"
+                   onclick="go()"
                    value="https://tieba.baidu.com/f?kw="> 贴吧
         </label>
         <label>
-            <input type="radio" name="type" style="width: 40px"
-                   onclick="document.getElementById('searchInput').focus()"
+            <input type="radio" name="type" style="width: 40px; height: 40px"
+                   onclick="go()"
                    value="https://www.google.com/search?q="> 谷歌
         </label>
     </div>
     <input type="text" id="searchInput" placeholder=""
-           onkeydown="if(event.keyCode === 13) {location.href = '#' + document.querySelector('input[name=type]:checked').value + value}"/>
+           onkeydown="if(event.keyCode === 13) {go()}"/>
 
     <script>
-        document.querySelectorAll('input[type="radio"]').forEach(radio => {
-            radio.addEventListener('click', () => {
-                const input = document.getElementById('textInput');
-                input.focus(); // 保持输入焦点
-            });
-        });
+        function go() {
+            const q = document.getElementById('searchInput').value;
+            if (q) {
+                location.href = '#' + document.querySelector('input[name=type]:checked').value + q;
+            }
+        }
     </script>
+
 </body>
 
 <script>
