@@ -20,6 +20,12 @@
                    onclick="if(document.getElementById('input').value)location.href = '#' + value + document.getElementById('input').value"
                    value="https://www.google.com/search?q="> 谷歌
         </label>
+        
+        <label>
+            <input type="radio" name="type" style="width: 40px; height: 40px"
+                   onclick="if(document.getElementById('input').value)location.href = '#' + value + document.getElementById('input').value"
+                   value="https://www.douban.com/group/search?cat=1019&q=" checked> 豆瓣小组
+        </label>
     </div>
     <input type="text" id="input" placeholder=""
            onkeydown="if(event.keyCode === 13) {location.href = '#' + document.querySelector('input[name=type]:checked').value + value; this.blur()}"/>
