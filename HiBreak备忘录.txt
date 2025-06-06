@@ -20,6 +20,7 @@ Chrome, via
 酷安c001apk: https://github.com/HDYOU/c001apk
 小红书: 7.96以上可用（如7.96.05）
 pilipala
-微信play版 8.0.21
+微信play版 8.0.21 登录提示版本低
+支付宝：10.2.51.8000 （我测可用）
 
 流体手势：设置左右切app
