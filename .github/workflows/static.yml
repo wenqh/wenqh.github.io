@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: github-pages
-          path: .  # 根目录的静态文件（index.html 等）
+          path: .
 
       - name: Deploy to GitHub Pages
         id: deploy
