@@ -19,7 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
 
     steps:
       - name: Checkout source
@@ -28,4 +27,12 @@ jobs:
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
 
-      - na
+      - name: Upload static files
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-pages
+          path: .  # 根目录的静态文件（index.html 等）
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v3
