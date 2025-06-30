@@ -40,7 +40,6 @@
             requestAnimationFrame(() => {
                 const after = window.scrollY;
                 if (after - before < window.innerHeight - 1) {
-                    //alert((after - before)+"到"+window.innerHeight);
                     const e = document.createElement('div');
                     Object.assign(e.style, {
                         position: 'absolute', top: before + innerHeight + 'px', width: '100%', borderTop: '3px solid'
