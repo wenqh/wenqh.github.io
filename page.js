@@ -20,17 +20,11 @@
         startY = e.touches[0].clientY;
     });
     window.addEventListener('touchmove', (e) => {
-         if (startX >= 0.600) {
-            e.preventDefault();
-         }
+        e.preventDefault();
     }, { passive: false });
     window.addEventListener('touchend', (e) => {
         const endX = e.changedTouches[0].clientX;
         const endY = e.changedTouches[0].clientY;
-
-        if (startX < 0.600) {
-            return;
-        }
 
         if (endY - startY < -50) {
             const before = window.scrollY;
@@ -38,17 +32,8 @@
             window.scrollBy(0, window.innerHeight);
 
             requestAnimationFrame(() => {
-                const after = window.scrollY;
-                if (after - before < window.innerHeight - 1) {
-                    const e = document.createElement('div');
-                    Object.assign(e.style, {
-                        position: 'absolute', top: before + innerHeight + 'px', width: '100%', borderTop: '3px solid'
-                    });
-                    document.body.appendChild(e);
-                }
+                _hook();
             });
-
-
         } else if (endY - startY > 50) {
             window.scrollBy(0, -window.innerHeight);
         }
