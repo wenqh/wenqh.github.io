@@ -16,7 +16,7 @@ HiBreakPro 手机设置：
 Clash
 Gborad
 Chrome（偏好设置-关闭按键时弹出显示字符）
-via
+Via
 
 酷安c001apk: https://github.com/HDYOU/c001apk
 小红书: 7.96以上可用（如7.96.05）
