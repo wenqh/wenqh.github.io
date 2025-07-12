@@ -14,8 +14,8 @@ HiBreakPro 手机设置：
 
 安装：
 Clash
-Gborad
-Chrome（偏好设置-关闭按键时弹出显示字符）
+Gborad（偏好设置-关闭按键时弹出显示字符）
+Chrome
 Via
 
 酷安c001apk: https://github.com/HDYOU/c001apk
