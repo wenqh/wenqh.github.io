@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         滑动翻页-适配红书
+// @name         滑动翻页
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @description  滑动翻页
