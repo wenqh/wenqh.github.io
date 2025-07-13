@@ -29,13 +29,13 @@
         if (endY - startY < -50) {
             const before = window.scrollY;
 
-            window.scrollBy(0, window.innerHeight-20);
+            window.scrollBy(0, window.innerHeight);
 
             requestAnimationFrame(() => {
                 _hook();
             });
         } else if (endY - startY > 50) {
-            window.scrollBy(0, -window.innerHeight+20);
+            window.scrollBy(0, -window.innerHeight);
         }
     });
 })();
