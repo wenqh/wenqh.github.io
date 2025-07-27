@@ -80,8 +80,9 @@
 
         const listItems = data[cat].map(({ name, url }) =>
           `<li class="collection-item">
-            <a href="#!" onclick="submitForm('${url}')">${name}</a>
-            <div class="grey-text text-darken-1" style="font-size: 12px; margin-top: 4px;">${url}</div>
+            <a href="#!" onclick="submitForm('${url}')">
+              ${name}<div class="grey-text text-darken-1" style="font-size: 12px; margin-top: 4px;">${url}</div>
+            </a>
           </li>`
         ).join('');
 
