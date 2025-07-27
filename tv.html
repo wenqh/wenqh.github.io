@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>直播源频道列表</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Materialize CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <style>
+    .tabs .tab a { color: #2196f3; }
+    .tabs .tab a.active { background-color: #e3f2fd; }
+    .collection a { display: block; padding: 12px; color: #000; }
+  </style>
+</head>
+<body>
+  <!-- 文本框输入URL -->
+  <div class="container" style="padding-top: 20px;">
+    <div class="input-field col s12">
+      <input id="urlInput" type="text" placeholder="请输入基础 URL" class="validate">
+      <label for="urlInput">请输入目标接口基础 URL</label>
+    </div>
+  </div>
+
+  <div class="container">
+    <h4 class="center-align">直播源频道列表</h4>
+    <div class="row">
+      <div class="col s12">
+        <ul class="tabs" id="tabHeader"></ul>
+      </div>
+      <div id="tabContent" class="col s12"></div>
+    </div>
+  </div>
+
+  <!-- Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    const SOURCE_URL = 'https://example.com/live.txt'; // 替换为你的直播源地址
+
+    // 异步加载文本内容
+    const fetchText = async (url) => {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('加载失败');
+      return res.text();
+    };
+
+    // 解析格式
+    const parseSource = (text) => {
+      const lines = text.trim().split(/\r?\n/);
+      const result = {};
+      let current = null;
+
+      for (const line of lines) {
+        if (line.endsWith(',#genre#')) {
+          current = line.split(',')[0].trim();
+          result[current] = [];
+        } else if (current && line.includes(',')) {
+          const [name, url] = line.split(',');
+          result[current].push({ name: name.trim(), url: url.trim() });
+        }
+      }
+      return result;
+    };
+
+    // 处理表单提交的功能
+    const submitForm = async (channelUrl) => {
+      const baseUrl = document.getElementById('urlInput').value;  // 获取文本框的基础 URL
+      if (!baseUrl) {
+        alert('请先输入基础 URL');
+        return;
+      }
+
+      // 拼接完整的接口 URL
+      const requestUrl = `${baseUrl}/action`;
+
+      const formData = new URLSearchParams();
+      formData.append('url', channelUrl);
+      formData.append('do', 'push');
+
+      const response = await fetch(requestUrl, {
+        method: 'POST',
+        headers: {
+          'accept': '*/*',
+          'accept-language': 'zh-CN,zh;q=0.9',
+          'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'x-requested-with': 'XMLHttpRequest'
+        },
+        body: formData.toString(),
+        mode: 'cors',
+        credentials: 'omit',
+      });
+
+      const data = await response.json();
+      console.log('返回数据:', data);
+    };
+
+    // 渲染页面结构
+    const render = (data) => {
+      const tabHeader = document.getElementById('tabHeader');
+      const tabContent = document.getElementById('tabContent');
+      tabHeader.innerHTML = '';
+      tabContent.innerHTML = '';
+
+      const categories = Object.keys(data);
+
+      categories.forEach((cat, i) => {
+        const id = `tab-${i}`;
+        tabHeader.innerHTML += `
+          <li class="tab col s3">
+            <a href="#${id}" class="${i === 0 ? 'active' : ''}">${cat}</a>
+          </li>
+        `;
+
+        const listItems = data[cat].map(({ name, url }) =>
+          `<li class="collection-item">
+            <a href="#!" onclick="submitForm('${url}')">${name}</a>
+          </li>`
+        ).join('');
+
+        tabContent.innerHTML += `
+          <div id="${id}" class="col s12">
+            <ul class="collection">${listItems}</ul>
+          </div>
+        `;
+      });
+
+      M.Tabs.init(tabHeader);
+    };
+
+    // 主入口
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const raw = await fetchText(SOURCE_URL);
+        const parsed = parseSource(raw);
+        render(parsed);
+      } catch (err) {
+        alert('直播源加载失败：' + err.message);
+      }
+    });
+  </script>
+</body>
+</html>
