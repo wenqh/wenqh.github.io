@@ -6,19 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Materialize CSS -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
-  <style>
-    .tabs .tab a { color: #2196f3; }
-    .tabs .tab a.active { background-color: #e3f2fd; }
-    .collection a { display: block; padding: 12px; color: #000; }
-  </style>
 </head>
 <body>
-  <!-- 文本框输入URL，默认值为 http://192.168.1.2 -->
+  <!-- 用户输入 TvBox URL 和 表单提交 -->
   <div class="container" style="padding-top: 20px;">
-    <div class="input-field col s12">
-      <input id="tvbox-url" type="text" value="http://192.168.1.2" placeholder="请输入基础 URL" class="validate">
-      <label for="tvbox-url">TvBox URL</label> <!-- 文字改为 "TvBox URL" -->
-    </div>
+    <form id="tvboxForm" method="POST">
+      <div class="input-field col s12">
+        <input id="tvbox-url" type="text" placeholder="请输入基础 URL" class="validate">
+        <label for="tvbox-url">TvBox URL</label>
+      </div>
+      <!-- 隐藏字段用于频道提交 -->
+      <input id="formUrl" type="hidden" name="url">
+      <input id="formAction" type="hidden" name="do" value="push">
+    </form>
   </div>
 
   <div class="container">
@@ -43,7 +43,7 @@
       return res.text();
     };
 
-    // 解析格式
+    // 解析直播源格式
     const parseSource = (text) => {
       const lines = text.trim().split(/\r?\n/);
       const result = {};
@@ -61,39 +61,7 @@
       return result;
     };
 
-    // 处理表单提交的功能
-    const submitForm = async (channelUrl) => {
-      const baseUrl = document.getElementById('tvbox-url').value;  // 获取文本框的基础 URL
-      if (!baseUrl) {
-        alert('请先输入基础 URL');
-        return;
-      }
-
-      // 拼接完整的接口 URL
-      const requestUrl = `${baseUrl}/action`;
-
-      const formData = new URLSearchParams();
-      formData.append('url', channelUrl);
-      formData.append('do', 'push');
-
-      const response = await fetch(requestUrl, {
-        method: 'POST',
-        headers: {
-          'accept': '*/*',
-          'accept-language': 'zh-CN,zh;q=0.9',
-          'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-          'x-requested-with': 'XMLHttpRequest'
-        },
-        body: formData.toString(),
-        mode: 'cors',
-        credentials: 'omit',
-      });
-
-      const data = await response.json();
-      console.log('返回数据:', data);
-    };
-
-    // 渲染页面结构
+    // 渲染分类和频道项
     const render = (data) => {
       const tabHeader = document.getElementById('tabHeader');
       const tabContent = document.getElementById('tabContent');
@@ -126,8 +94,33 @@
       M.Tabs.init(tabHeader);
     };
 
-    // 主入口
+    // 提交频道地址到目标接口
+    const submitForm = (channelUrl) => {
+      const baseUrl = document.getElementById('tvbox-url').value.trim();
+      if (!baseUrl) {
+        alert('请先输入 TvBox URL');
+        return;
+      }
+
+      // 保存 URL 到本地
+      localStorage.setItem('tvbox-url', baseUrl);
+
+      // 设置表单 action 和字段值
+      const form = document.getElementById('tvboxForm');
+      form.action = `${baseUrl}/action`;
+
+      document.getElementById('formUrl').value = channelUrl;
+
+      // 提交表单
+      form.submit();
+    };
+
+    // 页面加载初始化
     document.addEventListener('DOMContentLoaded', async () => {
+      const tvboxInput = document.getElementById('tvbox-url');
+      const savedUrl = localStorage.getItem('tvbox-url');
+      tvboxInput.value = savedUrl || 'http://192.168.1.6:9978';
+
       try {
         const raw = await fetchText(SOURCE_URL);
         const parsed = parseSource(raw);
