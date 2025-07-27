@@ -12,7 +12,7 @@
   <div class="container" style="padding-top: 20px;">
     <form id="tvboxForm" method="POST">
       <div class="input-field col s12">
-        <input id="tvbox-url" type="text" placeholder="请输入基础 URL" class="validate">
+        <input id="tvbox-url" type="text" placeholder="TvBox URL" class="validate">
         <label for="tvbox-url">TvBox URL</label>
       </div>
       <!-- 隐藏字段用于频道提交 -->
@@ -22,7 +22,7 @@
   </div>
 
   <div class="container">
-    <h4 class="center-align">直播源频道列表</h4>
+    <h4 class="center-align">直播列表</h4>
     <div class="row">
       <div class="col s12">
         <ul class="tabs" id="tabHeader"></ul>
@@ -97,12 +97,7 @@
     // 提交频道地址到目标接口
     const submitForm = (channelUrl) => {
       const baseUrl = document.getElementById('tvbox-url').value.trim();
-      if (!baseUrl) {
-        alert('请先输入 TvBox URL');
-        return;
-      }
 
-      // 保存 URL 到本地
       localStorage.setItem('tvbox-url', baseUrl);
 
       // 设置表单 action 和字段值
@@ -111,7 +106,6 @@
 
       document.getElementById('formUrl').value = channelUrl;
 
-      // 提交表单
       form.submit();
     };
 
