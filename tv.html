@@ -61,6 +61,7 @@
         const lines = text.trim().split(/\r?\n/);
         const result = [];
         let currentCategory = null;
+        let idx = 0;
 
         for (const line of lines) {
             if (line.endsWith(',#genre#')) {
@@ -69,7 +70,12 @@
                 result.push(currentCategory);
             } else if (currentCategory && line.includes(',')) {
                 const [name, url] = line.split(',');
-                currentCategory.items.push({ name: name.trim(), url: url.trim() });
+
+                // 查找当前分类中是否已存在该频道名
+                const existing = currentCategory.items.find(item => item.name === name);
+                const idx_ = existing ? existing.idx : ++idx;
+                
+                currentCategory.items.push({idx: idx_, name: name.trim(), url: url.trim() });
             }
         }
 
@@ -91,7 +97,7 @@
           </li>
         `;
 
-            const listItems = cat.items.map(({ name, url }) =>
+            const listItems = cat.items.map(({name, url}) =>
                 `<li class="collection-item">
             <a href="javascript:void(0);" onclick="play('${url}')">
               ${name}<div class="grey-text text-darken-1" style="font-size: 12px; margin-top: 4px;">${url}</div>
@@ -117,7 +123,7 @@
             return;
         }
 
-        const formUrl = `${tvboxUrl}/action?do=push&url=${encodeURIComponent(channelUrl)}`;
+        const formUrl = `${tvboxUrl}?do=push&url=${encodeURIComponent(channelUrl)}`;
 
         // 在新的标签页打开该链接
         window.open(formUrl, '_blank');
