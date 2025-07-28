@@ -117,7 +117,7 @@
             return;
         }
 
-        const formUrl = `${tvboxUrl}?do=push&url=${encodeURIComponent(channelUrl)}`;
+        const formUrl = `${tvboxUrl}/action?do=push&url=${encodeURIComponent(channelUrl)}`;
 
         // 在新的标签页打开该链接
         window.open(formUrl, '_blank');
