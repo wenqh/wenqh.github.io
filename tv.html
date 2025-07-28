@@ -14,14 +14,18 @@
             color: black !important;
         }
 
-        #tabHeader {
+        .tabs {
             display: flex;
             flex-wrap: wrap;
             height: auto;
         }
-        #tabHeader a.active {
+        .tabs a.active {
             background-color: #555 !important;
             color: white !important;
+        }
+        .scroll-wrap {
+            height: 1vh;
+            overflow-y: scroll;
         }
     </style>
 </head>
@@ -48,10 +52,14 @@
     <h5 class="center-align">直播列表</h5>
     <div class="row">
         <div class="col s3">
-            <ul class="tabs" id="tabHeader"></ul>
+            <div class="scroll-wrap">
+                <ul class="tabs" id="tabHeader"></ul>
+            </div>
         </div>
         <div class="col s9">
-            <div id="tabContent" class="col s12">加载中...</div>
+            <div class="scroll-wrap">
+                <div id="tabContent" class="col s12">加载中...</div>
+            </div>
         </div>
     </div>
     <!--<div class="row">
