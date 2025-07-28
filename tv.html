@@ -100,8 +100,7 @@
             const listItems = cat.items.map(({idx, name, url}) =>
                 `<li class="collection-item">
             <a href="javascript:void(0);" onclick="play('${url}')">
-              ${idx}
-              ${name}<div class="grey-text text-darken-1" style="font-size: 12px; margin-top: 4px;">${url}</div>
+              ${idx} ${name}<div class="grey-text text-darken-1" style="font-size: 12px; margin-top: 4px;">${url}</div>
             </a>
           </li>`
             ).join('');
