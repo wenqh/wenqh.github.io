@@ -54,18 +54,20 @@
     // 解析直播源格式
     const parseSource = (text) => {
       const lines = text.trim().split(/\r?\n/);
-      const result = {};
-      let current = null;
+      const result = [];
+      let currentCategory = null;
 
       for (const line of lines) {
         if (line.endsWith(',#genre#')) {
-          current = line.split(',')[0].trim();
-          result[current] = [];
-        } else if (current && line.includes(',')) {
+          const title = line.split(',')[0].trim();
+          currentCategory = { title, items: [] };
+          result.push(currentCategory);
+        } else if (currentCategory && line.includes(',')) {
           const [name, url] = line.split(',');
-          result[current].push({ name: name.trim(), url: url.trim() });
+          currentCategory.items.push({ name: name.trim(), url: url.trim() });
         }
       }
+
       return result;
     };
 
@@ -76,17 +78,15 @@
       tabHeader.innerHTML = '';
       tabContent.innerHTML = '';
 
-      const categories = Object.keys(data);
-
-      categories.forEach((cat, i) => {
+      data.forEach((cat, i) => {
         const id = `tab-${i}`;
         tabHeader.innerHTML += `
           <li class="tab col s3">
-            <a href="#${id}" class="${i === 0 ? 'active' : ''}">${cat}</a>
+            <a href="#${id}" class="${i === 0 ? 'active' : ''}">${cat.title}</a>
           </li>
         `;
 
-        const listItems = data[cat].map(({ name, url }) =>
+        const listItems = cat.items.map(({ name, url }) =>
           `<li class="collection-item">
             <a href="#!" onclick="submitForm('${url}')">
               ${name}<div class="grey-text text-darken-1" style="font-size: 12px; margin-top: 4px;">${url}</div>
