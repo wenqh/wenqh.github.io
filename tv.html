@@ -1,136 +1,138 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <title>📺</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Materialize CSS -->
-  <link href="https://cdn.bootcdn.net/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
-  <style>
-    body {
-      font-weight: bold;
-    }
-    a {
-      color: black !important;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>📺</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Materialize CSS -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-weight: bold;
+        }
+        a {
+            color: black !important;
+        }
+    </style>
 </head>
 <body>
-  <!-- 用户输入 TvBox URL 和 表单提交 -->
-  <div class="container" style="padding-top: 20px;">
-    <form id="tvboxForm" method="POST">
-      <div class="input-field col s12">
-        <input id="tvbox-url" type="text" placeholder="TvBox URL" class="validate">
-        <label for="tvbox-url">TvBox URL</label>
-      </div>
-      <!-- 隐藏字段用于频道提交 -->
-      <input id="formUrl" type="hidden" name="url">
-      <input id="formAction" type="hidden" name="do" value="push">
-    </form>
-  </div>
+<!-- 用户输入 TvBox URL 和 表单提交 -->
+<div class="container" style="padding-top: 20px;">
+    <input id="tvbox-url" type="text" placeholder="TvBox URL" class="validate">
+    <label for="tvbox-url">TvBox URL</label>
+</div>
 
-  <div class="container">
+<div class="container">
     <h5 class="center-align">直播列表</h5>
     <div class="row">
-      <div class="col s12">
-        <ul class="tabs" id="tabHeader"></ul>
-      </div>
-      <div id="tabContent" class="col s12"></div>
+        <div class="col s12">
+            <ul class="tabs" id="tabHeader"></ul>
+        </div>
+        <div id="tabContent" class="col s12"></div>
     </div>
-  </div>
+</div>
 
-  <!-- Materialize JS -->
-  <script src="https://cdn.bootcdn.net/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script>
+<!-- Materialize JS -->
+<script src="https://cdn.bootcdn.net/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
     const SOURCE_URL = '/tv.txt'; // 本地文件路径
 
     // 异步加载文本内容
     const fetchText = async (url) => {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('加载失败');
-      return res.text();
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('加载失败');
+        return res.text();
     };
 
     // 解析直播源格式
     const parseSource = (text) => {
-      const lines = text.trim().split(/\r?\n/);
-      const result = [];
-      let currentCategory = null;
+        const lines = text.trim().split(/\r?\n/);
+        const result = [];
+        let currentCategory = null;
 
-      for (const line of lines) {
-        if (line.endsWith(',#genre#')) {
-          const title = line.split(',')[0].trim();
-          currentCategory = { title, items: [] };
-          result.push(currentCategory);
-        } else if (currentCategory && line.includes(',')) {
-          const [name, url] = line.split(',');
-          currentCategory.items.push({ name: name.trim(), url: url.trim() });
+        for (const line of lines) {
+            if (line.endsWith(',#genre#')) {
+                const title = line.split(',')[0].trim();
+                currentCategory = { title, items: [] };
+                result.push(currentCategory);
+            } else if (currentCategory && line.includes(',')) {
+                const [name, url] = line.split(',');
+                currentCategory.items.push({ name: name.trim(), url: url.trim() });
+            }
         }
-      }
 
-      return result;
+        return result;
     };
 
     // 渲染分类和频道项
     const render = (data) => {
-      const tabHeader = document.getElementById('tabHeader');
-      const tabContent = document.getElementById('tabContent');
-      tabHeader.innerHTML = '';
-      tabContent.innerHTML = '';
+        const tabHeader = document.getElementById('tabHeader');
+        const tabContent = document.getElementById('tabContent');
+        tabHeader.innerHTML = '';
+        tabContent.innerHTML = '';
 
-      data.forEach((cat, i) => {
-        const id = `tab-${i}`;
-        tabHeader.innerHTML += `
+        data.forEach((cat, i) => {
+            const id = `tab-${i}`;
+            tabHeader.innerHTML += `
           <li class="tab col s3">
             <a href="#${id}" class="${i === 0 ? 'active' : ''}">${cat.title}</a>
           </li>
         `;
 
-        const listItems = cat.items.map(({ name, url }) =>
-          `<li class="collection-item">
-            <a href="#!" onclick="submitForm('${url}')">
+            const listItems = cat.items.map(({ name, url }) =>
+                `<li class="collection-item">
+            <a href="javascript:void(0);" onclick="submitForm('${url}')">
               ${name}<div class="grey-text text-darken-1" style="font-size: 12px; margin-top: 4px;">${url}</div>
             </a>
           </li>`
-        ).join('');
+            ).join('');
 
-        tabContent.innerHTML += `
+            tabContent.innerHTML += `
           <div id="${id}" class="col s12">
             <ul class="collection">${listItems}</ul>
           </div>
         `;
-      });
+        });
 
-      M.Tabs.init(tabHeader);
+        M.Tabs.init(tabHeader);
     };
 
     // 提交频道地址到目标接口
     const submitForm = (channelUrl) => {
-      const baseUrl = document.getElementById('tvbox-url').value.trim();
+        const tvboxUrl = localStorage.getItem('tvbox-url'); // 从 localStorage 获取 tvbox-url
+        if (!tvboxUrl) {
+            alert('请先设置 TvBox URL');
+            return;
+        }
 
-      localStorage.setItem('tvbox-url', baseUrl);
-
-      const form = document.getElementById('tvboxForm');
-      form.action = `${baseUrl}/action`;
-
-      document.getElementById('formUrl').value = channelUrl;
-      form.submit();
+        const formUrl = `${tvboxUrl}?do=push&url=${encodeURIComponent(channelUrl)}`;
+        
+        // 在新的标签页打开该链接
+        window.open(formUrl, '_blank');
     };
 
     // 页面加载初始化
     document.addEventListener('DOMContentLoaded', async () => {
-      const tvboxInput = document.getElementById('tvbox-url');
-      const savedUrl = localStorage.getItem('tvbox-url');
-      tvboxInput.value = savedUrl || 'http://192.168.1.6:9978';
+        const tvboxInput = document.getElementById('tvbox-url');
+        const savedUrl = localStorage.getItem('tvbox-url');
+        tvboxInput.value = savedUrl || 'http://192.168.1.6:9978'; // 默认 URL
 
-      try {
-        const raw = await fetchText(SOURCE_URL);
-        const parsed = parseSource(raw);
-        render(parsed);
-      } catch (err) {
-        alert('直播源加载失败：' + err.message);
-      }
+        // 保存用户输入的 URL 到 localStorage
+        tvboxInput.addEventListener('input', (e) => {
+            const url = e.target.value.trim();
+            if (url) {
+                localStorage.setItem('tvbox-url', url);
+            }
+        });
+
+        try {
+            const raw = await fetchText(SOURCE_URL);
+            const parsed = parseSource(raw);
+            render(parsed);
+        } catch (err) {
+            alert('直播源加载失败：' + err.message);
+        }
     });
-  </script>
+</script>
 </body>
 </html>
