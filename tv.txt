@@ -1,5 +1,4 @@
-
-1,#genre#
+电影,#genre#
 【周星星】星爷经典不间断,https://lunbo.freetv.top/huya/11342412
 成龙经典武打动作片,https://lunbo.freetv.top/huya/11342386
 【王晶】港风导演代表,https://lunbo.freetv.top/huya/11602058
@@ -194,7 +193,8 @@ Rainsun宇的直播间,https://lunbo.freetv.top/douyu/323876
 我在斗鱼豆瓣排名电影,https://lunbo.freetv.top/douyu/6432827
 漫威迷集合,https://lunbo.freetv.top/douyu/1713615
 【搞笑】我叫孙火旺，论优秀没输过,https://lunbo.freetv.top/douyu/9770949
-2,#genre#
+
+电视剧,#genre#
 [李云龙] 劳资的意太利炮呢！,https://lunbo.freetv.top/huya/30080238
 海绵宝宝宝的直播间,https://lunbo.freetv.top/huya/11352919
 黑神话悟空文化交流中心,https://lunbo.freetv.top/huya/26355861
@@ -268,7 +268,8 @@ Rainsun宇的直播间,https://lunbo.freetv.top/douyu/323876
 小小天才的搞笑段子,https://lunbo.freetv.top/douyu/9419678
 白客、孔连顺主演《鲜肉老师》登陆斗鱼！,https://lunbo.freetv.top/douyu/9815091
 宋小宝早期经典作品，爆笑了家人们,https://lunbo.freetv.top/douyu/9374865
-3,#genre#
+
+综艺,#genre#
 重温春晚爆笑经典小品,https://lunbo.freetv.top/huya/11602068
 脱口秀来了，就是让你笑,https://lunbo.freetv.top/huya/11352875
 tu槽大会 笑死人不偿命,https://lunbo.freetv.top/huya/21059555
@@ -377,9 +378,8 @@ tu槽大会 笑死人不偿命,https://lunbo.freetv.top/huya/21059555
 音乐台长,https://lunbo.freetv.top/douyu/9629943
 科学放映室,https://lunbo.freetv.top/douyu/9439712
 天才简史,https://lunbo.freetv.top/douyu/8662915
-
 电影幕后喵,https://lunbo.freetv.top/douyu/8884074
-live 央视,#genre#
+
 live,#genre#
 CCTV1,http://[2409:8087:74d9:21::6]:80/270000001128/9900000001/index.m3u8
 CCTV2,http://[2409:8087:74d9:21::6]:80/270000001322/69900158041111100000002135/index.m3u8
