@@ -20,15 +20,16 @@
 <div class="container" style="padding-top: 20px;">
     <!-- Modal Trigger -->
     <a class="btn btn-flat modal-trigger" href="#modal1">设置URL</a>
+    <a id="tvbox-url-link" class="btn btn-flat" target="_blank">OK影视</a>
 
     <!-- Modal Structure -->
     <div id="modal1" class="modal">
         <div class="modal-content">
             <h4>TVBox URL</h4>
-            <input id="tvbox-url" type="text" value="http://192.168.1.6:9978" placeholder="URL" class="validate">
+            <input id="tvbox-url-input" type="text" placeholder="TvBox URL" class="validate">
         </div>
         <div class="modal-footer">
-            <a href="#!" class="modal-close btn-flat" id="saveTvBoxBtn">确定</a>
+            <a id="tvbox-url-save" href="#!" class="modal-close btn-flat">确定</a>
         </div>
     </div>
 </div>
@@ -92,7 +93,7 @@
 
             const listItems = cat.items.map(({ name, url }) =>
                 `<li class="collection-item">
-            <a href="javascript:void(0);" onclick="submitForm('${url}')">
+            <a href="javascript:void(0);" onclick="play('${url}')">
               ${name}<div class="grey-text text-darken-1" style="font-size: 12px; margin-top: 4px;">${url}</div>
             </a>
           </li>`
@@ -109,8 +110,8 @@
     };
 
     // 提交频道地址到目标接口
-    const submitForm = (channelUrl) => {
-        const tvboxUrl = localStorage.getItem('tvbox-url'); // 从 localStorage 获取 tvbox-url
+    const play = (channelUrl) => {
+        const tvboxUrl = localStorage.getItem('tvbox-url');
         if (!tvboxUrl) {
             alert('请先设置 TvBox URL');
             return;
@@ -126,6 +127,19 @@
     document.addEventListener('DOMContentLoaded', async () => {
         M.Modal.init(document.querySelectorAll('.modal'));
 
+
+        const savedUrl = localStorage.getItem('tvbox-url') || 'http://192.168.1.6:9978';
+        var tvBoxUrlInput = document.getElementById('tvbox-url-input');
+        tvBoxUrlInput.value = savedUrl;
+        document.getElementById('tvbox-url-link').href = savedUrl;
+        document.getElementById('tvbox-url-save').addEventListener('click', () => {
+            const newUrl = tvBoxUrlInput.value.trim();
+            if (newUrl) {
+                localStorage.setItem('tvbox-url', newUrl);
+                document.getElementById('tvbox-url-link').href = newUrl;
+            }
+        })
+
         try {
             const raw = await fetchText(SOURCE_URL);
             const parsed = parseSource(raw);
@@ -133,20 +147,6 @@
         } catch (err) {
             alert('直播源加载失败：' + err.message);
         }
-
-
-        const tvboxInput = document.getElementById('tvbox-url');
-        const savedUrl = localStorage.getItem('tvbox-url');
-        tvboxInput.value = savedUrl || 'http://192.168.1.6:9978'; // 默认 URL
-
-        // 保存用户输入的 URL 到 localStorage
-        saveTvBoxBtn.addEventListener('click', (e) => {
-            const url = tvboxInput.value.trim();
-            if (url) {
-                localStorage.setItem('tvbox-url', url);
-            }
-        });
-
     });
 </script>
 </body>
