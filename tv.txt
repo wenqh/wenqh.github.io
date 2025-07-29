@@ -4721,30 +4721,6 @@ V世代主演突发车祸？！！剧集制作陷入停滞,https://lunbo.freetv.
 打会酱油,https://lunbo.freetv.top/huya/24401701
 
 
-📺港台61,#genre#
-DW,http://61.221.215.25:8800/hls/1/index.m3u8
-TVBS-NEWS,http://61.221.215.25:8800/hls/9/index.m3u8
-TEST-36,http://61.221.215.25:8800/hls/36/index.m3u8
-八大戲劇,http://61.221.215.25:8800/hls/39/index.m3u8
-TEST-40,http://61.221.215.25:8800/hls/40/index.m3u8
-三立戲劇,http://61.221.215.25:8800/hls/41/index.m3u8
-
-TEST-44,http://61.221.215.25:8800/hls/44/index.m3u8
-TEST-45,http://61.221.215.25:8800/hls/45/index.m3u8
-TEST-46,http://61.221.215.25:8800/hls/46/index.m3u8
-中天娛樂,http://61.221.215.25:8800/hls/47/index.m3u8
-緯來精彩,http://61.221.215.25:8800/hls/48/index.m3u8
-TEST-49,http://61.221.215.25:8800/hls/49/index.m3u8
-探索亞洲,http://61.221.215.25:8800/hls/50/index.m3u8
-NHK世界,http://61.221.215.25:8800/hls/51/index.m3u8
-TEST-54,http://61.221.215.25:8800/hls/54/index.m3u8
-八大第一,http://61.221.215.25:8800/hls/55/index.m3u8
-八大綜合,http://61.221.215.25:8800/hls/56/index.m3u8
-動物星球,http://61.221.215.25:8800/hls/57/index.m3u8
-TEST-58,http://61.221.215.25:8800/hls/58/index.m3u8
-世新綜合,http://61.58.60.230:9319/live/49.m3u8
-TEST-60,http://61.221.215.25:8800/hls/60/index.m3u8
-
 📺港台mine,#genre#
 民視,rtmp://f13h.mine.nu/sat/tv051
 台視,rtmp://f13h.mine.nu/sat/tv071
