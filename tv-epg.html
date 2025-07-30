@@ -47,30 +47,18 @@
                     const doc = new DOMParser().parseFromString(txt, "application/xml");
                     const now = new Date(Date.now() + 8 * 3600_000).toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
 
-                    const channels = {};
-                    for (const channel of doc.getElementsByTagName('channel')) {
-                        const id = channel.getAttribute('id');
-                        const nameNode = channel.getElementsByTagName('display-name')[0];
-                        channels[id] = nameNode?.textContent || id;
-                    }
-
                     const currentPrograms = [];
                     for (const programme of doc.getElementsByTagName('programme')) {
+                        const channelId = programme.getAttribute('channel');
                         const start = programme.getAttribute('start');
                         const stop = programme.getAttribute('stop');
-                        const channelId = programme.getAttribute('channel');
                         if (now >= start && now < stop) {
-                            const channelName = channels[channelId] || channelId;
+                            const channelName = doc.getElementById(channelId)?.getElementsByTagName('display-name')[0]?.textContent || channelId;
                             const nowProgramme = programme.getElementsByTagName('title')[0]?.textContent || '未知节目';
                             const nextProgramme = programme.nextElementSibling?.getElementsByTagName('title')[0]?.textContent || '未知节目';
 
                             currentPrograms.push({ channelName, nowProgramme, nextProgramme });
                         }
-                    }
-
-                    if (currentPrograms.length === 0) {
-                        content.textContent = '当前无正在播放的节目。';
-                        return;
                     }
 
                     content.innerHTML = currentPrograms.map(p =>
