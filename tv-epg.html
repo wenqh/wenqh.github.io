@@ -22,7 +22,7 @@
         }
         .channel { margin-bottom: 1em; }
         .channel-name { font-weight: bold; font-size: 1.2em}
-        .next-program {color: #888;}
+        .next-program-title {color: #888;}
     </style>
 </head>
 <body>
@@ -60,11 +60,11 @@
                         const stop = programme.getAttribute('stop');
                         const channelId = programme.getAttribute('channel');
                         if (now >= start && now < stop) {
-                            const title = programme.getElementsByTagName('title')[0]?.textContent || '未知节目';
-                            const nextTitle = programme.nextElementSibling?.getElementsByTagName('title')[0]?.textContent || '未知节目';
                             const channelName = channels[channelId] || channelId;
+                            const programmeTitle = programme.getElementsByTagName('title')[0]?.textContent || '未知节目';
+                            const nextProgrammeTitle = programme.nextElementSibling?.getElementsByTagName('title')[0]?.textContent || '未知节目';
 
-                            currentPrograms.push({ channelName, title, nextTitle });
+                            currentPrograms.push({ channelName, programmeTitle, nextProgrammeTitle });
                         }
                     }
 
@@ -76,8 +76,8 @@
                     content.innerHTML = currentPrograms.map(p =>
                         `<div class="channel">
                             <div class="channel-name">${p.channelName}</div>
-                            <div class="program-title">${p.title}</div>
-                            <div class="next-program">接下来: ${p.nextTitle}</div>
+                            <div class="program-title">${p.programmeTitle}</div>
+                            <div class="next-program-title">接下来: ${p.nextProgrammeTitle}</div>
                         </div>`
                     ).join('');
                 })
