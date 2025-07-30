@@ -1,7 +1,7 @@
 {
   "lives": [
     {
-      "group": "网页直播",         // 分组名
+      "group": "网页直播",        
       "channels": [
         {
           "name": "哔哩直播",
