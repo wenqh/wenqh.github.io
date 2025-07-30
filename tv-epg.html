@@ -6,60 +6,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body { font-family: sans-serif; padding: 1em; }
+        .source-links a {
+            margin-right: 1em;
+            padding: 0.4em 0.8em;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .source-links a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
         .channel { margin-bottom: 1em; }
         .channel-name { font-weight: bold; }
     </style>
 </head>
 <body>
     <h1>正在播放的节目</h1>
+    <div class="source-links" id="source-links">
+        <a href="https://raw.githubusercontent.com/linitfor/epg/refs/heads/main/merged.xml" class="active">默认源</a>
+        <a href="https://raw.githubusercontent.com/yangguanll/iptv-api/refs/heads/master/output/epg/epg.xml">备用源</a>
+        <a href="https://raw.githubusercontent.com/dujq666/tv/refs/heads/master/output/epg/epg.xml">备用源</a>
+    </div>
+
     <div id="content">加载中...</div>
 
     <script>
-        fetch('https://raw.githubusercontent.com/linitfor/epg/refs/heads/main/merged.xml')
-            .then(response => response.text())
-            .then(txt => {
-                const doc = new DOMParser().parseFromString(txt, "application/xml");
-                const now = new Date(Date.now() + 8 * 3600_000).toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
+        const sourceLinks = document.getElementById('source-links');
+        const content = document.getElementById('content');
 
-                // 解析频道名
-                const channels = {};
-                for (const channel of doc.getElementsByTagName('channel')) {
-                    const id = channel.getAttribute('id');
-                    const nameNode = channel.getElementsByTagName('display-name')[0];
-                    channels[id] = nameNode?.textContent || id;
-                }
+        function loadEPG(url) {
+            content.textContent = '加载中...';
+            fetch(url)
+                .then(response => response.text())
+                .then(txt => {
+                    const doc = new DOMParser().parseFromString(txt, "application/xml");
+                    const now = new Date(Date.now() + 8 * 3600_000).toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
 
-                // 查找当前正在播放的节目
-                const currentPrograms = [];
-                for (const programme of doc.getElementsByTagName('programme')) {
-                    const start = programme.getAttribute('start');
-                    const stop = programme.getAttribute('stop');
-                    const channelId = programme.getAttribute('channel');
-                    if (now >= start && now < stop) {
-                        const title = programme.getElementsByTagName('title')[0]?.textContent || '未知节目';
-                        const channelName = channels[channelId] || channelId;
-                        currentPrograms.push({ channelName, title });
+                    const channels = {};
+                    for (const channel of doc.getElementsByTagName('channel')) {
+                        const id = channel.getAttribute('id');
+                        const nameNode = channel.getElementsByTagName('display-name')[0];
+                        channels[id] = nameNode?.textContent || id;
                     }
-                }
 
-                const content = document.getElementById('content');
-                if (currentPrograms.length === 0) {
-                    content.textContent = '当前无正在播放的节目。';
-                    return;
-                }
+                    const currentPrograms = [];
+                    for (const programme of doc.getElementsByTagName('programme')) {
+                        const start = programme.getAttribute('start');
+                        const stop = programme.getAttribute('stop');
+                        const channelId = programme.getAttribute('channel');
+                        if (now >= start && now < stop) {
+                            const title = programme.getElementsByTagName('title')[0]?.textContent || '未知节目';
+                            const channelName = channels[channelId] || channelId;
+                            currentPrograms.push({ channelName, title });
+                        }
+                    }
 
-                // 使用 map + join 优化 HTML 拼接
-                content.innerHTML = currentPrograms.map(p =>
-                    `<div class="channel">
-                        <div class="channel-name">${p.channelName}</div>
-                        <div class="program-title">${p.title}</div>
-                    </div>`
-                ).join('');
-            })
-            .catch(err => {
-                document.getElementById('content').textContent = '加载失败：' + err;
-                console.error(err);
-            });
+                    if (currentPrograms.length === 0) {
+                        content.textContent = '当前无正在播放的节目。';
+                        return;
+                    }
+
+                    content.innerHTML = currentPrograms.map(p =>
+                        `<div class="channel">
+                            <div class="channel-name">${p.channelName}</div>
+                            <div class="program-title">${p.title}</div>
+                        </div>`
+                    ).join('');
+                })
+                .catch(err => {
+                    content.textContent = '加载失败：' + err;
+                    console.error(err);
+                });
+        }
+
+        // 初始加载第一个链接
+        loadEPG(sourceLinks.querySelector('a').href);
+
+        // 点击 a 时加载并高亮
+        sourceLinks.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') {
+                e.preventDefault();
+                for (const a of sourceLinks.querySelectorAll('a')) {
+                    a.classList.remove('active');
+                }
+                e.target.classList.add('active');
+                loadEPG(e.target.href);
+            }
+        });
     </script>
 </body>
 </html>
