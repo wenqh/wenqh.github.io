@@ -6169,3 +6169,4 @@ Viutv,https://live.hkdvb.com/hls/live/99.m3u8?token=631170156112507&edge=live.tv
 东森超视,http://211.75.171.121:8541/http/61.67.128.137:8081/hls/64/806/ch014.m3u8
 济公,webview://https://www.yy.com/1355265814
 济公,https://www.yy.com/1355265814
+t,https://cfss.cc/cdn/yy/991.m3u8
