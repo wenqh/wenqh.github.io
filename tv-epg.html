@@ -2,14 +2,80 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>📺</title>
+    <title>📺 当前节目</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: sans-serif; padding: 1em; background: #f0f0f0; }
+        .channel { background: white; padding: 1em; margin: 0.5em 0; border-radius: 8px; }
+        .channel-name { font-weight: bold; font-size: 1.2em; }
+    </style>
 </head>
 <body>
+    <h1>📺 当前正在播放</h1>
+    <div id="epg"></div>
+
     <script>
-        fetch('https://raw.githubusercontent.com/yangguanll/iptv-api/refs/heads/master/output/epg/epg.xml')
+        const epgUrl = 'https://raw.githubusercontent.com/yangguanll/iptv-api/refs/heads/master/output/epg/epg.xml';
+
+        fetch(epgUrl)
             .then(response => response.text())
-            .then(txt => console.log(txt))
+            .then(xmlText => {
+                const doc = new DOMParser().parseFromString(xmlText, 'application/xml');
+                const now = new Date(Date.now() + 8 * 3600_000);
+                const formattedNow = now.toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
+
+                // 构建频道ID => 频道名称的映射
+                const channelMap = new Map();
+                const channelNodes = doc.getElementsByTagName('channel');
+                for (let i = 0; i < channelNodes.length; i++) {
+                    const ch = channelNodes[i];
+                    const id = ch.getAttribute('id');
+                    const displayNameEl = ch.getElementsByTagName('display-name')[0];
+                    if (id && displayNameEl) {
+                        channelMap.set(id, displayNameEl.textContent.trim());
+                    }
+                }
+
+                // 查找当前时间正在播放的节目
+                const programmes = doc.getElementsByTagName('programme');
+                const nowPlaying = new Map(); // channelId => title
+
+                for (let i = 0; i < programmes.length; i++) {
+                    const prog = programmes[i];
+                    const start = prog.getAttribute('start')?.slice(0, 14);
+                    const stop = prog.getAttribute('stop')?.slice(0, 14);
+
+                    if (formattedNow >= start && formattedNow < stop) {
+                        const channelId = prog.getAttribute('channel');
+                        const titleEl = prog.getElementsByTagName('title')[0];
+                        const title = titleEl ? titleEl.textContent.trim() : '未知节目';
+                        if (!nowPlaying.has(channelId)) {
+                            nowPlaying.set(channelId, title);
+                        }
+                    }
+                }
+
+                // 显示结果
+                const container = document.getElementById('epg');
+                if (nowPlaying.size === 0) {
+                    container.innerHTML = '<p>当前时间没有正在播放的节目。</p>';
+                } else {
+                    for (const [channelId, title] of nowPlaying.entries()) {
+                        const name = channelMap.get(channelId) || channelId;
+                        const div = document.createElement('div');
+                        div.className = 'channel';
+                        div.innerHTML = `
+                            <div class="channel-name">${name}</div>
+                            <div class="program-title">${title}</div>
+                        `;
+                        container.appendChild(div);
+                    }
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('epg').innerHTML = '<p>加载失败</p>';
+            });
     </script>
 </body>
 </html>
