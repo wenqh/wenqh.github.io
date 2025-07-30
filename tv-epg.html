@@ -21,7 +21,6 @@
         }
         .channel { margin-bottom: 1em; }
         .channel-name { font-weight: bold; }
-        .next-program { margin-top: 20px; font-size: 18px; color: green; }
     </style>
 </head>
 <body>
@@ -31,57 +30,54 @@
         <a href="https://raw.githubusercontent.com/yangguanll/iptv-api/refs/heads/master/output/epg/epg.xml">备用源</a>
         <a href="https://raw.githubusercontent.com/dujq666/tv/refs/heads/master/output/epg/epg.xml">备用源</a>
     </div>
+
     <div id="content">加载中...</div>
-    <div id="next-program" class="next-program"></div>
 
     <script>
         const sourceLinks = document.getElementById('source-links');
         const content = document.getElementById('content');
-        const nextProgramElement = document.getElementById('next-program');
 
         function loadEPG(url) {
+            content.textContent = '加载中...';
             fetch(url)
                 .then(response => response.text())
                 .then(txt => {
                     const doc = new DOMParser().parseFromString(txt, "application/xml");
-                    const now = new Date().toISOString().slice(0, 14);
+                    const now = new Date(Date.now() + 8 * 3600_000).toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
 
                     const channels = {};
-                    Array.from(doc.getElementsByTagName('channel')).forEach(channel => {
+                    for (const channel of doc.getElementsByTagName('channel')) {
                         const id = channel.getAttribute('id');
-                        channels[id] = channel.querySelector('display-name')?.textContent || id;
-                    });
+                        const nameNode = channel.getElementsByTagName('display-name')[0];
+                        channels[id] = nameNode?.textContent || id;
+                    }
 
                     const currentPrograms = [];
-                    const nextPrograms = [];
-                    Array.from(doc.getElementsByTagName('programme')).forEach(programme => {
+                    for (const programme of doc.getElementsByTagName('programme')) {
                         const start = programme.getAttribute('start');
                         const stop = programme.getAttribute('stop');
                         const channelId = programme.getAttribute('channel');
-
                         if (now >= start && now < stop) {
-                            currentPrograms.push({ channel: channels[channelId], title: programme.querySelector('title')?.textContent });
-                        } else if (now < start) {
-                            nextPrograms.push({
-                                channel: channels[channelId], title: programme.querySelector('title')?.textContent, startTime: start
-                            });
+                            const title = programme.getElementsByTagName('title')[0]?.textContent || '未知节目';
+                            const nextTitle = programme.nextElementSibling?.getElementsByTagName('title')[0]?.textContent || '未知节目';
+                            const channelName = channels[channelId] || channelId;
+
+                            currentPrograms.push({ channelName, title, nextTitle });
                         }
-                    });
-
-                    content.innerHTML = currentPrograms.length ? currentPrograms.map(p => 
-                        `<div class="channel"><div class="channel-name">${p.channel}</div><div>${p.title}</div></div>`
-                    ).join('') : '当前无正在播放的节目。';
-
-                    if (nextPrograms.length) {
-                        const nextProgram = nextPrograms[0];
-                        const timeRemaining = Math.floor((new Date(nextProgram.startTime) - new Date()) / 60000);
-                        nextProgramElement.innerHTML = `
-                            <strong>下一个节目：</strong><br>
-                            ${nextProgram.channel} - ${nextProgram.title}<br>
-                            开始时间：${new Date(nextProgram.startTime).toLocaleTimeString()}<br>
-                            还剩 ${timeRemaining} 分钟
-                        `;
                     }
+
+                    if (currentPrograms.length === 0) {
+                        content.textContent = '当前无正在播放的节目。';
+                        return;
+                    }
+
+                    content.innerHTML = currentPrograms.map(p =>
+                        `<div class="channel">
+                            <div class="channel-name">${p.channelName}</div>
+                            <div class="program-title">${p.title}</div>
+                            <div class="program-title">接下来: ${p.nextTitle}</div>
+                        </div>`
+                    ).join('');
                 })
                 .catch(err => {
                     content.textContent = '加载失败：' + err;
@@ -89,12 +85,16 @@
                 });
         }
 
+        // 初始加载第一个链接
         loadEPG(sourceLinks.querySelector('a').href);
 
-        sourceLinks.addEventListener('click', e => {
+        // 点击 a 时加载并高亮
+        sourceLinks.addEventListener('click', (e) => {
             if (e.target.tagName === 'A') {
                 e.preventDefault();
-                sourceLinks.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+                for (const a of sourceLinks.querySelectorAll('a')) {
+                    a.classList.remove('active');
+                }
                 e.target.classList.add('active');
                 loadEPG(e.target.href);
             }
