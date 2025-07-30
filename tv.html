@@ -23,7 +23,7 @@
             background-color: #555 !important;
             color: white !important;
         }
-        .scroll-wrap {
+        .scroll-container {
             min-height: 100vh;
             height: 100vh;
             overflow-y: scroll;
@@ -31,7 +31,6 @@
     </style>
 </head>
 <body>
-<!-- 用户输入 TvBox URL -->
 <div class="container" style="padding-top: 20px;">
     <a class="btn btn-flat modal-trigger" href="#modal1">设置URL</a>
     <a id="tvbox-url-link" class="btn btn-flat" target="_blank">OK影视</a>
@@ -52,15 +51,11 @@
 <div class="container">
     <!-- <h5 class="center-align">直播列表</h5> -->
     <div class="row">
-        <div class="col s3">
-            <div class="scroll-wrap">
-                <ul class="tabs" id="tabHeader"></ul>
-            </div>
+        <div class="col s3 scroll-container">
+            <ul class="tabs" id="tabHeader"></ul>
         </div>
         <div class="col s9">
-            <div class="scroll-wrap">
-                <div id="tabContent" class="col s12">加载中...</div>
-            </div>
+            <div id="tabContent" class="col s12">加载中...</div>
         </div>
     </div>
     <!--<div class="row">
@@ -133,7 +128,7 @@
             ).join('');
 
             tabContent.innerHTML += `
-          <div id="${id}" class="col s12">
+          <div id="${id}" class="scroll-container">
             <ul class="collection">${listItems}</ul>
           </div>
         `;
