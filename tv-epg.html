@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>📺</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <script>
+        fetch('https://epg.112114.xyz/pp.xml')
+            .then(response => response.text())
+            .then(txt => console.log(txt))
+    </script>
+</body>
+</html>
