@@ -141,12 +141,12 @@
 
     // 提交频道地址到目标接口
     const play = (channelUrl) => {
-        window.open(`${tvboxUrl}/action?do=push&url=${encodeURIComponent(channelUrl)}`, '_blank');
+        window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(channelUrl)}`, '_blank');
     };
 
     // 页面加载初始化
     document.addEventListener('DOMContentLoaded', async () => {
-        const tvBoxUrl = localStorage.getItem('tvbox-url');
+        tvBoxUrl = localStorage.getItem('tvbox-url');
 
         M.Modal.init(document.querySelectorAll('.modal'));
 
