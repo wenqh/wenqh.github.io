@@ -6092,5 +6092,3 @@ Viutv,https://live.hkdvb.com/hls/live/99.m3u8?token=631170156112507&edge=live.tv
 东森超视,http://110.53.52.63:8888/newlive/live/hls/51/live.m3u8
 东森超视,http://125.229.9.67:8524/http/220.130.87.218:8081/hls/64/806/ch014.m3u8
 东森超视,http://211.75.171.121:8541/http/61.67.128.137:8081/hls/64/806/ch014.m3u8
-济公,webview://https://www.yy.com/1355265814
-济公html,https://www.yy.com/1355265814
