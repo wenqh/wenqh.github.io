@@ -70,7 +70,7 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
     const SOURCE_URL = '/tv.txt'; // 本地文件路径
-    const tvBoxUrl = 'http://192.168.1.2:9978';
+    let tvBoxUrl = 'http://192.168.1.2:9978';
 
     // 异步加载文本内容
     const fetchText = async (url) => {
