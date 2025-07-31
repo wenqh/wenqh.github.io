@@ -146,8 +146,8 @@
 
     // 页面加载初始化
     document.addEventListener('DOMContentLoaded', async () => {
-        tvBoxUrl = localStorage.getItem('tvbox-url');
-
+        const tvBoxUrl = localStorage.getItem('tvbox-url') || tvBoxUrl;
+        
         M.Modal.init(document.querySelectorAll('.modal'));
 
         var tvBoxUrlInput = document.getElementById('tvbox-url-input');
