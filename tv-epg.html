@@ -75,9 +75,6 @@
                 });
         }
 
-        // 初始加载第一个链接
-        loadEPG(sourceLinks.querySelector('a').href);
-
         // 点击 a 时加载并高亮
         sourceLinks.addEventListener('click', (e) => {
             if (e.target.tagName === 'A') {
@@ -89,6 +86,9 @@
                 loadEPG(e.target.href);
             }
         });
+        
+        // 初始加载第一个链接
+        loadEPG(sourceLinks.querySelector('a').href);
     </script>
 </body>
 </html>
