@@ -27,7 +27,6 @@
 贺岁🐯,https://cfss.cc/cdn/hy/11601971.flv#https://lunbo.freetv.top/huya/11601971
 许氏兄弟🐯,https://cfss.cc/cdn/hy/11602033.flv#https://lunbo.freetv.top/huya/11602033
 报告老板🐯,https://cfss.cc/cdn/hy/26355835.flv#https://lunbo.freetv.top/huya/26355835
-中国通史🐯,https://cfss.cc/cdn/hy/20985822.flv#https://lunbo.freetv.top/huya/20985822
 欢迎来到大铁锅炖大大鹅的直播间🐯,https://cfss.cc/cdn/hy/21059574.flv#https://lunbo.freetv.top/huya/21059574
 少年包青天🐯,https://cfss.cc/cdn/hy/11601972.flv#https://lunbo.freetv.top/huya/11601972
 甄子丹 我要打十个🐯,https://cfss.cc/cdn/hy/11352935.flv#https://lunbo.freetv.top/huya/11352935
@@ -282,6 +281,7 @@ tu槽大会 笑死人不偿命,https://cfss.cc/cdn/hy/21059555.flv#https://lunbo
 分享最好♬音质音乐ღ,https://cfss.cc/cdn/hy/1048902.flv#https://lunbo.freetv.top/huya/1048902
 【经典好歌】一起听,https://cfss.cc/cdn/hy/20616876.flv#https://lunbo.freetv.top/huya/20616876
 天赐5, 超多爆火歌曲, 一起来听！,https://cfss.cc/cdn/hy/30080249.flv#https://lunbo.freetv.top/huya/30080249
+中国通史🐯,https://cfss.cc/cdn/hy/20985822.flv#https://lunbo.freetv.top/huya/20985822
 
 赵本山《超清版》,https://www.yy.com/1382683959#https://cfss.cc/cdn/yy/1382683959.m3u8#https://lunbo.freetv.top/yy/1382683959
 赵本山《蓝光版》,https://www.yy.com/32160832#https://cfss.cc/cdn/yy/32160832.m3u8#https://lunbo.freetv.top/yy/32160832
@@ -4813,3 +4813,4 @@ Viutv,https://live.hkdvb.com/hls/live/99.m3u8?token=631170156112507&edge=live.tv
 东森超视,http://211.75.171.121:8541/http/61.67.128.137:8081/hls/64/806/ch014.m3u8
 济公,webview://https://www.yy.com/1355265814
 济公html,https://www.yy.com/1355265814
+
