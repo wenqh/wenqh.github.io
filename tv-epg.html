@@ -26,69 +26,69 @@
     </style>
 </head>
 <body>
-    <h1>正在播放的节目</h1>
-    <div class="source-links" id="source-links">
-        <a href="https://raw.githubusercontent.com/linitfor/epg/refs/heads/main/merged.xml" class="active">台湾</a>
-        <a href="https://raw.githubusercontent.com/dujq666/tv/refs/heads/master/output/epg/epg.xml">国内</a>
-        <a href="https://raw.githubusercontent.com/1ncred4/iptv/refs/heads/master/output/epg/epg.xml">节点</a>
-    </div>
+<h1>正在播放的节目</h1>
+<div class="source-links" id="source-links">
+    <a href="https://raw.githubusercontent.com/linitfor/epg/refs/heads/main/merged.xml" class="active">台湾</a>
+    <a href="https://raw.githubusercontent.com/dujq666/tv/refs/heads/master/output/epg/epg.xml">国内</a>
+    <a href="https://raw.githubusercontent.com/1ncred4/iptv/refs/heads/master/output/epg/epg.xml">节点</a>
+</div>
 
-    <div id="content">加载中...</div>
+<div id="content">加载中...</div>
 
-    <script>
-        const sourceLinks = document.getElementById('source-links');
-        const content = document.getElementById('content');
+<script>
+    const sourceLinks = document.getElementById('source-links');
+    const content = document.getElementById('content');
 
-        function loadEPG(url) {
-            content.textContent = '加载中...';
-            fetch(url)
-                .then(response => response.text())
-                .then(txt => {
-                    const doc = new DOMParser().parseFromString(txt, "application/xml");
-                    const now = new Date(Date.now() + 8 * 3600_000).toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
+    function loadEPG(url) {
+        content.textContent = '加载中...';
+        fetch(url)
+            .then(response => response.text())
+            .then(txt => {
+                const doc = new DOMParser().parseFromString(txt, "application/xml");
+                const now = new Date(Date.now() + 8 * 3600_000).toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
 
-                    const currentPrograms = [];
-                    for (const programme of doc.getElementsByTagName('programme')) {
-                        const channelId = programme.getAttribute('channel');
-                        const start = programme.getAttribute('start');
-                        const stop = programme.getAttribute('stop');
-                        if (now >= start && now < stop) {
-                            const channelName = doc.getElementById(channelId)?.getElementsByTagName('display-name')[0]?.textContent || channelId;
-                            const nowProgramme = programme.getElementsByTagName('title')[0]?.textContent || '未知节目';
-                            const nextProgramme = programme.nextElementSibling?.getElementsByTagName('title')[0]?.textContent || '未知节目';
+                const currentPrograms = [];
+                for (const programme of doc.getElementsByTagName('programme')) {
+                    const channelId = programme.getAttribute('channel');
+                    const start = programme.getAttribute('start');
+                    const stop = programme.getAttribute('stop');
+                    if (now >= start && now < stop) {
+                        const channelName = doc.getElementById(channelId)?.getElementsByTagName('display-name')[0]?.textContent || channelId;
+                        const nowProgramme = programme.getElementsByTagName('title')[0]?.textContent || '未知节目';
+                        const nextProgramme = programme.nextElementSibling?.getElementsByTagName('title')[0]?.textContent || '未知节目';
 
-                            currentPrograms.push({ channelName, nowProgramme, nextProgramme });
-                        }
+                        currentPrograms.push({ channelName, nowProgramme, nextProgramme });
                     }
+                }
 
-                    content.innerHTML = currentPrograms.map(p =>
-                        `<div class="channel">
+                content.innerHTML = currentPrograms.map(p =>
+                    `<div class="channel">
                             <div class="channel-name">${p.channelName}</div>
                             <div class="program">${p.nowProgramme}</div>
                             <div class="next-program">接下来: ${p.nextProgramme}</div>
                         </div>`
-                    ).join('');
-                })
-                .catch(err => {
-                    content.textContent = '加载失败：' + err;
-                    console.error(err);
-                });
-        }
+                ).join('');
+            })
+            .catch(err => {
+                content.textContent = '加载失败：' + err;
+                console.error(err);
+            });
+    }
 
-        // 点击 a 时加载并高亮
-        sourceLinks.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A') {
-                e.preventDefault();
-                for (const a of sourceLinks.querySelectorAll('a')) {
-                    a.classList.remove('active');
-                }
-                e.target.classList.add('active');
-                loadEPG(e.target.href);
+    // 点击 a 时加载并高亮
+    sourceLinks.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+            e.preventDefault();
+            for (const a of sourceLinks.querySelectorAll('a')) {
+                a.classList.remove('active');
             }
-        });
-        
-        // 初始加载第一个链接
-        loadEPG(sourceLinks.querySelector('a').href);
-    </script>
+            e.target.classList.add('active');
+            loadEPG(e.target.href);
+        }
+    });
+
+    // 初始加载第一个链接
+    loadEPG(sourceLinks.querySelector('a').href);
+</script>
 </body>
 </html>
