@@ -36,6 +36,8 @@
 <body>
 <div class="container" style="padding-top: 20px;">
     <a class="btn btn-flat modal-trigger" href="#modal1">设置URL</a>
+    <span class="switch"><label>编辑<input type="checkbox" id="edit"><span class="lever"></span></label></span>
+    <button id="export" class="btn btn-flat">导出</button>
     <a id="tvbox-url-link" class="btn btn-flat" target="_blank">OK影视</a>
     <a class="btn btn-flat" href="tv-epg.html" target="_blank">节目表</a>
 
@@ -70,7 +72,7 @@
 <!-- Materialize JS -->
 <script src="https://cdn.bootcdn.net/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
-    const SOURCE_URL = '/tv_.txt'; // 本地文件路径
+    const SOURCE_URL = 'tv_.txt'; // 本地文件路径
     let tvBoxUrl = 'http://192.168.1.2:9978';
 
     // 异步加载文本内容
@@ -123,16 +125,16 @@
 
             const listItems = cat.items.map(({idx, name, url}) =>
                 `<li class="collection-item">
-            <a href="javascript:void(0);" onclick="play('${url}')">
+            <a href="${url}" onclick="play('${url}', event)">
               ${idx} ${name}
-              <div class="grey-text text-darken-1" style="font-size: 12px; margin-top: 4px;">${url}</div>
+              <div style="color: #888">${url}</div>
             </a>
           </li>`
             ).join('');
 
             tabContent.innerHTML += `
           <div id="${id}" class="scroll-container">
-            <ul class="collection">${listItems}</ul>
+            <ul class="collection" data-cat-title="${cat.title}">${listItems}</ul>
           </div>
         `;
         });
@@ -141,9 +143,14 @@
     };
 
     // 提交频道地址到目标接口
-    const play = (channelUrl) => {
+    const play = (channelUrl, event) => {
+        event.preventDefault();
+        if (document.querySelector('#edit').checked) {
+            return;
+        }
         window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(channelUrl)}`, '_blank');
     };
+
 
     // 页面加载初始化
     document.addEventListener('DOMContentLoaded', async () => {
@@ -166,6 +173,44 @@
         } catch (err) {
             alert('直播源加载失败：' + err.message);
         }
+    });
+
+
+    document.querySelector('#edit').addEventListener('change', function() {
+        document.querySelector("#tabContent").setAttribute('contenteditable', this.checked)
+    });
+
+
+    document.querySelector('#export').addEventListener('click', () => {
+        let raw = '';
+
+        for (const ul of document.querySelectorAll("ul.collection")) {
+            const catTitle = ul.getAttribute('data-cat-title');
+            raw += '\n' + catTitle + ',#genre#\n';
+
+            for (const li of ul.querySelectorAll("li.collection-item")) {
+                const link = li.querySelector('a');
+
+                const name = link?.childNodes[0]?.nodeValue?.trim()?.replace(/^\d+\s+/, '')
+                const url = link?.href
+
+                raw += `${name},${url}\n`;
+            }
+        }
+
+        // 5. 创建并下载文件（这部分和之前一样）
+        if (!raw) {
+            return;
+        }
+        const blob = new Blob([raw], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+
+        link.href = URL.createObjectURL(blob);
+        link.download = SOURCE_URL;
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     });
 </script>
 </body>
