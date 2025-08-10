@@ -1,2 +1,32 @@
-- name: Deploy GitHub Pages site
-  uses: actions/deploy-pages@v4.0.5
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    # 如果你的主分支叫 'master'，请将上面的 'main' 改成 'master'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # 上传项目根目录下的所有内容
+          path: './'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
