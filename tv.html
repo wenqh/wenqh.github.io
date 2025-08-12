@@ -179,7 +179,6 @@
     document.querySelector('#edit').addEventListener('change', function() {
         document.querySelector("#tabContent").setAttribute('contenteditable', this.checked)
         document.querySelector("#tabHeader").setAttribute('contenteditable', this.checked)
-
     });
 
 
@@ -199,7 +198,7 @@
 
                 raw += `${name},${url}\n`;
             }
-        }
+        });
 
         // 5. 创建并下载文件（这部分和之前一样）
         if (!raw) {
