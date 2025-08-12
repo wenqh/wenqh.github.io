@@ -178,6 +178,8 @@
 
     document.querySelector('#edit').addEventListener('change', function() {
         document.querySelector("#tabContent").setAttribute('contenteditable', this.checked)
+        document.querySelector("#tabHeader").setAttribute('contenteditable', this.checked)
+
     });
 
 
