@@ -134,7 +134,7 @@
 
             tabContent.innerHTML += `
           <div id="${id}" class="scroll-container">
-            <ul class="collection" data-cat-title="${cat.title}">${listItems}</ul>
+            <ul>${listItems}</ul>
           </div>
         `;
         });
@@ -184,8 +184,9 @@
     document.querySelector('#export').addEventListener('click', () => {
         let raw = '';
 
-        for (const ul of document.querySelectorAll("ul.collection")) {
-            const catTitle = ul.getAttribute('data-cat-title');
+        const tabs = document.querySelectorAll("ul.tabs li");
+        document.querySelectorAll("ul.collection").forEach((ul, i) => {
+            const catTitle = tabs[i].textContent.trim();
             raw += '\n' + catTitle + ',#genre#\n';
 
             for (const li of ul.querySelectorAll("li.collection-item")) {
