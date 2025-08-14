@@ -152,7 +152,7 @@
             // 设置几秒后自动关闭
             setTimeout(() => {
                 newWin.close();
-            }, 1000);
+            }, 500);
         };
 
 
@@ -193,7 +193,7 @@
                     // 在这里可以执行摇一摇后的操作
                     console.log("摇一摇触发了！");
 
-                    const filteredCats = data.filter(cat => !cat.title.startsWith('1'));
+                    const filteredCats = data//.filter(cat => !cat.title.startsWith('1'));
 
 
                     const randomCat = filteredCats[Math.floor(Math.random() * filteredCats.length)];
