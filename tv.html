@@ -179,7 +179,7 @@
 
 
         const shakeThreshold = 15;
-        const shakeTimeout = 3000;
+        const shakeTimeout = 1000;
 
         let lastAcceleration = null;
         let lastShakeTime = 0;
@@ -205,16 +205,15 @@
                 return;
             }
             lastShakeTime = Date.now();
-            alert("摇一摇触发了！");
+            console.log("摇一摇触发了！");
 
             const filteredCats = data.filter(cat => !cat.title.startsWith('1'));
 
             const randomCat = filteredCats[Math.floor(Math.random() * filteredCats.length)];
             const randomItem = randomCat.items[Math.floor(Math.random() * randomCat.items.length)];
-            console.log(randomItem);
+            document.getElementById('nowPlay').textContent = `${randomItem.idx} ${randomItem.name}`;
 
             play(randomItem.url);
-            document.getElementById('nowPlay').textContent = `${randomItem.idx} ${randomItem.name}`;
         }, false);
     });
 
