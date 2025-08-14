@@ -126,7 +126,7 @@
             const listItems = cat.items.map(({idx, name, url}) =>
                 `<li class="collection-item">
             <a href="${url}" onclick="play('${url}', event)"
-                contextmenu="edit(event)">
+                oncontextmenu="edit(event)">
               ${idx} ${name}
               <div style="color: #888">${url}</div>
             </a>
@@ -146,9 +146,9 @@
     // 提交频道地址到目标接口
     const play = (channelUrl, event) => {
         event.preventDefault();
-        if (document.querySelector('#edit').checked) {
+        /*if (document.querySelector('#edit').checked) {
             return;
-        }
+        }*/
         window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(channelUrl)}`, '_blank');
     };
 
