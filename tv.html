@@ -183,33 +183,32 @@
             }
 
 
+            window.addEventListener('devicemotion', ev => {
+                const acceleration = event.accelerationIncludingGravity;
+                // 计算加速度值
+                const accelerationValue = Math.sqrt(
+                    Math.pow(acceleration.x, 2) +
+                    Math.pow(acceleration.y, 2) +
+                    Math.pow(acceleration.z, 2)
+                );
+                // 如果加速度值超过阈值，则认为触发了摇一摇事件
+                if (accelerationValue > 20) {
+                    // 在这里可以执行摇一摇后的操作
+                    alert('Shake detected!');
+
+                    console.log("摇一摇触发了！");
+
+                    const filteredCats = data.filter(cat => !cat.title.startsWith('1'));
 
 
+                    const randomCat = filteredCats[Math.floor(Math.random() * filteredCats.length)];
+                    const randomItem = randomCat.items[Math.floor(Math.random() * randomCat.items.length)];
 
-// 获取加速度数据
-            var acceleration = event.accelerationIncludingGravity;
-            // 计算加速度值
-            var accelerationValue = Math.sqrt(
-                Math.pow(acceleration.x, 2) +
-                Math.pow(acceleration.y, 2) +
-                Math.pow(acceleration.z, 2)
-            );
-            // 如果加速度值超过阈值，则认为触发了摇一摇事件
-            if (accelerationValue > 20) {
-                // 在这里可以执行摇一摇后的操作
-                alert('Shake detected!');
+                    document.getElementById('nowPlay').textContent = `${randomItem.idx} ${randomItem.name}`;
+                    play(randomItem.url);
+                }
+            }, shakeEventDetected, false);
 
-                console.log("摇一摇触发了！");
-
-                const filteredCats = data.filter(cat => !cat.title.startsWith('1'));
-
-
-                const randomCat = filteredCats[Math.floor(Math.random() * filteredCats.length)];
-                const randomItem = randomCat.items[Math.floor(Math.random() * randomCat.items.length)];
-
-                document.getElementById('nowPlay').textContent = `${randomItem.idx} ${randomItem.name}`;
-                play(randomItem.url);
-            }
         });
 
 
