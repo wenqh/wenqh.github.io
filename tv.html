@@ -178,7 +178,7 @@
 
 
     document.addEventListener('oncontextmenu', (e)=> {
-        e.preventDefault(); // 阻止默认右键菜单
+        e.preventDefault();
         const div = e.target;
         div.setAttribute('contenteditable', 'true');
         div.focus();
