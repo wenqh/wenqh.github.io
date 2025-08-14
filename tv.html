@@ -53,7 +53,7 @@
     </div>
 </div>
 
-<div class="container">
+<main class="container">
     <!-- <h5 class="center-align">直播列表</h5> -->
     <div class="row">
         <div class="col s3 scroll-container">
@@ -112,7 +112,6 @@
     const render = (data) => {
         const tabHeader = document.getElementById('tabHeader');
         const tabContent = document.getElementById('tabContent');
-        tabHeader.innerHTML = '';
         tabContent.innerHTML = '';
 
         data.forEach((cat, i) => {
@@ -125,8 +124,7 @@
 
             const listItems = cat.items.map(({idx, name, url}) =>
                 `<li class="collection-item">
-            <a href="${url}" onclick="play('${url}', event)"
-                oncontextmenu="edit(event)">
+            <a href="${url}" onclick="play('${url}', event)">
               ${idx} ${name}
               <div style="color: #888">${url}</div>
             </a>
@@ -177,7 +175,7 @@
     });
 
 
-    document.addEventListener('contextmenu', (e)=> {
+    document.querySelector('main').addEventListener('contextmenu', (e)=> {
         e.preventDefault();
         const div = e.target;
         div.setAttribute('contenteditable', 'true');
@@ -226,6 +224,41 @@
         link.click();
         document.body.removeChild(link);
     });
+
+
+
+    const shakeThreshold = 15;
+    const shakeTimeout = 3000;
+
+    let lastAcceleration = null;
+    let lastShakeTime = 0;
+
+    const handleShake = (event) => {
+    const { x, y, z } = event.accelerationIncludingGravity;
+
+    if (lastAcceleration === null) {
+        lastAcceleration = { x, y, z };
+        return;
+    }
+
+    const deltaX = Math.abs(x - lastAcceleration.x);
+    const deltaY = Math.abs(y - lastAcceleration.y);
+    const deltaZ = Math.abs(z - lastAcceleration.z);
+
+    lastAcceleration = { x, y, z };
+
+    const isShaking = (deltaX > shakeThreshold || deltaY > shakeThreshold || deltaZ > shakeThreshold);
+    const canTrigger = (Date.now() - lastShakeTime > shakeTimeout);
+
+    if (isShaking && canTrigger) {
+        lastShakeTime = Date.now();
+        console.log("摇一摇触发了！");
+        // 在这里执行您的自定义功能
+        document.body.style.backgroundColor = 'red';
+    }
+    };
+
+    window.addEventListener('devicemotion', handleShake, false);
 </script>
 </body>
 </html>
