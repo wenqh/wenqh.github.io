@@ -178,43 +178,52 @@
 
 
 
-        const shakeThreshold = 15;
-        const shakeTimeout = 1000;
+        const shakeThreshold = 100; // 调高阈值，因为是平方和
+const shakeTimeout = 1000;
 
-        let lastAcceleration = null;
-        let lastShakeTime = 0;
+let lastAcceleration = null;
+let lastShakeTime = 0;
 
-        window.addEventListener('devicemotion',  (event) => {
-            const { x, y, z } = event.accelerationIncludingGravity;
+window.addEventListener('devicemotion', (event) => {
+    const { x, y, z } = event.accelerationIncludingGravity;
 
-            if (lastAcceleration === null) {
-                lastAcceleration = { x, y, z };
-                return;
-            }
+    if (lastAcceleration === null) {
+        lastAcceleration = { x, y, z };
+        return;
+    }
 
-            const deltaX = Math.abs(x - lastAcceleration.x);
-            const deltaY = Math.abs(y - lastAcceleration.y);
-            const deltaZ = Math.abs(z - lastAcceleration.z);
+    const deltaX = x - lastAcceleration.x;
+    const deltaY = y - lastAcceleration.y;
+    const deltaZ = z - lastAcceleration.z;
 
-            lastAcceleration = { x, y, z };
+    // 计算总加速度的平方和，这比判断单个轴更可靠
+    const totalDelta = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
 
-            const isShaking = (deltaX > shakeThreshold || deltaY > shakeThreshold || deltaZ > shakeThreshold);
-            const canTrigger = (Date.now() - lastShakeTime > shakeTimeout);
+    lastAcceleration = { x, y, z };
 
-            if (!isShaking || !canTrigger) {
-                return;
-            }
-            lastShakeTime = Date.now();
-            console.log("摇一摇触发了！");
+    const isShaking = (totalDelta > shakeThreshold);
+    const canTrigger = (Date.now() - lastShakeTime > shakeTimeout);
 
-            const filteredCats = data.filter(cat => !cat.title.startsWith('1'));
+    if (!isShaking || !canTrigger) {
+        return;
+    }
+    
+    lastShakeTime = Date.now();
+    console.log("摇一摇触发了！");
 
-            const randomCat = filteredCats[Math.floor(Math.random() * filteredCats.length)];
-            const randomItem = randomCat.items[Math.floor(Math.random() * randomCat.items.length)];
-            document.getElementById('nowPlay').textContent = `${randomItem.idx} ${randomItem.name}`;
+    const filteredCats = data.filter(cat => !cat.title.startsWith('1'));
 
-            play(randomItem.url);
-        }, false);
+    if (filteredCats.length === 0) {
+        console.log("没有符合条件的数据。");
+        return;
+    }
+
+    const randomCat = filteredCats[Math.floor(Math.random() * filteredCats.length)];
+    const randomItem = randomCat.items[Math.floor(Math.random() * randomCat.items.length)];
+    
+    document.getElementById('nowPlay').textContent = `${randomItem.idx} ${randomItem.name}`;
+    play(randomItem.url);
+}, false);
     });
 
 
