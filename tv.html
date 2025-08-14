@@ -151,11 +151,8 @@
             const newWin = window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(channelUrl)}`, '_blank');
             // 设置几秒后自动关闭
             setTimeout(() => {
-                if (newWin && !newWin.closed) {
-                    newWin.close();
-                }
-            }, 5000); // 5000ms = 5秒
-            alert(1)
+                newWin.close();
+            }, 3000); // 5000ms = 5秒
         };
 
 
@@ -194,8 +191,6 @@
                 // 如果加速度值超过阈值，则认为触发了摇一摇事件
                 if (accelerationValue > 20) {
                     // 在这里可以执行摇一摇后的操作
-                    alert('Shake detected!');
-
                     console.log("摇一摇触发了！");
 
                     const filteredCats = data.filter(cat => !cat.title.startsWith('1'));
