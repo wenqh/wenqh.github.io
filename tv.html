@@ -166,9 +166,10 @@
             localStorage.setItem('tvbox-url', tvBoxUrl);
         })
 
+        let data;
         try {
             const raw = await fetchText(SOURCE_URL);
-            const data = parseSource(raw);
+            data = parseSource(raw);
             render(data);
         } catch (err) {
             alert('直播源加载失败：' + err.message);
