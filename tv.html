@@ -148,7 +148,14 @@
         /*if (document.querySelector('#edit').checked) {
             return;
         }*/
-        window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(channelUrl)}`, '_blank');
+        const newWin = window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(channelUrl)}`, '_blank');
+        // 设置几秒后自动关闭
+    setTimeout(() => {
+        if (newWin && !newWin.closed) {
+            newWin.close();
+        }
+    }, 5000); // 5000ms = 5秒
+    alert(1)
     };
 
 
