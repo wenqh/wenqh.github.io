@@ -4131,8 +4131,8 @@ BBC World News,https://live.catvod.com/catvod_com.php?id=Bbcnews
 Bloomberg News,https://live.catvod.com/catvod_com.php?id=bloomberg_twn
 Al-Jazeera,https://live.catvod.com/catvod_com.php?id=aljazeera_twn
 
-儿童频道CA,#genre#
-#ua=catvod.com
+儿童频道CAT,#genre#
+ua=catvod.com
 Baby TV Eng,https://live.catvod.com/catvod_com.php?id=Babytv
 CBeebies,https://live.catvod.com/catvod_com.php?id=Cbeebies
 Kids TV,https://live.catvod.com/catvod_com.php?id=KidsTV
