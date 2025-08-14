@@ -125,7 +125,8 @@
 
             const listItems = cat.items.map(({idx, name, url}) =>
                 `<li class="collection-item">
-            <a href="${url}" onclick="play('${url}', event)">
+            <a href="${url}" onclick="play('${url}', event)"
+                contextmenu="edit(event)">
               ${idx} ${name}
               <div style="color: #888">${url}</div>
             </a>
@@ -176,10 +177,22 @@
     });
 
 
-    document.querySelector('#edit').addEventListener('change', function() {
+    function edit(e) {
+        e.preventDefault(); // 阻止默认右键菜单
+        const div = e.target;
+        div.setAttribute('contenteditable', 'true');
+        div.focus();
+        
+        // 失去焦点退出编辑模式
+        div.addEventListener('blur', () => {
+            div.removeAttribute('contenteditable');
+        }, { once: true });
+}
+    }
+    /*document.querySelector('#edit').addEventListener('change', function() {
         document.querySelector("#tabContent").setAttribute('contenteditable', this.checked)
         document.querySelector("#tabHeader").setAttribute('contenteditable', this.checked)
-    });
+    });*/
 
 
     document.querySelector('#export').addEventListener('click', () => {
