@@ -3893,7 +3893,7 @@ TVBS新聞,http://s1.an94tv.cfd/tvbs/tvbs/AKTV.m3u8
 
 
 国内CA,#genre#
-#ua=catvod.com
+ua=catvod.com
 CCTV-1 综合 HD,https://live.catvod.com/catvod_com.php?id=cctv1
 CCTV-2 财经,https://live.catvod.com/catvod_com.php?id=cctv2
 CCTV-3 综艺 HD,https://live.catvod.com/catvod_com.php?id=cctv3
@@ -3928,7 +3928,7 @@ CCTV-15 音乐,https://live.catvod.com/catvod_com.php?id=cctv15
 CGTN,https://live.catvod.com/catvod_com.php?id=CGTN
 
 体育频道CA,#genre#
-#ua=catvod.com
+ua=catvod.com
 Astro Premier League 1,https://live.catvod.com/catvod_com.php?id=go_assp1
 Astro EPL 1 backup,https://live.catvod.com/catvod_com.php?id=go_assp1x
 Astro Premier League 2,https://live.catvod.com/catvod_com.php?id=go_assp2
@@ -3975,7 +3975,7 @@ Astro Beinsports 2,https://live.catvod.com/catvod_com.php?id=Astrobein2
 Astro Beinsports 3,https://live.catvod.com/catvod_com.php?id=Astrobein3
 
 台湾频道CA,#genre#
-#ua=catvod.com
+ua=catvod.com
 TVBS News 新闻台,https://live.catvod.com/catvod_com.php?id=tvbs_n
 TVBS 欢乐台 （备份）,https://live.catvod.com/catvod_com.php?id=tvbshuanle_twn
 TVBS HD,https://live.catvod.com/catvod_com.php?id=tvbs
@@ -4068,7 +4068,7 @@ RHK 32,https://live.catvod.com/catvod_com.php?id=rhk32_twn
 Viu6,https://live.catvod.com/catvod_com.php?id=viusix_twn
 
 电影频道CA,#genre#
-#ua=catvod.com
+ua=catvod.com
 Cinemax,https://live.catvod.com/catvod_com.php?id=Cinemax
 Animax,https://live.catvod.com/catvod_com.php?id=Animax
 Movies Now HD,https://live.catvod.com/catvod_com.php?id=moviesnow_raj
@@ -4094,7 +4094,7 @@ Rock Actions,https://live.catvod.com/catvod_com.php?id=Rockaction
 Rock Entertainment,https://live.catvod.com/catvod_com.php?id=Rockentertain
 
 记录频道CA,#genre#
-#ua=catvod.com
+ua=catvod.com
 Natgeo_HD,https://live.catvod.com/catvod_com.php?id=natgeohd_twn
 NatGeo_Wild HD,https://live.catvod.com/catvod_com.php?id=natgeowild_twn
 Animal_Planet,https://live.catvod.com/catvod_com.php?id=animalplanet_twn
@@ -4113,7 +4113,7 @@ Foodnetwork Hd,https://live.catvod.com/catvod_com.php?id=Foodnetwork
 HGTV,https://live.catvod.com/catvod_com.php?id=HGTV
 
 新闻频道CA,#genre#
-#ua=catvod.com
+ua=catvod.com
 Skynews,https://live.catvod.com/catvod_com.php?id=skynews_twn
 ABC News,https://live.catvod.com/catvod_com.php?id=abcnews_glo
 CBS HD,https://live.catvod.com/catvod_com.php?id=cbshd_glo
@@ -4144,7 +4144,7 @@ Nickelodeon,https://live.catvod.com/catvod_com.php?id=Nickelodeon
 Nick Jr,https://live.catvod.com/catvod_com.php?id=Nickjr
 
 其它频道CA,#genre#
-#ua=catvod.com
+ua=catvod.com
 Channel 5,https://live.catvod.com/catvod_com.php?id=Channel5HD
 Channel 8,https://live.catvod.com/catvod_com.php?id=Channel8HD
 Suria,https://live.catvod.com/catvod_com.php?id=Suria
