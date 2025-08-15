@@ -193,14 +193,20 @@
                     // 在这里可以执行摇一摇后的操作
                     console.log("摇一摇触发了！");
 
-                    const filteredCats = data//.filter(cat => !cat.title.startsWith('1'));
+const selectedIndices = [0,1,2,4,5,6];
 
+// 1. 筛选出索引在指定数组中的分类
+const filteredCats = data.filter((cat, index) => selectedIndices.includes(index));
 
-                    const randomCat = filteredCats[Math.floor(Math.random() * filteredCats.length)];
-                    const randomItem = randomCat.items[Math.floor(Math.random() * randomCat.items.length)];
+// 2. 将所有符合条件的分类中的items合并成一个扁平化的数组
+const allItems = filteredCats.flatMap(cat => cat.items);
 
-                    document.getElementById('nowPlay').textContent = `${randomItem.idx} ${randomItem.name}`;
-                    play(randomItem.url);
+// 3. 从合并后的数组中随机抽取一个item
+  const randomIndex = Math.floor(Math.random() * allItems.length);
+  const randomItem = allItems[randomIndex];
+  
+  document.getElementById('nowPlay').textContent = `${randomItem.idx} ${randomItem.name}`;
+  play(randomItem.url);
                 }
             });
 
