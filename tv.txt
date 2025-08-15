@@ -3262,24 +3262,6 @@ momo綜合,rtmp://f13h.mine.nu/sat/tv761
 
 
 📡杂,#genre#
-
-星空衛視,http://wouu.net:9977/rtp/239.93.1.10:2193
-鳳凰資訊,http://wouu.net:9977/udp/239.93.0.118:2191
-星空衛視,http://wouu.net:9977/udp/239.93.0.156:2193
-鳳凰中文,http://wouu.net:9977/udp/239.93.0.162:2192
-鳳凰資訊,http://wouu.net:9977/udp/239.93.1.4:2191
-鳳凰中文,http://wouu.net:9977/udp/239.93.1.9:2192
-鳳凰資訊,http://www.erbao1981.top:8188/udp/239.76.246.134:1234
-鳳凰中文,http://www.erbao1981.top:8188/udp/239.76.246.135:1234
-鳳凰香港,http://www.lebaobei.top:6868/udp/239.255.30.123:8231
-鳳凰中文,http://www.lebaobei.top:6868/udp/239.255.30.50:8231
-鳳凰資訊,http://www.lebaobei.top:6868/udp/239.255.30.70:8231
-鳳凰資訊,http://xeace.cn:8888/udp/239.93.0.118:2191
-鳳凰資訊,http://udnhls.skilldns.com:80/fhzx-cn.m3u8
-鳳凰中文,http://58.250.155.2:8180/TV00000000000000000031@HHZT
-鳳凰中文,http://ali.hlspull.yximgs.com/live/l3w1tt2dkzvpukruupu001-golive.flv
-重溫經典,http://ali.hlspull.yximgs.com/live/awei_cwjd.flv
-星光視界,http://ali.hlspull.yximgs.com/live/zxcvbnm9852.flv
 香港衛視,http://zhibo.hkstv.tv/livestream/mutfysrq.flv
 
 香港衛視,http://zhibo.hkstv.tv:80/livestream/mutfysrq.flv
@@ -3476,15 +3458,6 @@ CGTN,https://live.catvod.com/catvod_com.php?id=CGTN
 
 体育频道catvod,#genre#
 ua=catvod.com
-Astro Premier League 1,https://live.catvod.com/catvod_com.php?id=go_assp1
-Astro EPL 1 backup,https://live.catvod.com/catvod_com.php?id=go_assp1x
-Astro Premier League 2,https://live.catvod.com/catvod_com.php?id=go_assp2
-Astro Grandstand,https://live.catvod.com/catvod_com.php?id=go_assp3
-Astro Football,https://live.catvod.com/catvod_com.php?id=go_assp4
-Astro Sports Plus,https://live.catvod.com/catvod_com.php?id=go_sportsplus
-Astro Badminton 1,https://live.catvod.com/catvod_com.php?id=go_badminton1
-Astro Badminton 2,https://live.catvod.com/catvod_com.php?id=go_badminton2
-Astro W-Sports,https://live.catvod.com/catvod_com.php?id=go_assp5
 Supersports 1,https://live.catvod.com/catvod_com.php?id=Assp1
 Supersports 2,https://live.catvod.com/catvod_com.php?id=Assp2
 Supersports 3,https://live.catvod.com/catvod_com.php?id=Assp3
@@ -4687,3 +4660,4 @@ Viutv,https://live.hkdvb.com/hls/live/99.m3u8?token=631170156112507&edge=live.tv
 东森超视,http://110.53.52.63:8888/newlive/live/hls/51/live.m3u8
 东森超视,http://125.229.9.67:8524/http/220.130.87.218:8081/hls/64/806/ch014.m3u8
 东森超视,http://211.75.171.121:8541/http/61.67.128.137:8081/hls/64/806/ch014.m3u8
+
