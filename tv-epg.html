@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>📺 当前节目</title>
+    <title>📺当前节目</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body { font-family: sans-serif; padding: 1em; }
@@ -63,9 +63,9 @@
 
                 content.innerHTML = currentPrograms.map(p =>
                     `<div class="channel">
-                            <div class="channel-name">${p.channelName}</div>
-                            <div class="program"> ${p.nowProgramme}</div>
-                            <div class="next-program"> 接下来: ${p.nextProgramme}</div>
+                            <div class="channel-name">📺${p.channelName}</div>
+                            <div class="program">${p.nowProgramme}</div>
+                            <div class="next-program">接下来: ${p.nextProgramme}</div>
                         </div>`
                 ).join('');
             })
