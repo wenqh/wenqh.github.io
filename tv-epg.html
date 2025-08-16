@@ -64,7 +64,7 @@
                 content.innerHTML = currentPrograms.map(p =>
                     `<div class="channel">
                             <div class="channel-name">${p.channelName}</div>
-                            <div class="program"> {p.nowProgramme}</div>
+                            <div class="program"> ${p.nowProgramme}</div>
                             <div class="next-program"> 接下来: ${p.nextProgramme}</div>
                         </div>`
                 ).join('');
