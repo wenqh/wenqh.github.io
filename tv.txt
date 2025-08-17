@@ -3456,43 +3456,6 @@ CCTV-15 音乐,https://live.catvod.com/catvod_com.php?id=cctv15
 东方卫视,https://live.catvod.com/catvod_com.php?id=dongfangweishi_twn
 CGTN,https://live.catvod.com/catvod_com.php?id=CGTN
 
-体育频道catvod,#genre#
-ua=catvod.com
-Supersports 1,https://live.catvod.com/catvod_com.php?id=Assp1
-Supersports 2,https://live.catvod.com/catvod_com.php?id=Assp2
-Supersports 3,https://live.catvod.com/catvod_com.php?id=Assp3
-Supersports 4,https://live.catvod.com/catvod_com.php?id=Assp4
-WWE,https://live.catvod.com/catvod_com.php?id=Wwe
-Fight Sports,https://live.catvod.com/catvod_com.php?id=Fs
-NBA TV,https://live.catvod.com/catvod_com.php?id=Nba
-Astro Cricket,https://live.catvod.com/catvod_com.php?id=Acricket
-Astro Golf,https://live.catvod.com/catvod_com.php?id=Agolf
-Tnt Sports 1,https://live.catvod.com/catvod_com.php?id=6fac0aaead
-TNT Sports 2,https://live.catvod.com/catvod_com.php?id=d9a76a79cc
-TNT Sports 3,https://live.catvod.com/catvod_com.php?id=5fea4d73db
-TNT Sports 4,https://live.catvod.com/catvod_com.php?id=tntsport4
-Sony Ten 1,https://live.catvod.com/catvod_com.php?id=ten1_raj
-Sony Ten 2,https://live.catvod.com/catvod_com.php?id=ten2_raj
-Sony Ten 3,https://live.catvod.com/catvod_com.php?id=ten3_raj
-SPOTV 1 HD,https://live.catvod.com/catvod_com.php?id=go_spotv
-SPO TV 2,https://live.catvod.com/catvod_com.php?id=go_spotv2
-Skysports F1,https://live.catvod.com/catvod_com.php?id=tiankongf1
-Skysports Cricket,https://live.catvod.com/catvod_com.php?id=tiankongcricket
-Skysports EPL,https://live.catvod.com/catvod_com.php?id=tiankongepl
-Skysports Main Event,https://live.catvod.com/catvod_com.php?id=tiankongmain
-Skysports News,https://live.catvod.com/catvod_com.php?id=tiankongnews
-Skysports Mix,https://live.catvod.com/catvod_com.php?id=tiankongmix
-爱尔达体育2台,https://live.catvod.com/catvod_com.php?id=eltasport2_twn
-爱尔达体育3台,https://live.catvod.com/catvod_com.php?id=eltasport3_twn
-Rugby Pass TV,https://live.catvod.com/catvod_com.php?id=Rugbypasstv
-RTM Sports HD,https://live.catvod.com/catvod_com.php?id=Rtmsport
-Arena,https://live.catvod.com/catvod_com.php?id=Arena
-Arena 2,https://live.catvod.com/catvod_com.php?id=Arena2
-BolaArena 1,https://live.catvod.com/catvod_com.php?id=Bolaarena1
-BolaArena 2,https://live.catvod.com/catvod_com.php?id=Bolaarena2
-Astro Beinsports 1,https://live.catvod.com/catvod_com.php?id=Astrobein1
-Astro Beinsports 2,https://live.catvod.com/catvod_com.php?id=Astrobein2
-Astro Beinsports 3,https://live.catvod.com/catvod_com.php?id=Astrobein3
 
 📡台湾频道catvod,#genre#
 ua=catvod.com
@@ -3651,8 +3614,10 @@ BBC World News,https://live.catvod.com/catvod_com.php?id=Bbcnews
 Bloomberg News,https://live.catvod.com/catvod_com.php?id=bloomberg_twn
 Al-Jazeera,https://live.catvod.com/catvod_com.php?id=aljazeera_twn
 
-📡儿童频道catvod,#genre#
+
+其它频道catvod,#genre#
 ua=catvod.com
+Supersports 1,https://live.catvod.com/catvod_com.php?id=Assp1
 Baby TV Eng,https://live.catvod.com/catvod_com.php?id=Babytv
 CBeebies,https://live.catvod.com/catvod_com.php?id=Cbeebies
 Kids TV,https://live.catvod.com/catvod_com.php?id=KidsTV
@@ -3662,9 +3627,6 @@ MiaoMi,https://live.catvod.com/catvod_com.php?id=MiaoMi
 Cartoon Network,https://live.catvod.com/catvod_com.php?id=Cn
 Nickelodeon,https://live.catvod.com/catvod_com.php?id=Nickelodeon
 Nick Jr,https://live.catvod.com/catvod_com.php?id=Nickjr
-
-其它频道catvod,#genre#
-ua=catvod.com
 Channel 5,https://live.catvod.com/catvod_com.php?id=Channel5HD
 Channel 8,https://live.catvod.com/catvod_com.php?id=Channel8HD
 Suria,https://live.catvod.com/catvod_com.php?id=Suria
@@ -3796,95 +3758,6 @@ BBC 1,https://live.catvod.com/catvod_com.php?id=bbc1_antik
 itv 1,https://live.catvod.com/catvod_com.php?id=itv1_antik
 
 
-
-📡国内咪咕,#genre#
-CCTV1,http://cqcb.live.iptv.darwinchow.com/cctv1HD
-CCTV2,http://cqcb.live.iptv.darwinchow.com/cctv2hd
-CCTV3,http://cqcb.live.iptv.darwinchow.com/cctv3HD
-CCTV4,http://cqcb.live.iptv.darwinchow.com/cctv4HD
-CCTV5,http://cqcb.live.iptv.darwinchow.com/cctv5hd
-CCTV5+,http://cqcb.live.iptv.darwinchow.com/cctv5SportHD
-CCTV6,http://cqcb.live.iptv.darwinchow.com/cctv6hd
-CCTV7,http://cqcb.live.iptv.darwinchow.com/cctv7HD
-CCTV8,http://cqcb.live.iptv.darwinchow.com/cctv8hd
-CCTV9,http://cqcb.live.iptv.darwinchow.com/cctv9hd
-CCTV10,http://cqcb.live.iptv.darwinchow.com/cctv10hd
-CCTV11,http://cqcb.live.iptv.darwinchow.com/cctv11hd
-CCTV12,http://cqcb.live.iptv.darwinchow.com/cctv12hd
-CCTV13,http://cqcb.live.iptv.darwinchow.com/CCTVNewsHD
-CCTV14,http://cqcb.live.iptv.darwinchow.com/cctvseHD
-CCTV15,http://cqcb.live.iptv.darwinchow.com/cctv15HD
-CCTV16,http://cqcb.live.iptv.darwinchow.com/cctv16HD
-CCTV17,http://cqcb.live.iptv.darwinchow.com/cctv17HD
-风云音乐,http://cqcb.live.iptv.darwinchow.com/fyyyHD
-风云足球,http://cqcb.live.iptv.darwinchow.com/fyzqHD
-怀旧剧场,http://cqcb.live.iptv.darwinchow.com/hjjcHD
-第一剧场,http://cqcb.live.iptv.darwinchow.com/diyijuchangHD
-兵器科技,http://cqcb.live.iptv.darwinchow.com/bqkjHD
-央视台球,http://cqcb.live.iptv.darwinchow.com/ystqHD
-风云剧场,http://cqcb.live.iptv.darwinchow.com/fyjcHD
-求索纪录,http://cqcb.live.iptv.darwinchow.com/qsjlHD
-兵器科技,http://cqcb.live.iptv.darwinchow.com/bqkjHD
-游戏风云,http://cqcb.live.iptv.darwinchow.com/yxfyHD
-幸福娱乐,http://cqcb.live.iptv.darwinchow.com/xfylHD
-风尚生活,http://cqcb.live.iptv.darwinchow.com/fsshHD
-怀旧剧场,http://cqcb.live.iptv.darwinchow.com/hjjcHD
-风云音乐,http://cqcb.live.iptv.darwinchow.com/fyyyHD
-央视台球,http://cqcb.live.iptv.darwinchow.com/ystqHD
-风云足球,http://cqcb.live.iptv.darwinchow.com/fyzqHD
-文化精品,http://cqcb.live.iptv.darwinchow.com/yswhHD
-高尔夫网球,http://cqcb.live.iptv.darwinchow.com/golfHD
-
-
-北京卫视,http://cqcb.live.iptv.darwinchow.com/beijingHD
-天津卫视,http://cqcb.live.iptv.darwinchow.com/tianjinHD
-江苏卫视,http://cqcb.live.iptv.darwinchow.com/jiangsuHD
-东方卫视,http://cqcb.live.iptv.darwinchow.com/shanghaiHD
-浙江卫视,http://cqcb.live.iptv.darwinchow.com/zhejiangHD
-湖南卫视,http://cqcb.live.iptv.darwinchow.com/hunanHD
-山东卫视,http://cqcb.live.iptv.darwinchow.com/shandongHD
-广东卫视,http://cqcb.live.iptv.darwinchow.com/guangdongHD
-深圳卫视,http://cqcb.live.iptv.darwinchow.com/shenzhenHD
-东南卫视,http://cqcb.live.iptv.darwinchow.com/dongnanHD
-江西卫视,http://cqcb.live.iptv.darwinchow.com/jiangxiHD
-吉林卫视,http://cqcb.live.iptv.darwinchow.com/jilinHD
-辽宁卫视,http://cqcb.live.iptv.darwinchow.com/liaoningHD
-黑龙江卫视,http://cqcb.live.iptv.darwinchow.com/heilongjiangHD
-四川卫视,http://cqcb.live.iptv.darwinchow.com/sichuanHD
-贵州卫视,http://cqcb.live.iptv.darwinchow.com/guizhouHD
-河南卫视,http://cqcb.live.iptv.darwinchow.com/henanHD
-广西卫视,http://cqcb.live.iptv.darwinchow.com/guangxiHD
-东南卫视,http://cqcb.live.iptv.darwinchow.com/dongnanHD
-东方卫视,http://cqcb.live.iptv.darwinchow.com/shanghaiHD
-云南卫视,http://cqcb.live.iptv.darwinchow.com/yunnanSD
-北京卫视,http://cqcb.live.iptv.darwinchow.com/beijingHD
-吉林卫视,http://cqcb.live.iptv.darwinchow.com/jilinHD
-四川卫视,http://cqcb.live.iptv.darwinchow.com/sichuanHD
-天津卫视,http://cqcb.live.iptv.darwinchow.com/tianjinHD
-宁夏卫视,http://cqcb.live.iptv.darwinchow.com/ningxia
-安徽卫视,http://cqcb.live.iptv.darwinchow.com/anhuiSD
-山西卫视,http://cqcb.live.iptv.darwinchow.com/shanxiSD
-广东卫视,http://cqcb.live.iptv.darwinchow.com/guangdongHD
-广西卫视,http://cqcb.live.iptv.darwinchow.com/guangxiHD
-新疆卫视,http://cqcb.live.iptv.darwinchow.com/xinjiangSD
-江苏卫视,http://cqcb.live.iptv.darwinchow.com/jiangsuHD
-江西卫视,http://cqcb.live.iptv.darwinchow.com/jiangxiHD
-河北卫视,http://cqcb.live.iptv.darwinchow.com/hebeiSD
-河南卫视,http://cqcb.live.iptv.darwinchow.com/henanHD
-浙江卫视,http://cqcb.live.iptv.darwinchow.com/zhejiangHD
-海南卫视,http://cqcb.live.iptv.darwinchow.com/hainanSD
-深圳卫视,http://cqcb.live.iptv.darwinchow.com/shenzhenHD
-湖北卫视,http://cqcb.live.iptv.darwinchow.com/hubeiSD
-湖南卫视,http://cqcb.live.iptv.darwinchow.com/hunanHD
-西藏卫视,http://cqcb.live.iptv.darwinchow.com/xizangSD
-贵州卫视,http://cqcb.live.iptv.darwinchow.com/guizhouHD
-辽宁卫视,http://cqcb.live.iptv.darwinchow.com/liaoningHD
-重庆卫视,http://cqcb.live.iptv.darwinchow.com/chongqingHD
-青海卫视,http://cqcb.live.iptv.darwinchow.com/qinghaiSD
-黑龙江卫视,http://cqcb.live.iptv.darwinchow.com/heilongjiangHD
-三沙卫视,http://cqcb.live.iptv.darwinchow.com/sanshaSD
-教育卫视,http://cqcb.live.iptv.darwinchow.com/sdjiaoyuSD
-兵团卫视,http://cqcb.live.iptv.darwinchow.com/bingtuanSD
 
 
 📡国内60.174.40.117和221.226.4.10,#genre#
