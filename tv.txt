@@ -3444,23 +3444,6 @@ CCTV-15音乐,http://60.174.40.117:85/tsfile/live/0015_1.m3u8?key=txiptv
 CCTV-16监听,http://zqh2333.top:2222/rtp/239.93.55.54:5140
 CCTV-17农业农村,http://zqh2333.top:2222/rtp/239.93.24.92:5140
 CCTV-5+体育赛事,http://zqh2333.top:2222/rtp/239.93.24.36:8004
-CCTV-1综合,http://221.226.4.10:85/tsfile/live/0001_1.m3u8?key=txiptv
-CCTV-2财经,http://221.226.4.10:85/tsfile/live/0002_1.m3u8?key=txiptv
-CCTV-3综艺,http://221.226.4.10:85/tsfile/live/0003_1.m3u8?key=txiptv
-CCTV-4中文国际,http://221.226.4.10:85/tsfile/live/0004_1.m3u8?key=txiptv
-CCTV-5体育,http://221.226.4.10:85/tsfile/live/1000_1.m3u8?key=txiptv
-CCTV-6电影,http://221.226.4.10:85/tsfile/live/0006_1.m3u8?key=txiptv
-CCTV-7国防军事,http://221.226.4.10:85/tsfile/live/0007_1.m3u8?key=txiptv
-CCTV-8电视剧,http://221.226.4.10:85/tsfile/live/0008_1.m3u8?key=txiptv
-CCTV-9纪录,http://221.226.4.10:85/tsfile/live/0009_1.m3u8?key=txiptv
-CCTV-10科教,http://221.226.4.10:85/tsfile/live/0010_1.m3u8?key=txiptv
-CCTV-11戏曲,http://182.32.159.39:85/tsfile/live/0011_1.m3u8?key=txiptv
-CCTV-12社会与法,http://221.226.4.10:85/tsfile/live/0012_1.m3u8?key=txiptv
-CCTV-13新闻,http://221.226.4.10:85/tsfile/live/1001_1.m3u8?key=txiptv
-CCTV-14少儿,http://221.226.4.10:85/tsfile/live/0014_1.m3u8?key=txiptv
-CCTV-15音乐,http://182.32.159.39:85/tsfile/live/0015_1.m3u8?key=txiptv
-CCTV-16监听,http://58.221.214.82:9901/tsfile/live/0002_2.m3u8?=txiptv
-CCTV-5+体育赛事,http://221.226.4.10:85/tsfile/live/0005_1.m3u8?key=txiptv
 
 北京卫视,http://60.174.40.117:85/tsfile/live/1025_1.m3u8?key=txiptv
 天津卫视,http://60.174.40.117:85/tsfile/live/1027_1.m3u8?key=txiptv
@@ -3498,22 +3481,7 @@ CCTV-5+体育赛事,http://221.226.4.10:85/tsfile/live/0005_1.m3u8?key=txiptv
 新疆卫视,http://219.146.95.58:59902/tsfile/live/0110_1.m3u8
 兵团卫视,http://liveout.btzx.com.cn/62ds9e/yil08g.m3u8
 三沙卫视,http://pullsstv90080111.ssws.tv/live/SSTV20230221.m3u8
-北京卫视,http://221.226.4.10:85/tsfile/live/1012_1.m3u8?key=txiptv
-天津卫视,http://221.226.4.10:85/tsfile/live/1014_1.m3u8?key=txiptv
-东方卫视,http://221.226.4.10:85/tsfile/live/1013_1.m3u8?key=txiptv
-东南卫视,http://221.226.4.10:85/tsfile/live/0137_1.m3u8?key=txiptv
-海南卫视,http://221.226.4.10:85/tsfile/live/1025_1.m3u8?key=txiptv
-广东卫视,http://221.226.4.10:85/tsfile/live/1022_1.m3u8?key=txiptv
-广西卫视,http://221.226.4.10:85/tsfile/live/1024_1.m3u8?key=txiptv
-深圳卫视,http://221.226.4.10:85/tsfile/live/1023_1.m3u8?key=txiptv
-江苏卫视,http://221.226.4.10:85/tsfile/live/1006_1.m3u8?key=txiptv
-江西卫视,http://219.146.95.58:59902/tsfile/live/0138_1.m3u8?txiptv
-浙江卫视,http://221.226.4.10:85/tsfile/live/1018_1.m3u8?key=txiptv
-湖南卫视,http://221.226.4.10:85/tsfile/live/1016_1.m3u8?key=txiptv
-湖北卫视,http://221.226.4.10:85/tsfile/live/1017_1.m3u8?key=txiptv
-安徽卫视,http://221.226.4.10:85/tsfile/live/0130_1.m3u8?key=txiptv
-山东卫视,http://221.226.4.10:85/tsfile/live/1021_1.m3u8?key=txiptv
-山西卫视,http://221.226.4.10:85/tsfile/live/0118_1.m3u8?key=txiptv
+
 教育卫视,http://test1.live.sdetv.com.cn/live/dianshizhibo/playlist.m3u8
 河南卫视,http://221.226.4.10:85/tsfile/live/0139_1.m3u8?key=txiptv
 河北卫视,http://zqh2333.top:2222/rtp/239.93.24.132:5140?key=txiptv
@@ -4640,3 +4608,4 @@ France-24,http://php.jdshipin.com/smt.php?id=france24_twn
 Skynews,http://php.jdshipin.com/smt.php?id=skynews_twn
 
 Arirang,http://php.jdshipin.com/smt.php?id=arirang_twn
+
