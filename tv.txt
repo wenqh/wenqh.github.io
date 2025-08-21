@@ -3899,6 +3899,15 @@ Viutv,https://live.hkdvb.com/hls/live/99.m3u8?token=631170156112507&edge=live.tv
 
 📡电视catvod,#genre#
 ua=catvod.com
+Nickelodeon台灣,https://live.catvod.com/catvod_com.php?id=nickelodeon_twn
+年代MUCH,https://live.catvod.com/catvod_com.php?id=niandaitv_twn
+緯來戲劇,https://live.catvod.com/catvod_com.php?id=videolandtv
+JET綜合,https://live.catvod.com/catvod_com.php?id=jet
+壹新聞,https://live.catvod.com/catvod_com.php?id=yinews
+amc電影台,https://live.catvod.com/catvod_com.php?id=starmoviesgold_twn
+緯來育樂,https://live.catvod.com/catvod_com.php?id=videolandmax
+NHK,https://live.catvod.com/catvod_com.php?id=NHK
+https://live.catvod.com/catvod_com.php?id=nickelodeon_twn
 美亞電影,https://live.catvod.com/catvod_com.php?id=meiyamovie_twn
 龍祥電影,https://live.catvod.com/catvod_com.php?id=lungxiangtime_twn
 天映電影indo,https://live.catvod.com/catvod_com.php?id=Celestialindo
@@ -4608,4 +4617,5 @@ France-24,http://php.jdshipin.com/smt.php?id=france24_twn
 Skynews,http://php.jdshipin.com/smt.php?id=skynews_twn
 
 Arirang,http://php.jdshipin.com/smt.php?id=arirang_twn
+
 
