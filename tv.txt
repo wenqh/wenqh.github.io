@@ -3899,6 +3899,22 @@ Viutv,https://live.hkdvb.com/hls/live/99.m3u8?token=631170156112507&edge=live.tv
 
 📡电视catvod,#genre#
 ua=catvod.com
+
+公視台語台,https://live.catvod.com/catvod_com.php?id=ctv2_taiwan
+Nickjr,https://live.catvod.com/catvod_com.php?id=Nickjr
+韓國娛樂台,https://live.catvod.com/catvod_com.php?id=xingweiyule_twn
+東風衛視,https://live.catvod.com/catvod_com.php?id=aziotv_twn
+高點綜合,https://live.catvod.com/catvod_com.php?id=toptv_twn
+DAZN1,https://live.catvod.com/catvod_com.php?id=golfchannel_twn
+MTV LIVE,https://live.catvod.com/catvod_com.php?id=Weishimovie
+WarnerTV,https://live.catvod.com/catvod_com.php?id=WarnerTV
+探索動力,https://live.catvod.com/catvod_com.php?id=discoveryturbo_twn
+HGTV,https://live.catvod.com/catvod_com.php?id=hgtv_twn
+Lifetime,https://live.catvod.com/catvod_com.php?id=lifetime_twn
+靖洋卡通,https://live.catvod.com/catvod_com.php?id=jingyangcartoon_twn
+靖天日本,https://live.catvod.com/catvod_com.php?id=jingtianjapan_twn
+
+
 緯來育樂,https://live.catvod.com/catvod_com.php?id=videolandmax
 美亞電影,https://live.catvod.com/catvod_com.php?id=meiyamovie_twn
 龍祥電影,https://live.catvod.com/catvod_com.php?id=lungxiangtime_twn
@@ -3916,6 +3932,7 @@ ua=catvod.com
 民視新聞,https://live.catvod.com/catvod_com.php?id=ftvnew_taiwan
 公視,https://live.catvod.com/catvod_com.php?id=ctv_taiwan
 公視2,https://live.catvod.com/catvod_com.php?id=ctv2_twn
+公視台語台,https://live.catvod.com/catvod_com.php?id=ctv2_taiwan
 台視,https://live.catvod.com/catvod_com.php?id=ttv_taiwan
 台視綜合,https://live.catvod.com/catvod_com.php?id=ttvzhonghe
 台視綜合,https://live.catvod.com/catvod_com.php?id=lunghuamovie_twn
