@@ -3899,23 +3899,6 @@ Viutv,https://live.hkdvb.com/hls/live/99.m3u8?token=631170156112507&edge=live.tv
 
 📡电视catvod,#genre#
 ua=catvod.com
-
-公視台語台,https://live.catvod.com/catvod_com.php?id=ctv2_taiwan
-Nickjr,https://live.catvod.com/catvod_com.php?id=Nickjr
-韓國娛樂台,https://live.catvod.com/catvod_com.php?id=xingweiyule_twn
-東風衛視,https://live.catvod.com/catvod_com.php?id=aziotv_twn
-高點綜合,https://live.catvod.com/catvod_com.php?id=toptv_twn
-DAZN1,https://live.catvod.com/catvod_com.php?id=golfchannel_twn
-MTV LIVE,https://live.catvod.com/catvod_com.php?id=Weishimovie
-WarnerTV,https://live.catvod.com/catvod_com.php?id=WarnerTV
-探索動力,https://live.catvod.com/catvod_com.php?id=discoveryturbo_twn
-HGTV,https://live.catvod.com/catvod_com.php?id=hgtv_twn
-Lifetime,https://live.catvod.com/catvod_com.php?id=lifetime_twn
-靖洋卡通,https://live.catvod.com/catvod_com.php?id=jingyangcartoon_twn
-靖天日本,https://live.catvod.com/catvod_com.php?id=jingtianjapan_twn
-
-
-緯來育樂,https://live.catvod.com/catvod_com.php?id=videolandmax
 美亞電影,https://live.catvod.com/catvod_com.php?id=meiyamovie_twn
 龍祥電影,https://live.catvod.com/catvod_com.php?id=lungxiangtime_twn
 天映電影indo,https://live.catvod.com/catvod_com.php?id=Celestialindo
@@ -3940,6 +3923,7 @@ Lifetime,https://live.catvod.com/catvod_com.php?id=lifetime_twn
 緯來電影,https://live.catvod.com/catvod_com.php?id=videolandmovie
 緯來戲劇,https://live.catvod.com/catvod_com.php?id=videolandtv
 緯來育樂,https://live.catvod.com/catvod_com.php?id=videolandyule
+緯來育樂1,https://live.catvod.com/catvod_com.php?id=videolandmax
 緯來綜合,https://live.catvod.com/catvod_com.php?id=videolandzonghe
 緯來體育,https://live.catvod.com/catvod_com.php?id=videolandsport
 緯來日本,https://live.catvod.com/catvod_com.php?id=videolandjapan
@@ -3979,6 +3963,7 @@ TVBS亞洲,https://live.catvod.com/catvod_com.php?id=Tvbasia
 TVBS新聞,https://live.catvod.com/catvod_com.php?id=tvbs_n
 靖天國際,https://live.catvod.com/catvod_com.php?id=jingtianintl_twn
 靖天卡通,https://live.catvod.com/catvod_com.php?id=jingtiancartoon_twn
+靖洋卡通,https://live.catvod.com/catvod_com.php?id=jingyangcartoon_twn
 華藝綜合,https://live.catvod.com/catvod_com.php?id=weishichinese_twn
 環宇新聞,https://live.catvod.com/catvod_com.php?id=huanyuxinwen_twn
 環宇財經,https://live.catvod.com/catvod_com.php?id=huanyutaiwan_twn
@@ -3987,6 +3972,7 @@ TVBS新聞,https://live.catvod.com/catvod_com.php?id=tvbs_n
 鳳凰衞視,https://live.catvod.com/catvod_com.php?id=phoenixtv_hd
 鳳凰資訊,https://live.catvod.com/catvod_com.php?id=phoenixinfo_hd
 鳳凰香港,https://live.catvod.com/catvod_com.php?id=hkphoenix_twn
+韓國娛樂台,https://live.catvod.com/catvod_com.php?id=xingweiyule_twn
 ElTA影劇,https://live.catvod.com/catvod_com.php?id=eltayingju_twn
 ElTA影劇,https://live.catvod.com/catvod_com.php?id=eltadrama_twn
 ELTA體育1,https://live.catvod.com/catvod_com.php?id=eltasport_twn
@@ -3994,6 +3980,7 @@ ELTA體育2,https://live.catvod.com/catvod_com.php?id=eltasport2_twn
 ELTA體育3,https://live.catvod.com/catvod_com.php?id=eltasport3_twn
 ELTA體育4,https://live.catvod.com/catvod_com.php?id=natgeowild_twn
 ELTA綜合,https://live.catvod.com/catvod_com.php?id=eltazonghe_twn
+DAZN1,https://live.catvod.com/catvod_com.php?id=golfchannel_twn
 好萊塢電影,https://live.catvod.com/catvod_com.php?id=hollywoodmovies_twn
 CatchPlay電影,https://live.catvod.com/catvod_com.php?id=catchplay_twn
 AMC電影台,https://live.catvod.com/catvod_com.php?id=starmoviesgold_twn
@@ -4099,6 +4086,8 @@ France-24,https://live.catvod.com/catvod_com.php?id=france24_twn
 Skynews,https://live.catvod.com/catvod_com.php?id=skynews_twn
 Arirang,https://live.catvod.com/catvod_com.php?id=arirang_twn
 NHK,https://live.catvod.com/catvod_com.php?id=NHK
+Nickjr,https://live.catvod.com/catvod_com.php?id=Nickjr
+MTV LIVE,https://live.catvod.com/catvod_com.php?id=Weishimovie
 
 
 📡电视smart,#genre#
@@ -4633,6 +4622,3 @@ France-24,http://php.jdshipin.com/smt.php?id=france24_twn
 Skynews,http://php.jdshipin.com/smt.php?id=skynews_twn
 
 Arirang,http://php.jdshipin.com/smt.php?id=arirang_twn
-
-
-
