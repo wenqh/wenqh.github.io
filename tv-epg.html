@@ -20,7 +20,10 @@
             color: white;
             border-color: #007bff;
         }
-        .channel { margin-bottom: 1em; }
+        .channel { margin-bottom: 1em;
+  color: white;
+  -webkit-text-stroke: 2px black;
+                 }
         .channel-name { font-weight: bold; font-size: 1.2em}
         .next-program {color: #888;}
     </style>
@@ -63,7 +66,7 @@
 
                 content.innerHTML = currentPrograms.map(p =>
                     `<div class="channel">
-                            <div class="channel-name">📺${p.channelName}</div>
+                            <div class="channel-name">${p.channelName}</div>
                             <div class="program">${p.nowProgramme}</div>
                             <div class="next-program">接下来: ${p.nextProgramme}</div>
                         </div>`
@@ -93,6 +96,7 @@
 </body>
 
 </html>
+
 
 
 
