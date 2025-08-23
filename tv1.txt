@@ -2496,11 +2496,12 @@ CCTV-5+,http://1.itv.nctv.top:35455/itv/1000000005000265016.m3u8?cdn=ystenlive
 
 
 密码获取,#genre#
-uq=catvod.com
+ua=catvod.com
 电影,https://live.catvod.com/catvod_com.php?id=videolandmovie
 公众号,https://live3.rxip.sc96655.com/live/CCTV-16-4K_6688000.m3u8
 宝盒汇,https://live3.rxip.sc96655.com/live/CCTV-16-4K_6688000.m3u8
 回复 VIP,https://live3.rxip.sc96655.com/live/CCTV-16-4K_6688000.m3u8
 即可获取,https://live3.rxip.sc96655.com/live/CCTV-16-4K_6688000.m3u8
 私密頻道_0001,#genre#
+
 
