@@ -214,9 +214,12 @@ const allItems = filteredCats.flatMap(cat => cat.items);
 
 
 
-        document.querySelector('main').addEventListener('contextmenu', (e)=> {
-            e.preventDefault();
+        document.querySelector('main').addEventListener('contextmenu', (e) => {
             const div = e.target;
+            if(div.getAttribute('contenteditable')) {
+                return;
+            }
+            e.preventDefault();
             div.setAttribute('contenteditable', 'true');
             div.focus();
 
