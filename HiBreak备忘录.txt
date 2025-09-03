@@ -33,8 +33,11 @@ Pilipala
 
 知乎网页插件 https://greasyfork.org/zh-CN/users/197529-kkocdko https://greasyfork.org/zh-CN/scripts/546526-zhihu-desktop-on-mobile
     /* 搜索框位置 */
-    .SearchTabs-actions, .AppHeader-Tabs {
+    .AppHeader-Tabs, .SearchTabs-actions {
         order: 9;
+    }
+    .SearchTabs {
+        overflow-x: scroll;
     }
     /* 搜索页侧边 */
     .SearchMain + *, .Question-sideColumn {
