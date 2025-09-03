@@ -32,13 +32,20 @@ Pilipala
 
 
 知乎网页插件 https://greasyfork.org/zh-CN/users/197529-kkocdko https://greasyfork.org/zh-CN/scripts/546526-zhihu-desktop-on-mobile
-    /* 搜索框 */
+    /* 搜索框位置 */
     .SearchTabs-actions, .AppHeader-Tabs {
         order: 9;
     }
     /* 搜索页侧边 */
-    .SearchMain + * {
+    .SearchMain + *, .Question-sideColumn {
         display: none;    
+    }
+    /* 问题页 */
+    .QuestionHeader {
+        min-width: 100%;
+    }
+    .AuthorInfo-badgeText {
+        width: 100%;
     }
     /* 评论框 */
     div:has(> div > .Modal-content) {
