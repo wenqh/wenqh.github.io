@@ -1,1 +1,11 @@
+name: Static Workflow
 
+# 不触发任何事件
+on: []
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder step
+        run: echo "This is an empty workflow"
