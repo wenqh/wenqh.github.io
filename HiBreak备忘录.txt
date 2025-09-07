@@ -59,3 +59,4 @@ Pilipala
     .Modal-content > div > :last-child {
         display: none;
     }
+    .Pc-word-new {display: none}
