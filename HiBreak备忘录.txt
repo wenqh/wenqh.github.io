@@ -47,6 +47,9 @@ Pilipala
     .QuestionHeader {
         min-width: 100%;
     }
+    .QuestionHeader-main {
+        width: 100%;
+    }
     .AuthorInfo-badgeText {
         width: auto;
     }
