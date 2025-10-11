@@ -108,6 +108,19 @@
             return result;
         };
 
+        function parseM3U(txt){
+            const groups={},lines=txt.split(/\r?\n/);
+            for(let i=0;i<lines.length;i++)
+                if(lines[i].startsWith('#EXTINF')){
+                    const group=(lines[i].match(/group-title="([^"]*)"/)||['','默认'])[1];
+                    const name=lines[i].split(',').pop().trim();
+                    const url=lines[i+1];
+                    (groups[group]=groups[group]||[]).push({name,url});
+                }
+            return Object.entries(groups).map(([group,items])=>({group,items}));
+        }
+
+
         // 渲染分类和频道项
         const render = (data) => {
             const tabHeader = document.getElementById('tabHeader');
