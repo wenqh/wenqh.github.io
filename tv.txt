@@ -4623,9 +4623,3 @@ Skynews,http://php.jdshipin.com/smt.php?id=skynews_twn
 
 
 Arirang,http://php.jdshipin.com/smt.php?id=arirang_twn
-test1,#genre#
-Arirang,http://php.jdshipin.com/smt.php?id=arirang_twn
-test2,#genre#
-Arirang,http://php.jdshipin.com/smt.php?id=arirang_twn
-test1,#genre#
-abc,http://php.jdshipin.com/smt.php?id=arirang_twn
