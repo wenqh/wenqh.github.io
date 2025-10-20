@@ -1,36 +1,87 @@
 HiBreakPro 手机设置：
 
 卸载：
-搜狗输入法，浏览器，WpsOffice，语音设置（讯飞）
+搜狗输入法，浏览器，WpsOffice，语音设置（讯飞）...
 
 设置：
-搜索：手势->手势导航：“手势导航”
-指纹录入*2
+字体大小:2档
+字体:梦源20
 延长解锁
-拿起设备唤醒
+拿起设备唤醒（无需）
 各app电源后台优化
 无障碍：按触反馈-关
-文字高对比默认开
-移动关5G
+移动关数据和5G
 
 安装：
 Clash
 Gborad（偏好设置-关闭按键时弹出显示字符）
-Chrome
 Via
 
 酷安c001apk: https://github.com/HDYOU/c001apk
 小红书: 7.96以上可用（如7.96.05）
 Pilipala
 微信Play版 8.0.21 登录提示版本低
-支付宝：10.2.51.8000 （我测可用）
-关闭play自动更新app
-
+支付宝：10.2.51.8000 （闪退，小程序不能用）
+支付宝:10.5.56.9600
+高德:12.03.60.3016
+关闭低版本app的play自动更新app
 流体手势：设置左右切app
 
-苹方加粗黑体
 
-
+{
+    "*": {
+        "scroll": "GESTURE",
+        "y1": 46,
+        "y2": 1625,
+        "duration": 100,
+        "mark": null
+    },
+    "com.android.chrome": {
+        "y1": 152,
+        "y2": 1587
+    },
+    "com.tencent.mm": {
+        "y1": 144,
+        "y2": 1532,
+        "duration": 150
+    },
+    "mark.via.gp": {
+        "y11": 135,
+        "y1": 144
+    },
+    "com.google.android.youtube": {
+        "duration": 800
+    },
+    "com.openai.chatgpt": {
+        "y11111111": 165,
+        "y2": 1466
+    },
+    "com.spotify.music": {
+        "y1": 150,
+        "y2": 1431
+    },
+    "com.guozhigq.pilipala": {
+        "y1": 315,
+        "duration": 300
+    },
+    "com.example.c001apk": {
+        "y1": 256,
+        "duration": 600
+    },
+    "com.example.c001apk.flutter": {
+        "y1": 150,
+        "y2": 1497,
+        "duration": 600
+    },
+    "com.huanchengfly.tieba.post": {
+        "y1": 273,
+        "y2": 1514
+    },
+    "org.telegram.messenger": {
+        "y1": 244,
+        "y2": 1555
+    }
+}
 知乎网页插件 https://greasyfork.org/zh-CN/users/197529-kkocdko https://greasyfork.org/zh-CN/scripts/546526-zhihu-desktop-on-mobile
     /* 搜索框位置 */
     .AppHeader-Tabs, .SearchTabs-actions {
