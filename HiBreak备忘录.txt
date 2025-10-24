@@ -110,7 +110,7 @@ Pilipala
         max-height: 100%;
         height: 100%;
     }
-    .Modal-content > div > :last-child {
+    .Modal-content > div > :last-child, .Modal-content > div > :first-child {
         display: none;
     }
     .Pc-word-new {display: none}
