@@ -65,7 +65,7 @@ Pilipala
         "duration": 300
     },
     "com.example.c001apk.compose": {
-        "y1": 256
+        "y1": 257
     },
     "com.example.c001apk.flutter": {
         "y1": 150,
