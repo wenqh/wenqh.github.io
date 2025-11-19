@@ -153,6 +153,8 @@
         `;
             });
 
+            var instance = M.Tabs.getInstance(tabHeader);
+            if (instance) instance.destroy()
             M.Tabs.init(tabHeader);
         };
 
@@ -203,7 +205,7 @@
                 }
                 try {
                     const raw = await fetchText(this.value);
-                    data = parseSource(raw);
+                    data = parseM3U(raw);
                     render(data);
                 } catch (err) {
                     alert('直播源加载失败：' + err.message);
