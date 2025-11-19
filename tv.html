@@ -39,6 +39,7 @@
     <button id="export">导出</button>
     <a id="tvbox-url-link" target="_blank">OK影视</a>
     <a href="tv-epg.html" target="_blank">节目表</a>
+    <div><input id="listUrl" placeholder="列表url" value="tv.txt"></div>
     <div id="nowPlay"></div>
 
     <!-- Modal Structure -->
@@ -72,7 +73,7 @@
     <!-- Materialize JS -->
     <script src="https://cdn.bootcdn.net/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        const SOURCE_URL = 'tv.txt'; // 本地文件路径
+        // const SOURCE_URL = 'tv.txt'; // 本地文件路径
         let tvBoxUrl = 'http://192.168.1.2:9978';
 
         // 异步加载文本内容
@@ -125,6 +126,7 @@
         const render = (data) => {
             const tabHeader = document.getElementById('tabHeader');
             const tabContent = document.getElementById('tabContent');
+            tabHeader.innerHTML = '';
             tabContent.innerHTML = '';
 
             data.forEach((cat, i) => {
@@ -182,6 +184,11 @@
                 localStorage.setItem('tvbox-url', tvBoxUrl);
             })
 
+
+
+        
+            const playUrlInput = document.getElementById('listUrl');
+            let SOURCE_URL = playUrlInput.value;
             let data;
             try {
                 const raw = await fetchText(SOURCE_URL);
@@ -190,6 +197,19 @@
             } catch (err) {
                 alert('直播源加载失败：' + err.message);
             }
+            playUrlInput.addEventListener('keydown', async function(event) {
+                if (event.key !== 'Enter') {  // 或者 event.keyCode === 13
+                    return;
+                }
+                try {
+                    const raw = await fetchText(this.value);
+                    data = parseSource(raw);
+                    render(data);
+                } catch (err) {
+                    alert('直播源加载失败：' + err.message);
+                }
+            });
+
 
 
             window.addEventListener('devicemotion', event => {
