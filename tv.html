@@ -84,7 +84,7 @@
         };
 
         // 解析直播源格式
-        const parseSource = (text) => {
+        const parseTxt = (text) => {
             const lines = text.trim().split(/\r?\n/);
             const result = [];
             let currentCategory = null;
@@ -92,8 +92,8 @@
 
             for (const line of lines) {
                 if (line.endsWith(',#genre#')) {
-                    const title = line.split(',')[0].trim();
-                    currentCategory = { title, items: [] };
+                    const group = line.split(',')[0].trim();
+                    currentCategory = { group, items: [] };
                     result.push(currentCategory);
                 } else if (currentCategory && line.includes(',')) {
                     const [name, url] = line.split(',');
@@ -129,15 +129,15 @@
             tabHeader.innerHTML = '';
             tabContent.innerHTML = '';
 
-            data.forEach((cat, i) => {
+            data.forEach((d, i) => {
                 const id = `tab-${i}`;
                 tabHeader.innerHTML += `
           <li class="tab">
-            <a href="#${id}" class="${i === 0 ? 'active' : ''}">${cat.title}</a>
+            <a href="#${id}" class="${i === 0 ? 'active' : ''}">${d.group}</a>
           </li>
         `;
 
-                const listItems = cat.items.map(({idx, name, url}) =>
+                const listItems = d.items.map(({idx, name, url}) =>
                     `<li class="collection-item">
             <a href="${url}" onclick="play('${url}', event)">
               ${idx} ${name}
@@ -194,7 +194,7 @@
             let data;
             try {
                 const raw = await fetchText(SOURCE_URL);
-                data = parseSource(raw);
+                data = parseTxt(raw);
                 render(data);
             } catch (err) {
                 alert('直播源加载失败：' + err.message);
