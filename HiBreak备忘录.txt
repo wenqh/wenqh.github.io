@@ -5,7 +5,7 @@ HiBreakPro 手机设置：
 
 设置：
 字体大小:2档
-字体:梦源20
+字体:梦源20重
 延长解锁
 拿起设备唤醒（无需）
 各app电源后台优化
@@ -17,6 +17,7 @@ Clash
 Gborad（偏好设置-关闭按键时弹出显示字符）
 Via
 
+手势app，流体/Gesture Control/Edge Gesture
 酷安c001apk: https://github.com/HDYOU/c001apk
 小红书: 7.96以上可用（如7.96.05）
 Pilipala
