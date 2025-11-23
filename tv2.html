@@ -65,18 +65,6 @@
     })
     //.catch(err => console.error(err));
 
-
-    function parseM3U(txt) {
-        const groups = {}, lines = txt.split(/\r?\n/);
-        for (let i = 0; i < lines.length; i++)
-            if (lines[i].startsWith('#EXTINF')) {
-                const group = (lines[i].match(/group-title="([^"]*)"/) || ['', '默认'])[1];
-                const name = lines[i].split(',').pop().trim();
-                const url = lines[i + 1];
-                (groups[group] = groups[group] || []).push({ name, url });
-            }
-        return Object.entries(groups).map(([group, items]) => ({ group, items }));
-    }
     function parseM3U(txt) {
         const groups = {}, lines = txt.split(/\r?\n/);
         lines.forEach((line, i) => {
