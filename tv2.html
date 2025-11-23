@@ -57,9 +57,9 @@
             datas.map(d => `<li>${d.group}</li>`).join('')
         }`;
 
-        let i = 0;
+        let no = 0;
         document.getElementById('right').innerHTML = Object.values(datas).map(m =>
-            `<ul>${m.items.map(i => `<li data-url="${i.url}">${++i + i.name}</li>`).join('')}</ul>`
+            `<ul>${m.items.map(i => `<li data-url="${i.url}">${++no + i.name}</li>`).join('')}</ul>`
         ).join('');
     })
     //.catch(err => console.error(err));
