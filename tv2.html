@@ -38,9 +38,9 @@
 
     document.getElementById('right').addEventListener('click', e => {
         if (e.target.tagName === 'LI') {
-            const url = e.childrenp[0].href;
+            const url = e.children[0].href;
             const win = window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`, '_blank');
-            // 设置几秒后自动关闭
+            
             setTimeout(() => {
                 win.close();
             }, 300);
@@ -86,3 +86,4 @@
 </script>
 
 </html>
+
