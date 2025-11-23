@@ -59,7 +59,7 @@
         }`;
 
         let no = 0;
-        document.getElementById('right').innerHTML = Object.entries(groups).map(([group, items]) => 
+        document.getElementById('right').innerHTML = Object.entries(datas).map(([group, items]) => 
             `<ul>${Object.entries(items).map(([name, urls]) => 
                 urls.map(u => `<li data-url="${u}">${String(no++).padStart(3, '0')} ${name}</li>`).join('')
             ).join('')}</ul>`
