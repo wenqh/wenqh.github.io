@@ -7,11 +7,12 @@
     <style>
         html, body {height: 100%; margin: 0}
         li{padding: 10px 0}
+        li:active {border: 1px solid}
 
         .container{display: flex; height: 100%}
+        .container > * {overflow: auto;}
         #right ul{display: none}
         #right ul.active{display: block}
-        li:active {border: 1px solid}
     </style>
 </head>
 <body>
