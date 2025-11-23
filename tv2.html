@@ -25,9 +25,17 @@
             [...document.querySelectorAll('#id2 ul')].forEach((u,i)=>u.classList.toggle('active', i===n));
         }
     });
+
+    let tvBoxUrl = localStorage.getItem('tvbox-url');
+
     document.getElementById('right').addEventListener('click', e => {
         if (e.target.tagName === 'LI') {
-
+            const url = e.target.dataset.url;
+            const win = window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`, '_blank');
+            // 设置几秒后自动关闭
+            setTimeout(() => {
+                win.close();
+            }, 300);
         }
     });
 </script>
