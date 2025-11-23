@@ -9,11 +9,21 @@
 </head>
 <body>
     <div style="display: flex">
-        <div id="group"></div>
-        <div id="tvs" style="flex: 1"></div>
+        <ul id="groups"></ul>
+        <ul id="id2" style="flex: 1">
+            
+        </ul>
     </div>
 </body>
 
+
+<script>
+    document.getElementById('group li').addEventListener('click', e => {
+        if (e.target.tagName === 'LI') {
+            console.log([...e.target.parentNode.children].indexOf(e.target));
+        }
+    });
+</script>
 <script>
     fetch('git.txt')
     .then(res => res.text())
@@ -21,13 +31,13 @@
         const datas = parseM3U(data)
 
 
-        document.getElementById('group').innerHTML = `<ul>${
+        document.getElementById('group').innerHTML = `${
             [...datas.keys()].map(k => `<li>${k}</li>`).join('')
-        }</ul>`;
+        }`;
 
         document.getElementById('tvs').innerHTML = Object.values(datas)
         .map(items => 
-            `<ul>${items.map(i => `<li data-url="${i.url}">${i.name}</li>`).join('')}</ul>`
+            `<ul>${items.map(i => `<li data-url="${i.url}">${i.name}</li></ul>`).join('')}`
         )
         .join('');
     })
