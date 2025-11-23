@@ -77,6 +77,19 @@
             }
         return Object.entries(groups).map(([group, items]) => ({ group, items }));
     }
+    function parseM3U(txt) {
+        const groups = {}, lines = txt.split(/\r?\n/);
+        lines.forEach((line, i) => {
+            if (line.startsWith('#EXTINF')) {
+                const group = (line.match(/group-title="([^"]*)"/) || ['', '默认'])[1];
+                const name = line.split(',').pop().trim();
+                const url = lines[i + 1];
+                (groups[group] = groups[group] || []).push({ name, url });
+            }
+        });
+        return groups;
+    }
+
 </script>
 
 </html>
