@@ -60,7 +60,7 @@
 
         let no = 0;
         document.getElementById('right').innerHTML = Object.values(datas).map(m =>
-            `<ul>${m.items.map(i => `<li data-url="${i.url}">${++no + i.name}</li>`).join('')}</ul>`
+            `<ul>${m.items.map(i => `<li data-url="${i.url}">${String(no++).padStart(3, '0') + ' ' + i.name}</li>`).join('')}</ul>`
         ).join('');
     })
     //.catch(err => console.error(err));
