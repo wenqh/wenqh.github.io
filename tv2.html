@@ -72,7 +72,10 @@
                 const group = (line.match(/group-title="([^"]*)"/) || ['', '默认'])[1];
                 const name = line.split(',').pop().trim();
                 const url = lines[i + 1];
-                (groups[group] = groups[group] || []).push({ name, url });
+                //(groups[group] = groups[group] || []).push({ name, url });
+
+                groups[group] = groups[group] || {};
+                (groups[group][name] = groups[group][name] || []).push(url);
             }
         });
         return groups;
