@@ -39,7 +39,7 @@
 
 
         document.getElementById('left').innerHTML = `${
-            [...datas.keys()].map(k => `<li>${k}</li>`).join('')
+            datas.map(d => `<li>${d.group}</li>`).join('')
         }`;
 
         document.getElementById('right').innerHTML = Object.values(datas).map(items =>
