@@ -10,7 +10,7 @@
 <body>
     <div style="display: flex">
         <div id="group"></div>
-        <div style="flex: 1"></div>
+        <div id="tvs" style="flex: 1"></div>
     </div>
 </body>
 
@@ -24,7 +24,15 @@
             [...map.keys()].map(k => `<li>${k}</li>`).join('')
         }</ul>`;
 
+        
+        const tvs = Object.values(map)
+        .map(items => 
+            `<ul>${items.map(i => `<li data-url="${i.url}">${i.name}</li>`).join('')}</ul>`
+        )
+        .join('');
+
         document.getElementById('group').innerHTML = g;
+        document.getElementById('tvs').innerHTML = tvs;
     })
     .catch(err => console.error(err));
 
