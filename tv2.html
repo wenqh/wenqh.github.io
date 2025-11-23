@@ -61,7 +61,7 @@
         let no = 0;
         document.getElementById('right').innerHTML = Object.entries(datas).map(([group, items]) => 
             `<ul>${Object.entries(items).map(([name, urls]) => 
-                urls.map(u => `<li data-url="${u}">${String(++no).padStart(3, '0')} ${name}</li>`).join('')
+                `<li>${String(++no).padStart(3, '0')} ${name}: ${urls.map(u => `<a href="${u}" target="_blank">${u}</a>`).join(' ')}</li>`
             ).join('')}</ul>`
         ).join('');
     })
