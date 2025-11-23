@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>📺</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    </style>
+</head>
+<body>
+    <div style="display: flex">
+        <div id="group"></div>
+        <div style="flex: 1"></div>
+    </div>
+</body>
+
+<script>
+    fetch('git.txt')
+    .then(res => res.text())
+    .then(data => {
+        const groups = parseM3U(data)
+        
+        const g = `<ul>${
+            [...map.keys()].map(k => `<li>${k}</li>`).join('')
+        }</ul>`;
+
+        document.getElementById('group').innerHTML = g;
+    })
+    .catch(err => console.error(err));
+
+
+    function parseM3U(txt) {
+        const groups = {}, lines = txt.split(/\r?\n/);
+        for (let i = 0; i < lines.length; i++)
+            if (lines[i].startsWith('#EXTINF')) {
+                const group = (lines[i].match(/group-title="([^"]*)"/) || ['', '默认'])[1];
+                const name = lines[i].split(',').pop().trim();
+                const url = lines[i + 1];
+                (groups[group] = groups[group] || []).push({ name, url });
+            }
+        return Object.entries(groups).map(([group, items]) => ({ group, items }));
+    }
+</script>
+</html>
