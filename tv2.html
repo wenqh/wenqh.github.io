@@ -55,7 +55,7 @@
 
 
         document.getElementById('left').innerHTML = `${
-            datas.map(d => `<li>${d}</li>`).join('')
+            Object.keys(datas).map(d => `<li>${d}</li>`).join('')
         }`;
 
         let no = 0;
