@@ -8,13 +8,14 @@
         html, body {height: 100%; margin: 0}
         li{padding: 10px 0}
 
+        .container{display: flex; height: 100%}
         #right ul{display: none}
         #right ul.active{display: block}
         li:active {border: 1px solid}
     </style>
 </head>
 <body>
-    <div style="display: flex">
+    <div class="container">
         <ul id="left"></ul>
         <div id="right" style="flex: 1">
         </div>
