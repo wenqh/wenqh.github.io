@@ -7,7 +7,7 @@
     <style>
         html, body {height: 100%; margin: 0}
         li{padding: 10px 0}
-        
+
         #right ul{display: none}
         #right ul.active{display: block}
         li:active {border: 1px solid}
@@ -55,8 +55,9 @@
             datas.map(d => `<li>${d.group}</li>`).join('')
         }`;
 
+        let i = 0;
         document.getElementById('right').innerHTML = Object.values(datas).map(m =>
-            `<ul>${m.items.map(i => `<li data-url="${i.url}">${i.name}</li>`).join('')}</ul>`
+            `<ul>${m.items.map(i => `<li data-url="${i.url}">${++i + i.name}</li>`).join('')}</ul>`
         ).join('');
     })
     //.catch(err => console.error(err));
