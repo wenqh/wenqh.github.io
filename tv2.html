@@ -9,8 +9,8 @@
 </head>
 <body>
     <div style="display: flex">
-        <ul id="groups"></ul>
-        <ul id="id2" style="flex: 1">
+        <ul id="left"></ul>
+        <ul id="right" style="flex: 1">
             
         </ul>
     </div>
@@ -18,7 +18,7 @@
 
 
 <script>
-    document.getElementById('groups').addEventListener('click', e => {
+    document.getElementById('left').addEventListener('click', e => {
         if (e.target.tagName === 'LI') {
             const index = ([...e.target.parentNode.children].indexOf(e.target));
 
@@ -33,11 +33,11 @@
         const datas = parseM3U(data)
 
 
-        document.getElementById('group').innerHTML = `${
+        document.getElementById('left').innerHTML = `${
             [...datas.keys()].map(k => `<li>${k}</li>`).join('')
         }`;
 
-        document.getElementById('tvs').innerHTML = Object.values(datas).map(items => 
+        document.getElementById('right').innerHTML = Object.values(datas).map(items => 
             `<ul>${items.map(i => `<li data-url="${i.url}">${i.name}</li></ul>`).join('')}`
         )
         .join('');
