@@ -5,14 +5,16 @@
     <title>📺</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        #right ul{display: none}
+        #right ul.active{display: none}
     </style>
 </head>
 <body>
     <div style="display: flex">
         <ul id="left"></ul>
-        <ul id="right" style="flex: 1">
+        <div id="right" style="flex: 1">
             
-        </ul>
+        </div>
     </div>
 </body>
 
@@ -22,7 +24,7 @@
         if (e.target.tagName === 'LI') {
             const index = ([...e.target.parentNode.children].indexOf(e.target));
 
-            [...document.querySelectorAll('#id2 ul')].forEach((u,i)=>u.classList.toggle('active', i===n));
+            [...document.querySelectorAll('#right ul')].forEach((u,i)=>u.classList.toggle('active', i===n));
         }
     });
 
