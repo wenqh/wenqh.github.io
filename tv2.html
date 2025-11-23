@@ -18,7 +18,7 @@
 
 
 <script>
-    document.getElementById('group li').addEventListener('click', e => {
+    document.getElementById('groups').addEventListener('click', e => {
         if (e.target.tagName === 'LI') {
             console.log([...e.target.parentNode.children].indexOf(e.target));
         }
@@ -35,8 +35,7 @@
             [...datas.keys()].map(k => `<li>${k}</li>`).join('')
         }`;
 
-        document.getElementById('tvs').innerHTML = Object.values(datas)
-        .map(items => 
+        document.getElementById('tvs').innerHTML = Object.values(datas).map(items => 
             `<ul>${items.map(i => `<li data-url="${i.url}">${i.name}</li></ul>`).join('')}`
         )
         .join('');
