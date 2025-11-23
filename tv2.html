@@ -20,7 +20,8 @@
 <script>
     document.getElementById('groups').addEventListener('click', e => {
         if (e.target.tagName === 'LI') {
-            console.log([...e.target.parentNode.children].indexOf(e.target));
+            const index = ([...e.target.parentNode.children].indexOf(e.target));
+            document.getElementById('id2')
         }
     });
 </script>
@@ -40,7 +41,7 @@
         )
         .join('');
     })
-    .catch(err => console.error(err));
+    //.catch(err => console.error(err));
 
 
     function parseM3U(txt) {
