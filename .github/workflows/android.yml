@@ -1,26 +1,39 @@
-name: Android CI
+
+name: TvCrawler
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  schedule:
+    - cron: '0 11 * * *'  # 每天北京时间19:00（UTC +8)
+  workflow_dispatch:      # 支持手动触发
 
 jobs:
-  build:
-
+  run-crawler:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: set up JDK 11
-      uses: actions/setup-java@v4
+    - name: Checkout repository
+      uses: actions/checkout@v3
       with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: gradle
+        persist-credentials: true
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+    - name: Set up JDK 21
+      uses: actions/setup-java@v5
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+
+    - name: Compile Java crawler
+      run: javac TvCrawler.java
+
+    - name: Run crawler
+      run: java TvCrawler
+
+    - name: Commit and push results
+      run: |
+        git config --local user.name "github-actions[bot]"
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git add tv_auto.txt
+        git commit -m "Update TV crawler results [skip ci]" || echo "No changes to commit"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
