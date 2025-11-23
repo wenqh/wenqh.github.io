@@ -13,7 +13,6 @@
     <div style="display: flex">
         <ul id="left"></ul>
         <div id="right" style="flex: 1">
-            
         </div>
     </div>
 </body>
@@ -24,7 +23,7 @@
         if (e.target.tagName === 'LI') {
             const index = ([...e.target.parentNode.children].indexOf(e.target));
 
-            [...document.querySelectorAll('#right ul')].forEach((u,i)=>u.classList.toggle('active', i===n));
+            [...document.querySelectorAll('#right ul')].forEach((u,i)=>u.classList.toggle('active', i===index));
         }
     });
 
