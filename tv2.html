@@ -18,14 +18,14 @@
     fetch('git.txt')
     .then(res => res.text())
     .then(data => {
-        const groups = parseM3U(data)
+        const datas = parseM3U(data)
 
-        
+
         document.getElementById('group').innerHTML = `<ul>${
-            [...groups.keys()].map(k => `<li>${k}</li>`).join('')
+            [...datas.keys()].map(k => `<li>${k}</li>`).join('')
         }</ul>`;
 
-        document.getElementById('tvs').innerHTML = Object.values(map)
+        document.getElementById('tvs').innerHTML = Object.values(datas)
         .map(items => 
             `<ul>${items.map(i => `<li data-url="${i.url}">${i.name}</li>`).join('')}</ul>`
         )
