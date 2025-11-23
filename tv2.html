@@ -21,7 +21,8 @@
     document.getElementById('groups').addEventListener('click', e => {
         if (e.target.tagName === 'LI') {
             const index = ([...e.target.parentNode.children].indexOf(e.target));
-            document.getElementById('id2')
+
+            [...document.querySelectorAll('#id2 ul')].forEach((u,i)=>u.classList.toggle('active', i===n));
         }
     });
 </script>
