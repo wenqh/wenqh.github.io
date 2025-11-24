@@ -5,7 +5,9 @@ on:
   schedule:
     - cron: '0 11 * * *'  # 每天北京时间19:00（UTC +8)
   workflow_dispatch:      # 支持手动触发
-
+permissions:
+  contents: write
+  
 jobs:
   run-crawler:
     runs-on: ubuntu-latest
