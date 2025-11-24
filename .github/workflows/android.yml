@@ -14,6 +14,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
+        token: ${{ secrets.GITHUB_TOKEN }}
         persist-credentials: true
 
     - name: Set up JDK 21
