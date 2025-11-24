@@ -45,17 +45,19 @@
     let tvBoxUrl = localStorage.getItem('tvbox-url');
 
     document.getElementById('right').addEventListener('click', e => {
-        if (e.target.tagName === 'LI') {
-            [...document.querySelectorAll('#right li')].forEach((u) => u.classList.toggle('active', u === e.target));
+        const li = e.target.closest('li');
+        if (!li) return;
 
-            const url = e.target.children[0].href;
-            const win = window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`, '_blank');
-            
-            setTimeout(() => {
-                win.close();
-            }, 300);
-        }
+        document.querySelectorAll('#right li').forEach(u =>
+            u.classList.toggle('active', u === li)
+        );
+
+        const url = li.querySelector('a')?.href;
+        if (!url) return;
+        const win = window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`, '_blank');
+        setTimeout(() => win.close(), 300);
     });
+
 </script>
 <script>
     [
