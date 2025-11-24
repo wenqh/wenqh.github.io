@@ -19,7 +19,9 @@ public class TvCrawler {
             "https://sub.ottiptv.cc/huyayqk.m3u",
             "https://sub.ottiptv.cc/douyuyqk.m3u",
             "https://sub.ottiptv.cc/bililive.m3u",
-            "https://sub.ottiptv.cc/yylunbo.m3u");
+            "https://sub.ottiptv.cc/yylunbo.m3u",
+            "https://live.catvod.com/tv.m3u"
+    );
 
     public static void main(String[] args) throws IOException {
         String all = M3U8_URLS.map(u -> {
@@ -47,3 +49,4 @@ public class TvCrawler {
         return response.body();
     }
 }
+
