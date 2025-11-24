@@ -14,7 +14,7 @@
         .container > * {overflow: auto;}
         #right ul {display: none}
         #right ul.active {display: block}
-        #right a {float: right; margin: 10px 0;}
+        #right a {float: right; margin: 0 10px;}
     </style>
 </head>
 <body>
@@ -33,7 +33,7 @@
 
             [...document.querySelectorAll('#left li')].forEach((u, i) => u.classList.toggle('active', i === index));
 
-            [...document.querySelectorAll('#right ul')].forEach((u, i) => u.classList.toggle('active', i === index));
+            [...document.querySelectorAll('#right ul')].forEach((u, i) => u.classList.toggle('active', i === index+1 || index === 0));
         }
     });
 
@@ -42,7 +42,6 @@
     document.getElementById('right').addEventListener('click', e => {
         if (e.target.tagName === 'LI') {
             [...document.querySelectorAll('#right li')].forEach((u) => u.classList.toggle('active', u === e.target));
-
 
             const url = e.target.children[0].href;
             const win = window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`, '_blank');
@@ -59,8 +58,7 @@
     .then(data => {
         const datas = parseM3U(data)
 
-
-        document.getElementById('left').innerHTML = `${
+        document.getElementById('left').innerHTML = `<li>全部</li>${
             Object.keys(datas).map(d => `<li>${d}</li>`).join('')
         }`;
 
