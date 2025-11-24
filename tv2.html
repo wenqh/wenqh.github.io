@@ -64,8 +64,8 @@
 
         let no = 0;
         document.getElementById('right').innerHTML = Object.entries(datas).map(([group, items]) => 
-            `<ul>${Object.entries(items).map(([name, urls]) => 
-                `<li>${String(++no).padStart(3, '0')} ${name}${urls.map((u, i) => `<a href="${u}" target="_blank">路线${i}</a>`).join(' ')}</li>`
+            `<ul>${Object.entries(items).map(([name, item]) => 
+                `<li>${String(++no).padStart(3, '0')} <img src="${item.logo}">${name}${item.urls.map((u, i) => `<a href="${u}" target="_blank">路线${i}</a>`).join(' ')}</li>`
             ).join('')}</ul>`
         ).join('');
     })
@@ -82,7 +82,9 @@
                 const url = lines[i + 1];
                 //(groups[group] = groups[group] || []).push({ name, url });
 
-                (groups[group] = groups[group] || {})[name] = (groups[group][name] || []).push(url);
+                groups[group] = groups[group] || {};
+                groups[group][name] = groups[group][name] || { logo: logo, urls: [] };
+                groups[group][name].urls.push(url);
             }
         });
         return groups;
