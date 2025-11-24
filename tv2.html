@@ -38,7 +38,7 @@
 
     document.getElementById('right').addEventListener('click', e => {
         if (e.target.tagName === 'LI') {
-            const url = e.children[0].href;
+            const url = e.target.children[0].href;
             const win = window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`, '_blank');
             
             setTimeout(() => {
