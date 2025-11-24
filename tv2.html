@@ -63,8 +63,7 @@
     [
         'tv-auto.m3u',
         'https://live.catvod.com/tv.m3u'
-    ]
-    .reduce((p, url) => {
+    ].reduce((p, url) => 
         p.then(() => fetch(url)
             .then(res => res.text())
             .then(data => {
@@ -82,7 +81,7 @@
                 ).join('');
             })
         )
-    }, Promise.resolve());
+    , Promise.resolve());
     
     //.catch(err => console.error(err));
 
@@ -108,6 +107,7 @@
 </script>
 
 </html>
+
 
 
 
