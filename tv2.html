@@ -52,7 +52,7 @@
             u.classList.toggle('active', u === li)
         );
 
-        const url = li.querySelector('a')?.href;
+        const url = (e.target.closest('a') || li.querySelector('a'))?.href;
         if (!url) return;
         const win = window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`, '_blank');
         setTimeout(() => win.close(), 300);
@@ -108,5 +108,6 @@
 </script>
 
 </html>
+
 
 
