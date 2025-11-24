@@ -9,6 +9,7 @@
         ul{list-style-type: none}
         li{padding: 10px 0}
         li:active {border: 1px solid}
+        li:focus {border: 1px solid}
 
         .container{display: flex; height: 100%}
         .container > * {overflow: auto;}
@@ -60,8 +61,8 @@
 
         let no = 0;
         document.getElementById('right').innerHTML = Object.entries(datas).map(([group, items]) => 
-            `<ul>${Object.entries(items).map(([name, urls]) => 
-                `<li>${String(++no).padStart(3, '0')} ${name}${urls.map(u => `<a href="${u}" target="_blank">${u}</a>`).join(' ')}</li>`
+            `<ul>${Object.entries(items).map(([name, urls], i) => 
+                `<li>${String(++no).padStart(3, '0')} ${name}${urls.map(u => `<a href="${u}" target="_blank">路线${i}</a>`).join(' ')}</li>`
             ).join('')}</ul>`
         ).join('');
     })
