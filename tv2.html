@@ -33,7 +33,7 @@
 
             [...document.querySelectorAll('#left li')].forEach((u, i) => u.classList.toggle('active', i === index));
 
-            [...document.querySelectorAll('#right ul')].forEach((u, i) => u.classList.toggle('active', i === index+1 || index === 0));
+            [...document.querySelectorAll('#right ul')].forEach((u, i) => u.classList.toggle('active', i === index-1 || index === 0));
         }
     });
 
@@ -76,12 +76,13 @@
         lines.forEach((line, i) => {
             if (line.startsWith('#EXTINF')) {
                 const group = (line.match(/group-title="([^"]*)"/) || ['', '默认'])[1];
+                const logo = (line.match(/tvg-logo="([^"]*)"/) || ['', ''])[1];
+
                 const name = line.split(',').pop().trim();
                 const url = lines[i + 1];
                 //(groups[group] = groups[group] || []).push({ name, url });
 
-                groups[group] = groups[group] || {};
-                (groups[group][name] = groups[group][name] || []).push(url);
+                (groups[group] = groups[group] || {})[name] = (groups[group][name] || []).push(url);
             }
         });
         return groups;
