@@ -23,7 +23,7 @@
 </head>
 <body>
     <div class="container">
-        <ul id="left"></ul>
+        <ul id="left"><li>全部</li></ul>
         <div id="right" style="flex: 1">
         </div>
     </div>
@@ -60,6 +60,7 @@
 
 </script>
 <script>
+    let no = 0;
     [
         'tv-auto.m3u',
         'https://live.catvod.com/tv.m3u'
@@ -69,11 +70,10 @@
             .then(data => {
                 const datas = parseM3U(data)
 
-                document.getElementById('left').innerHTML += `<li>全部</li>${
+                document.getElementById('left').innerHTML += `${
                     Object.keys(datas).map(d => `<li>${d}</li>`).join('')
                 }`;
 
-                let no = 0;
                 document.getElementById('right').innerHTML += Object.entries(datas).map(([group, items]) => 
                     `<ul>${Object.entries(items).map(([name, item]) => 
                         `<li>${String(++no).padStart(3, '0')} <img src="${item.logo}" loading="lazy">${name}${item.urls.map((u, i) => `<a href="${u}" target="_blank">路线${i+1}</a>`).join(' ')}</li>`
