@@ -9,7 +9,7 @@
         ul{list-style-type: none}
         li{padding: 10px 0}
         li:active {border: 1px solid}
-        li:focus {border: 1px solid}
+        li.active {background: black; color: white}
 
         .container{display: flex; height: 100%}
         .container > * {overflow: auto;}
@@ -31,7 +31,9 @@
         if (e.target.tagName === 'LI') {
             const index = ([...e.target.parentNode.children].indexOf(e.target));
 
-            [...document.querySelectorAll('#right ul')].forEach((u,i)=>u.classList.toggle('active', i===index));
+            [...document.querySelectorAll('#left li')].forEach((u, i) => u.classList.toggle('active', i === index));
+
+            [...document.querySelectorAll('#right ul')].forEach((u, i) => u.classList.toggle('active', i === index));
         }
     });
 
