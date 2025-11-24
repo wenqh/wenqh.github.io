@@ -64,24 +64,25 @@
         'tv-auto.m3u',
         'https://live.catvod.com/tv.m3u'
     ]
-    .forEach(url => {
-        fetch(url)
-        .then(res => res.text())
-        .then(data => {
-            const datas = parseM3U(data)
+    .reduce((p, url) => {
+        p.then(() => fetch(url)
+            .then(res => res.text())
+            .then(data => {
+                const datas = parseM3U(data)
 
-            document.getElementById('left').innerHTML += `<li>全部</li>${
-                Object.keys(datas).map(d => `<li>${d}</li>`).join('')
-            }`;
+                document.getElementById('left').innerHTML += `<li>全部</li>${
+                    Object.keys(datas).map(d => `<li>${d}</li>`).join('')
+                }`;
 
-            let no = 0;
-            document.getElementById('right').innerHTML += Object.entries(datas).map(([group, items]) => 
-                `<ul>${Object.entries(items).map(([name, item]) => 
-                    `<li>${String(++no).padStart(3, '0')} <img src="${item.logo}" loading="lazy">${name}${item.urls.map((u, i) => `<a href="${u}" target="_blank">路线${i+1}</a>`).join(' ')}</li>`
-                ).join('')}</ul>`
-            ).join('');
-        })
-    });
+                let no = 0;
+                document.getElementById('right').innerHTML += Object.entries(datas).map(([group, items]) => 
+                    `<ul>${Object.entries(items).map(([name, item]) => 
+                        `<li>${String(++no).padStart(3, '0')} <img src="${item.logo}" loading="lazy">${name}${item.urls.map((u, i) => `<a href="${u}" target="_blank">路线${i+1}</a>`).join(' ')}</li>`
+                    ).join('')}</ul>`
+                ).join('');
+            })
+        )
+    }, Promise.resolve());
     
     //.catch(err => console.error(err));
 
