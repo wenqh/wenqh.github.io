@@ -28,7 +28,7 @@ public class TvCrawler {
             return resp;
         }).collect(Collectors.joining("\n"));
 
-        Files.writeString(Paths.get("tv-auto.txt"), all, StandardCharsets.UTF_8);
+        Files.writeString(Paths.get("tv-auto.m3u"), all, StandardCharsets.UTF_8);
     }
 
 
