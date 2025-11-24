@@ -8,8 +8,7 @@
         html, body {height: 100%; margin: 0}
         ul{list-style-type: none}
         li{padding: 10px 0}
-        li:active {border: 1px solid}
-        li.active {background: black; color: white}
+        li.active, li:active {background: black; color: white}
 
         .container{display: flex; height: 100%}
         .container > * {overflow: auto;}
@@ -41,6 +40,9 @@
 
     document.getElementById('right').addEventListener('click', e => {
         if (e.target.tagName === 'LI') {
+            [...document.querySelectorAll('#right li')].forEach((u) => u.classList.toggle('active', u === e.target));
+
+
             const url = e.target.children[0].href;
             const win = window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`, '_blank');
             
