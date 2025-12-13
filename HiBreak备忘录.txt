@@ -1,7 +1,9 @@
 HiBreakPro 手机设置：
 
 卸载：
-搜狗输入法，浏览器，WpsOffice，语音设置（讯飞）...
+搜狗输入法，禁用浏览器，WpsOffice，语音设置（讯飞）...
+pm disable-user --user 0 com.xrz.hoverballdemo
+pm disable-user --user 0 com.xrz.filemanager
 
 设置：
 字体大小:2档
@@ -11,6 +13,7 @@ HiBreakPro 手机设置：
 各app电源后台优化
 无障碍：按触反馈-关
 移动关数据和5G
+自定义按键
 
 安装：
 Clash
