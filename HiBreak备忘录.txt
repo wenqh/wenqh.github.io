@@ -30,56 +30,26 @@ Pilipala
 高德:12.03.60.3016
 关闭低版本app的play自动更新app
 
-{
-    "*": {
-        "scroll": "GESTURE",
-        "y1": 46,
-        "y2": 1625,
-        "duration": 100,
-        "mark1": null
-    },
-    "com.android.chrome": {
-        "y1": 152,
-        "y2": 1587
-    },
-    "com.tencent.mm": {
-        "y1": 144,
-        "y2": 1532,
-        "duration": 150
-    },
-    "mark.via.gp": {
-        "y11": 135,
-        "y1": 144
-    },
-    "com.google.android.youtube": {
-        "duration": 800
-    },
-    "com.openai.chatgpt": {
-        "y11111111": 165,
-        "y2": 1466
-    },
-    "com.spotify.music": {
-        "y1": 150,
-        "y2": 1431
-    },
-    "com.guozhigq.pilipala": {
-        "y1": 315,
-        "duration": 300
-    },
-    "com.example.c001apk.compose": {
-        "y1": 257
-    },
-    "com.example.c001apk.flutter": {
-        "y1": 150,
-        "y2": 1497,
-        "duration": 600
-    },
-    "com.huanchengfly.tieba.post": {
-        "y1": 273,
-        "y2": 1514
-    },
-    "org.telegram.messenger": {
-        "y1": 244,
-        "y2": 1555
-    }
-}
+## MTKSystemUI
+文件：com/android/systemui/statusbar/NotificationGroupingUtil
+385行
+const v1, 0x1020541  # textClassifier
+改成
+const v1, 0x1020542  # textEmailAddress
+
+
+文件：com/android/wm.shell/startingsurface/StartingWindowControllers$$ExternalSyntheticLambda0
+修改：
+.method public final run()V
+    .registers 39
+
+    return-void #42行处 加了这行代码
+
+
+文件：com/android/systemui/keyguard/KeyguardServices2
+2240行处增加方法：
+.method public final powerBrightScreen()V
+    .registers 1
+
+    return-void
+.end method
