@@ -53,3 +53,7 @@ const v1, 0x1020542  # textEmailAddress
 
     return-void
 .end method
+
+
+adb shell content call --uri content://com.xrz.sys.control.provider --method showMenuControl --extra isShow:b:true
+adb shell am start -n com.xrz.ebook.launcher/com.xrz.ebook.launcher.ui.settings.SettingsActivity
