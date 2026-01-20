@@ -30,6 +30,10 @@ Pilipala
 高德:12.03.60.3016
 关闭低版本app的play自动更新app
 
+圆图标
+cmd overlay fabricate --target android --name CircleMask android:string/config_icon_mask 3 "M50,50m-50,0a50,50 0,1,1 100,0a50,50 0,1,1 -100,0"
+cmd overlay enable com.android.shell:CircleMask
+
 ## MTKSystemUI
 文件：com/android/systemui/statusbar/NotificationGroupingUtil
 385行
