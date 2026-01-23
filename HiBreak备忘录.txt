@@ -58,6 +58,17 @@ const v1, 0x1020542  # textEmailAddress
     return-void
 .end method
 
+## Launcher3去动画
+文件 com/android/launcher3/PagedView 7193行
+const/4 v7, 0x0 加这行
+
+invoke-virtual/range {v2 .. v7}, Landroid/widget/OverScroller;->startScroll(IIIII)V
+
+屏蔽跟手效果
+sget-object v6, Lcom/android/launcher3/touch/PagedOrientationHandler;->VIEW_SCROLL_BY:Lcom/android/launcher3/touch/PagedOrientationHandler$Int2DAction;
+
+#注释掉5323行 invoke-interface {v3, v0, v6, v2}, Lcom/android/launcher3/touch/PagedOrientationHandler;->setPrimary(Ljava/lang/Object;Lcom/android/launcher3/touch/PagedOrientationHandler$Int2DAction;I)V
+
 
 adb shell content call --uri content://com.xrz.sys.control.provider --method showMenuControl --extra isShow:b:true
 adb shell am start -n com.xrz.ebook.launcher/com.xrz.ebook.launcher.ui.settings.SettingsActivity
