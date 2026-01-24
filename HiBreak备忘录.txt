@@ -37,7 +37,7 @@ cmd overlay enable com.android.shell:CircleMask
 ## MTKSystemUI
 文件：com/android/systemui/statusbar/NotificationGroupingUtil
 385行
-const v1, 0x1020541  # textClassifier
+const v1, 0x1020541  # textClassifier 
 改成
 const v1, 0x1020542  # textEmailAddress
 
@@ -57,6 +57,8 @@ const v1, 0x1020542  # textEmailAddress
 
     return-void
 .end method
+
+quick_settings_tiles_stock 字符资源里加,nfc
 
 ## Launcher3去动画
 文件 com/android/launcher3/PagedView 7193行
