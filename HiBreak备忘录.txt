@@ -58,7 +58,12 @@ const v1, 0x1020542  # textEmailAddress
     return-void
 .end method
 
-quick_settings_tiles_stock 字符资源里加,nfc
+修复媒体播放闪退
+.line 59
+const v1, 0x1080780 #1470行改成0x1080784
+invoke-virtual {v0, v1}, Landroid/content/Context;->getDrawable(I)Landroid/graphics/drawable/Drawable;
+
+quick_settings_tiles_stock 开NFC按钮：字符资源里加,nfc
 
 ## Launcher3去动画
 文件 com/android/launcher3/PagedView 7193行
