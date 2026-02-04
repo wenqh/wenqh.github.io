@@ -48,9 +48,8 @@
         const li = e.target.closest('li');
         if (!li) return;
 
-        document.querySelectorAll('#right li').forEach(u =>
-            u.classList.toggle('active', u === li)
-        );
+        document.querySelector('#right li.active')?.classList.remove('active');
+        li.classList.add('active');
 
         const url = (e.target.closest('a') || li.querySelector('a'))?.href;
         if (!url) return;
@@ -107,6 +106,7 @@
 </script>
 
 </html>
+
 
 
 
