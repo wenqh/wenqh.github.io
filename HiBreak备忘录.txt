@@ -65,6 +65,27 @@ invoke-virtual {v0, v1}, Landroid/content/Context;->getDrawable(I)Landroid/graph
 
 quick_settings_tiles_stock 开NFC按钮：字符资源里加,nfc
 
+去掉锁屏遮罩层
+    .line 52
+    :cond_33
+    #注释这行改成下面这行 iget v2, p0, Lcom/android/systemui/statusbar/phone/ScrimState;->mScrimBehindAlphaKeyguard:F
+    const/4 v2, 0x0
+
+    .line 54
+    :goto_35
+    iput v2, p0, Lcom/android/systemui/statusbar/phone/ScrimState;->mBehindAlpha:F
+
+    .line 56
+    if-eqz v1, :cond_3b
+
+    .line 58
+    注释这行改成下面这行 iget v0, p0, Lcom/android/systemui/statusbar/phone/ScrimState;->mScrimBehindAlphaKeyguard:F
+    const/4 v0, 0x0
+
+    .line 60
+    :cond_3b
+    iput v0, p0, Lcom/android/systemui/statusbar/phone/ScrimState;->mNotifAlpha:F
+
 ## Launcher3去动画
 文件 com/android/launcher3/PagedView 7193行
 const/4 v7, 0x0 加这行
