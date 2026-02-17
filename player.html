@@ -9,7 +9,7 @@
         html, body {height: 100%; margin: 0; background: black; color: #ddd}
         ul {list-style-type: none; padding-left: 10px}
         li {padding: 10px 0;}
-        li.active {background: black; color: #ddd}
+        li.active {background: #ddd; color: black}
 
         .container {display: flex; height: 100%}
         .container > * {overflow-y: scroll; overflow-x: hidden;}
@@ -38,7 +38,9 @@
     <ul id="left"><li tabindex="0">全部</li></ul>
     <div id="right" style="max-width: 300px"></div>
 </div>
-<div id="tip" style="position: fixed; top:45%; left:0; width: 100%; height: 100px; text-align: center; font-size: 30px; z-index: 9"></div>
+<div id="tip" style="position: fixed; top:45%; left:0; width: 100%; height: 100px; text-align: center; font-size: 30px; z-index: 9;
+text-shadow:
+    0 0 4px rgba(0, 0, 0, 0.8 );"></div>
 </body>
 
 
