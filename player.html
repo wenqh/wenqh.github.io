@@ -38,7 +38,7 @@
     <ul id="left"><li tabindex="0">全部</li></ul>
     <div id="right" style="max-width: 300px"></div>
 </div>
-<div id="tip" style="position: fixed; top:40%; left:0; width: 100%; height: 100px; text-align: center; font-size: 30px; z-index: 9"></div>
+<div id="tip" style="position: fixed; top:45%; left:0; width: 100%; height: 100px; text-align: center; font-size: 30px; z-index: 9"></div>
 </body>
 
 
@@ -91,15 +91,14 @@
         const tip = document.getElementById('tip');
         tip.innerHTML = li.firstChild.textContent;
         tip.style.display = 'block';
+        if(timer) clearTimeout(timer);
 
         video.addEventListener('error', () => {
             //tip.style.display = 'block';
             tip.innerHTML += '<br>播放失败：' + getErrorMsg(video);
         }, { once: true });
         video.play().then(() => {
-            if(timer) clearTimeout(timer);
-            setTimeout(()=>tip.style.display = 'none', 3000) // ← 成功时隐藏
-
+            timer = setTimeout(()=>tip.style.display = 'none', 3000) // ← 成功时隐藏
         });
 
         function getErrorMsg(video) {
