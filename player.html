@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>电视📺</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html, body {height: 100%; margin: 0; background: black; color: #ddd}
+        ul {list-style-type: none; padding-left: 10px}
+        li {padding: 10px 0;}
+        li.active {background: black; color: #ddd}
+
+        .container {display: flex; height: 100%}
+        .container > * {overflow-y: scroll; overflow-x: hidden;}
+        #left {text-align: center}
+        #right ul {display: none}
+        #right ul.active {display: block}
+        #right li {display: flex; align-items: center; gap: 5px}
+        #right a {margin: 0 10px;}
+        /*#right a:first-of-type {display: none} */ #right a {display: none}
+        #right img {width: 40px}
+
+        a {color: #aad}
+    </style>
+</head>
+<body>
+<video id="video" tabindex="-1" style="filter: brightness(0.91); width:100%; height: 100%; display: block; object-fit: contain;" controls111></video>
+<div class="container" style="position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 300px;
+    height: 100%;
+    background: rgba(0,0,0,0.4); /* 半透明覆盖 */
+    margin111: 10px;
+    overflow-y: auto;
+    z-index: 10;">
+    <ul id="left"><li tabindex="0">全部</li></ul>
+    <div id="right" style="max-width: 300px"></div>
+</div>
+<div id="tip" style="position: fixed; top:40%; left:0; width: 100%; height: 100px; text-align: center; font-size: 30px; z-index: 9"></div>
+</body>
+
+
+<script>
+    document.getElementById('left').addEventListener('focusin', e => {
+        if (e.target.tagName === 'LI') {
+            const index = ([...e.target.parentNode.children].indexOf(e.target));
+
+            [...document.querySelectorAll('#left li')].forEach((u, i) => u.classList.toggle('active', i === index));
+            // const ac = document.querySelector('#left li.active');
+            // const tmp = ac && ac.classList.remove('active');
+            // e.target.classList.add('active');
+            //
+            // document.querySelector('#right ul.active')?.classList.remove('active');
+            // document.querySelector(`#right ul${index === 0 ? '' : ':nth-child(' + index + ')'}`).classList.add('active');
+            [...document.querySelectorAll('#right ul')].forEach((u, i) => u.classList.toggle('active', i === index-1 || index === 0));
+        }
+        e.stopPropagation();
+    });
+
+    let tvBoxUrl = localStorage.getItem('tvbox-url');
+    let timer;
+
+    document.getElementById('right').addEventListener('click', e => {
+        const li = e.target.closest('li');
+        if (!li) return;
+
+        var active = document.querySelector('#right li.active');
+        active && active.classList.remove('active');
+
+        li.classList.add('active');
+
+        const url = (/*e.target.closest('a') || */li.querySelector('a')).href;
+        if (!url) return;
+        // const win = window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`, '_blank');
+        // setTimeout(() => win.close(), 300);
+        var video = document.getElementById('video');
+        video.src = url;
+        video.play();
+
+        // if (timer) {
+        //     clearTimeout(timer);
+        // }
+        // timer = setTimeout(() => {
+        //     document.querySelector('.container').style.display = 'none';
+            document.querySelector('.container').style.visibility = 'hidden';
+        // }, 5000);
+
+
+        const tip = document.getElementById('tip');
+        tip.innerHTML = li.firstChild.textContent;
+        tip.style.display = 'block';
+
+        video.addEventListener('error', () => {
+            //tip.style.display = 'block';
+            tip.innerHTML += '<br>播放失败：' + getErrorMsg(video);
+        }, { once: true });
+        video.play().then(() => {
+            if(timer) clearTimeout(timer);
+            setTimeout(()=>tip.style.display = 'none', 3000) // ← 成功时隐藏
+
+        });
+
+        function getErrorMsg(video) {
+            if (!video.error) return '未知错误';
+            switch(video.error.code) {
+                case 1: return '播放被中止';
+                case 2: return '网络错误';
+                case 3: return '解码错误';
+                case 4: return '视频格式不支持';
+                default: return '未知错误';
+            }
+        }
+    });
+
+</script>
+<script>
+    let no = 0;
+    [
+        'https://wenqh.github.io/tv-auto.m3u',
+    ].reduce((p, url) =>
+            p.then(() => fetch(url)
+                .then(res => res.text())
+                .then(data => {
+                    const datas = parseM3U(data)
+
+                    document.getElementById('left').insertAdjacentHTML('beforeend', `${
+                        Object.keys(datas).map(d => `<li tabindex="0">${d}</li>`).join('')
+                    }`);
+
+                    document.getElementById('right').innerHTML += Object.entries(datas).map(([group, items]) =>
+                        `<ul>${Object.entries(items).map(([name, item]) =>
+                            `<li tabindex="0">${String(++no)}. ${name}${item.urls.map((u, i) => `<a tabindex="-1" href="${u}" target="_blank">路线${i+1}</a>`).join(' ')}</li>`
+                        ).join('')}</ul>`
+                    ).join('');/*${String(++no).padStart(3, '0')}*/
+                })
+            )
+        , Promise.resolve());
+
+    //.catch(err => console.error(err));
+
+    function parseM3U(txt) {
+        const groups = {}, lines = txt.split(/\r?\n/);
+        lines.forEach((line, i) => {
+            if (line.startsWith('#EXTINF')) {
+                const group = (line.match(/group-title="([^"]*)"/) || ['', '默认'])[1];
+                const logo = (line.match(/tvg-logo="([^"]*)"/) || ['', ''])[1];
+
+                const name = line.split(',').pop().trim();
+                const url = lines[i + 1];
+                //(groups[group] = groups[group] || []).push({ name, url });
+
+                groups[group] = groups[group] || {};
+                groups[group][name] = groups[group][name] || { logo: logo, urls: [] };
+                groups[group][name].urls.push(url);
+            }
+        });
+        return groups;
+    }
+</script>
+
+<script>
+    const container = document.querySelector('.container');
+    window.addEventListener('keydown', function(e) {
+        if (!container.style.visibility || container.style.visibility === 'visible') {
+            return;
+        }
+        if ((e.keyCode === 13 || e.keyCode === 32)) {
+            container.style.visibility = 'visible';
+            return;
+        }
+
+        const allLis = Array.from(document.querySelectorAll('#right li'));
+        const idx = allLis.indexOf(document.querySelector('#right li.active'));
+
+        if (e.keyCode === 38 || e.keyCode === 40) {
+            /*if (active && active.previousElementSibling) {
+                active.previousElementSibling.click();
+            }*/
+            allLis[idx + (e.keyCode === 38 ? -1 : 1)].click();
+        }
+    });
+</script>
+
+<script>
+    const goFull = () => {
+        // 只要当前已经是全屏，就直接跳过逻辑
+        if (document.fullscreenElement || document.webkitFullscreenElement) return;
+
+        const el = document.documentElement;
+        const rfs = el.requestFullscreen || el.webkitRequestFullscreen;
+
+        if (rfs) {
+            rfs.call(el).then(() => {
+                console.log("进入全屏成功");
+            });
+        }
+    };
+
+    // 绑定事件：直接传入函数名
+    ['keydown', 'click', 'touchstart'].forEach(type => {
+        window.addEventListener(type, () => goFull());
+    });
+    document.querySelector("#left li").focus();
+</script>
+</html>
