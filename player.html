@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -31,7 +30,7 @@
     left: 0;
     min-width: 300px;
     height: 100%;
-    background: rgba(0,0,0,0.4); /* 半透明覆盖 */
+    background: rgba(0,0,0,0.6); /* 半透明覆盖 */
     margin111: 10px;
     overflow-y: auto;
     z-index: 10;">
@@ -39,8 +38,7 @@
     <div id="right" style="max-width: 300px"></div>
 </div>
 <div id="tip" style="position: fixed; top:45%; left:0; width: 100%; height: 100px; text-align: center; font-size: 30px; z-index: 9;
-text-shadow:
-    0 0 4px rgba(0, 0, 0, 0.8 );"></div>
+text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);"></div>
 </body>
 
 
@@ -109,7 +107,7 @@ text-shadow:
                 case 1: return '播放被中止';
                 case 2: return '网络错误';
                 case 3: return '解码错误';
-                case 4: return '视频格式不支持';
+                case 4: return '媒体错误或不支持';
                 default: return '未知错误';
             }
         }
@@ -124,7 +122,11 @@ text-shadow:
             p.then(() => fetch(url)
                 .then(res => res.text())
                 .then(data => {
-                    const datas = parseM3U(data)
+                    const datas = parseM3U(data);
+
+
+                    ['超清频道','粤语频道','冰茶体育','🎀冰茶公告','列表更新时间','4K频道','原创','一起看','原创IP','户外','萌宠','电子榨菜','情感杂谈','手工绘画','生活杂谈','颜值','沉浸体验','运动体育','时尚','美食','zonghe','📡港台mine','📡杂1','📡香港jdshipin','📡港台AKTV','📡国内60&221','📡国内69.165','📡港台66.42','🌈宝盒没宝','🌊港·澳·台','📡电视smart','📡电视163189','📡电视jdshipin',].forEach(key => delete datas[key]);
+
 
                     document.getElementById('left').insertAdjacentHTML('beforeend', `${
                         Object.keys(datas).map(d => `<li tabindex="0">${d}</li>`).join('')
