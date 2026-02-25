@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 public class TvCrawler {
     private static Stream<String> M3U8_URLS = Stream.of(
-            "https://bc.188766.xyz/?ip=&mishitong=true&mima=mianfeibuhuaqian&json=true",
+            "https://gh.llkk.cc/https://raw.githubusercontent.com/Kimentanm/aptv/master/m3u/iptv.m3u",
             "https://gh.llkk.cc/https://raw.githubusercontent.com/develop202/migu_video/refs/heads/main/interface.txt",
             "https://nos.netease.com/ysf/3d75a78a0fc7ede372c03598d6d10367.m3u",
             "https://sub.ottiptv.cc/huyayqk.m3u",
