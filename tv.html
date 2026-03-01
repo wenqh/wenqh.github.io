@@ -24,18 +24,17 @@
 <body>
 <div class="container">
     <ul id="left"><li>全部</li></ul>
-    <div id="right" style="flex: 1">
-    </div>
+    <div id="right" style="flex: 1"></div>
 </div>
 <div style="position: fixed; bottom: 20px; right: 10px; width:40px; height:40px;
             border-radius:50%; border: solid 1px #aaa; background: white;
             display:flex; justify-content:center; align-items:center;"
-     onclick="menu.style.display=menu.style.display === 'none' ? 'block' : 'none'">+</div>
+     onclick="menu.showModal();left.style.display=menu.style.display === 'none' ? 'block' : 'none'">+</div>
 </body>
-<div id="menu" style="display: none; position: fixed; bottom: 70px; right: 10px; background: white; border: solid 1px">
-    <div>推送URL：<input onchange="localStorage.setItem('tvbox-url', value)" onload="value=localStorage.getItem('tvbox-url') || 'http://192.168.1.2:9978'"></div>
+<dialog id="menu" style="/*display: none; */position: fixed; bottom: 70px; right: 10px; background: white; border: solid 1px">
+    <div>推送URL：<input onchange="localStorage.setItem('tvbox-url', value)" onfocus="value=(localStorage.getItem('tvbox-url') || 'http://192.168.1.2:9978')"></div>
     <div>直播源：<input onchange="load(value)"></div>
-</div>
+</dialog>
 
 
 <script>
