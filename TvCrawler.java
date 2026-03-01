@@ -20,7 +20,10 @@ public class TvCrawler {
             "https://sub.ottiptv.cc/douyuyqk.m3u",
             "https://sub.ottiptv.cc/bililive.m3u",
             "https://sub.ottiptv.cc/yylunbo.m3u",
-            "https://wenqh.github.io/tv1.m3u"
+            "https://wenqh.github.io/tv1.m3u",
+            "https://raw.githubusercontent.com/Jsnzkpg/Jsnzkpg/refs/heads/Jsnzkpg/Jsnzkpg1.m3u",
+            "https://raw.githubusercontent.com/Jsnzkpg/Jsnzkpg/refs/heads/Jsnzkpg/Jsnzkpg1.m3u",
+            "https://tv.iill.top/m3u/Gather"
     );
 
     public static void main(String[] args) throws IOException {
