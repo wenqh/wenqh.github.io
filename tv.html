@@ -31,7 +31,7 @@
             display:flex; justify-content:center; align-items:center;"
      onclick="menu.style.display=menu.style.display === 'none' ? 'block' : 'none'">+</div>
 </body>
-<div id="menu" style="display: none; position: fixed; bottom: 80px; right: 10px; background: white; border: solid 1px; font-size: 1.5em">
+<div id="menu" style="display: none; position: fixed; bottom: 80px; right: 10px; background: white; border: solid 1px">
     <div>推送URL：<input onchange="localStorage.setItem('tvbox-url', value)" onfocus="value=(localStorage.getItem('tvbox-url') || 'http://192.168.1.2:9978')"></div>
     <div>直播源：<input onchange="load(value)"></div>
 </div>
