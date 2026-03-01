@@ -29,12 +29,12 @@
 <div style="position: fixed; bottom: 20px; right: 10px; width:40px; height:40px;
             border-radius:50%; border: solid 1px #aaa; background: white;
             display:flex; justify-content:center; align-items:center;"
-     onclick="menu.showModal();left.style.display=menu.style.display === 'none' ? 'block' : 'none'">+</div>
+     onclick="menu.style.display=menu.style.display === 'none' ? 'block' : 'none'">+</div>
 </body>
-<dialog id="menu" style="/*display: none; */position: fixed; bottom: 70px; right: 10px; background: white; border: solid 1px">
+<div id="menu" style="display: none; position: fixed; bottom: 70px; right: 10px; background: white; border: solid 1px">
     <div>推送URL：<input onchange="localStorage.setItem('tvbox-url', value)" onfocus="value=(localStorage.getItem('tvbox-url') || 'http://192.168.1.2:9978')"></div>
     <div>直播源：<input onchange="load(value)"></div>
-</dialog>
+</div>
 
 
 <script>
