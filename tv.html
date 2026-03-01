@@ -31,7 +31,7 @@
             display:flex; justify-content:center; align-items:center;"
      onclick="menu.style.display=menu.style.display === 'none' ? 'block' : 'none'">+</div>
 </body>
-<div id="menu" style="display: none; position: fixed; bottom: 70px; right: 10px; background: white; border: solid 1px; font-size: 1.5em">
+<div id="menu" style="display: none; position: fixed; bottom: 80px; right: 10px; background: white; border: solid 1px; font-size: 1.5em">
     <div>推送URL：<input onchange="localStorage.setItem('tvbox-url', value)" onfocus="value=(localStorage.getItem('tvbox-url') || 'http://192.168.1.2:9978')"></div>
     <div>直播源：<input onchange="load(value)"></div>
 </div>
@@ -70,7 +70,8 @@
     function load(...urls) {
         urls.reduce((p, url) =>
             p.then(() => fetch(url)
-                .then(res => res.text())
+                .then(res => {if (!res.ok) throw new Error(`加载失败：${res.status}`);
+                    return res.text()})
                 .then(data => {
                     const datas = parseM3U(data)
 
@@ -83,6 +84,8 @@
                             `<li>${String(++no).padStart(3, '0')} <img src="${item.logo}" loading="lazy">${name}${item.urls.map((u, i) => `<a href="${u}" target="_blank">路线${i+1}</a>`).join('')}</li>`
                         ).join('')}</ul>`
                     ).join('');
+                }).catch(err => {
+                    alert(err.message);
                 })
             )
         , Promise.resolve());
