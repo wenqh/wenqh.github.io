@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         html, body {height: 100%; margin: 0}
-        ul {list-style-type: none; padding-left: 10px}
+        ul {list-style-type: none; padding: 0 4px}
         li {padding: 10px 0;}
         li.active {background: black; color: white}
 
         .container {display: flex; height: 100%}
         .container > * {overflow-y: scroll; overflow-x: hidden;}
-        #left {text-align: center; max-width: 30%; white-space: nowrap;}
+        #left {text-align: center; max-width: 24%; white-space: nowrap;}
         #right ul {display: none}
         #right ul.active {display: block}
         #right li {display: flex; align-items: center; gap: 5px}
@@ -31,9 +31,9 @@
             display:flex; justify-content:center; align-items:center;"
      onclick="menu.style.display=menu.style.display === 'none' ? 'block' : 'none'">+</div>
 </body>
-<div id="menu" style="display: none; position: fixed; bottom: 80px; right: 10px; background: white; border: solid 1px">
-    <div>推送URL：<input onchange="localStorage.setItem('tvbox-url', value)" onfocus="value=(localStorage.getItem('tvbox-url') || 'http://192.168.1.2:9978')"></div>
-    <div>直播源：<input onchange="load(value)"></div>
+<div id="menu" style="display: none; position: fixed; bottom: 80px; right: 10px; background: white; border: solid 1px; padding: 10px">
+    <div>推送URL：<input onchange="localStorage.setItem('tvbox-url', value)" onfocus="value=(localStorage.getItem('tvbox-url') || 'http://192.168.1.2:9978')" style="font-size: 1.2em"></div>
+    <div>直播源：<input onchange="load(value)" style="font-size: 1.2em"></div>
 </div>
 
 
