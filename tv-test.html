@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>📺</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Materialize CSS -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-weight: bold;
+        }
+        a {
+            color: black !important;
+        }
+
+
+        li {
+            padding: 5px 0;
+        }
+        #left {
+            text-align: center;
+        }
+        .li.active {
+            background-color: #555 !important;
+            color: white !important;
+        }
+        #right ul {
+            display: none;
+        }
+        #right ul.active {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container" style="padding-top: 20px;">
+    <button class="modal-trigger" href="#modal1">设置URL</button>
+    <button id="export">导出</button>
+    <a id="tvbox-url-link" target="_blank">OK影视</a>
+    <a href="tv-epg.html" target="_blank">节目表</a>
+    <div><input id="listUrl" placeholder="列表url" value="https://wenqh.github.io/tv_.txt"></div>
+    <div id="nowPlay"></div>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>TVBox URL</h4>
+            <input id="tvbox-url-input" type="text" placeholder="TvBox URL" class="validate">
+        </div>
+        <div class="modal-footer">
+            <a id="tvbox-url-save" href="#!" class="modal-close btn-flat">确定</a>
+        </div>
+    </div>
+</div>
+
+<main class="container">
+    <!-- <h5 class="center-align">直播列表</h5> -->
+    <div class="row">
+        <div class="col s3">
+            <ul id="left">
+                <li>全部</li>
+            </ul>
+        </div>
+        <div id="right" class="col s9">加载中...</div>
+    </div>
+    <!--<div class="row">
+        <div class="col s12">
+            <ul class="tabs" id="tabHeader"></ul>
+        </div>
+        <div id="tabContent" class="col s12">加载中...</div>
+    </div>-->
+</main>
+
+<!-- Materialize JS -->
+<script src="https://cdn.bootcdn.net/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    // const SOURCE_URL = 'tv.txt'; // 本地文件路径
+    let tvBoxUrl = 'http://192.168.1.2:9978';
+
+    // 异步加载文本内容
+    const fetchText = async (url) => {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('加载失败');
+        return res.text();
+    };
+
+    // 解析直播源格式
+    const parseTXT = (text) => {
+        const lines = text.trim().split(/\r?\n/);
+        const result = [];
+        let currentCategory = null;
+        let idx = 0;
+
+        for (const line of lines) {
+            if (line.endsWith(',#genre#')) {
+                const group = line.split(',')[0].trim();
+                currentCategory = { group, items: [] };
+                result.push(currentCategory);
+            } else if (currentCategory && line.includes(',')) {
+                const [name, url] = line.split(',');
+
+                // 查找当前分类中是否已存在该频道名
+                const existing = currentCategory.items.find(item => item.name === name);
+                const idx_ = existing ? existing.idx : ++idx;
+
+                currentCategory.items.push({idx: idx_, name: name.trim(), url: url.trim() });
+            }
+        }
+
+        return result;
+    };
+
+    function parseM3U(txt){
+        const groups={},lines=txt.split(/\r?\n/);
+        for(let i=0;i<lines.length;i++)
+            if(lines[i].startsWith('#EXTINF')){
+                const group=(lines[i].match(/group-title="([^"]*)"/)||['','默认'])[1];
+                const name=lines[i].split(',').pop().trim();
+                const url=lines[i+1];
+                (groups[group]=groups[group]||[]).push({name,url});
+            }
+        return Object.entries(groups).map(([group,items])=>({group,items}));
+    }
+
+
+    // 渲染分类和频道项
+    const render = (data) => {
+        const tabHeader = document.getElementById('left');
+        const tabContent = document.getElementById('right');
+        tabHeader.innerHTML = '';
+        tabContent.innerHTML = '';
+
+        data.forEach((d, i) => {
+            tabHeader.innerHTML += `
+          <li> ${d.group} </li>
+        `;
+
+            const listItems = d.items.map(({idx, name, url}) =>
+                `<li>
+            <a href="${url}" onclick="play('${url}', event)">
+              ${idx} ${name}
+              <div style="color: #888">${url}</div>
+            </a>
+          </li>`
+            ).join('');
+
+            tabContent.innerHTML += `
+          <div>
+            <ul>${listItems}</ul>
+          </div>
+        `;
+        });
+    };
+
+    // 提交频道地址到目标接口
+    const play = (channelUrl, event) => {
+        if(event) event.preventDefault();
+        /*if (document.querySelector('#edit').checked) {
+            return;
+        }*/
+        const newWin = window.open(`${tvBoxUrl}/action?do=push&url=${encodeURIComponent(channelUrl)}`, '_blank');
+        // 设置几秒后自动关闭
+        setTimeout(() => {
+            newWin.close();
+        }, 500);
+    };
+
+
+    // 页面加载初始化
+    document.addEventListener('DOMContentLoaded', async () => {
+        tvBoxUrl = localStorage.getItem('tvbox-url') || tvBoxUrl;
+
+        M.Modal.init(document.querySelectorAll('.modal'));
+
+        var tvBoxUrlInput = document.getElementById('tvbox-url-input');
+        tvBoxUrlInput.value = tvBoxUrl;
+        document.getElementById('tvbox-url-link').href = tvBoxUrl;
+        document.getElementById('tvbox-url-save').addEventListener('click', () => {
+            tvBoxUrl = tvBoxUrlInput.value.trim();
+            localStorage.setItem('tvbox-url', tvBoxUrl);
+        })
+
+
+
+
+        const playUrlInput = document.getElementById('listUrl');
+        let SOURCE_URL = playUrlInput.value;
+
+        await load(SOURCE_URL);
+        async function load(url) {
+            try {
+                const raw = await fetchText(url);
+                let data = raw.startsWith("#EXTM3U") || raw.includes("#EXTINF:") ?
+                    parseM3U(raw) :
+                    parseTXT(raw)
+                render(data);
+            } catch (err) {
+                alert('直播源加载失败：' + err.message);
+                console.error(err);
+            }
+        }
+
+        document.getElementById('left').addEventListener('click', e => {
+            if (e.target.tagName === 'LI') {
+                const index = ([...e.target.parentNode.children].indexOf(e.target));
+
+                [...document.querySelectorAll('#left li')].forEach((u, i) => u.classList.toggle('active', i === index));
+
+                [...document.querySelectorAll('#right ul')].forEach((u, i) => u.classList.toggle('active', i === index-1 || index === 0));
+            }
+        });
+
+        playUrlInput.addEventListener('keydown', async function(event) {
+            if (event.key !== 'Enter') {  // 或者 event.keyCode === 13
+                return;
+            }
+            await load(this.value);
+        });
+
+
+
+        window.addEventListener('devicemotion', event => {
+            const acceleration = event.accelerationIncludingGravity;
+            // 计算加速度值
+            const accelerationValue = Math.sqrt(
+                Math.pow(acceleration.x, 2) +
+                Math.pow(acceleration.y, 2) +
+                Math.pow(acceleration.z, 2)
+            );
+            // 如果加速度值超过阈值，则认为触发了摇一摇事件
+            if (accelerationValue > 30) {
+                // 在这里可以执行摇一摇后的操作
+                console.log("摇一摇触发了！");
+
+                const selectedIndices = [0,1,2,4,5];
+
+// 1. 筛选出索引在指定数组中的分类
+                const filteredCats = data.filter((cat, index) => selectedIndices.includes(index));
+
+// 2. 将所有符合条件的分类中的items合并成一个扁平化的数组
+                const allItems = filteredCats.flatMap(cat => cat.items);
+
+// 3. 从合并后的数组中随机抽取一个item
+                const randomIndex = Math.floor(Math.random() * allItems.length);
+                const randomItem = allItems[randomIndex];
+
+                document.getElementById('nowPlay').textContent = `${randomItem.idx} ${randomItem.name}`;
+                play(randomItem.url);
+            }
+        });
+
+    });
+
+
+
+
+    document.querySelector('main').addEventListener('contextmenu', (e) => {
+        const div = e.target;
+        if(div.getAttribute('contenteditable')) {
+            return;
+        }
+        e.preventDefault();
+        div.setAttribute('contenteditable', 'true');
+        div.focus();
+
+        // 失去焦点退出编辑模式
+        div.addEventListener('blur', () => {
+            div.removeAttribute('contenteditable');
+        }, { once: true });
+    });
+    /*document.querySelector('#edit').addEventListener('change', function() {
+        document.querySelector("#tabContent").setAttribute('contenteditable', this.checked)
+        document.querySelector("#tabHeader").setAttribute('contenteditable', this.checked)
+    });*/
+
+
+    document.querySelector('#export').addEventListener('click', () => {
+        let raw = '';
+
+        const tabs = document.querySelectorAll("ul.tabs li");
+        document.querySelectorAll("ul.collection").forEach((ul, i) => {
+            const catTitle = tabs[i].textContent.trim();
+            raw += '\n' + catTitle + ',#genre#\n';
+
+            for (const li of ul.querySelectorAll("li.collection-item")) {
+                const link = li.querySelector('a');
+
+                const name = link?.childNodes[0]?.nodeValue?.trim()?.replace(/^\d+\s+/, '')
+                const url = link?.href
+
+                raw += `${name},${url}\n`;
+            }
+        });
+
+        // 5. 创建并下载文件（这部分和之前一样）
+        if (!raw) {
+            return;
+        }
+        const blob = new Blob([raw], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+
+        link.href = URL.createObjectURL(blob);
+        link.download = SOURCE_URL;
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+</script>
+</body>
+</html>
