@@ -131,7 +131,7 @@
 
                 groups[group] ||=  {};
                 groups[group][name] ||= { logo: logo, urls: [] };
-                groups[group][name].urls.push(url);
+                if (!groups[group][name].urls.includes(url)) groups[group][name].urls.push(url);
             }
         });
         return groups;
@@ -148,7 +148,7 @@
             const [name, url] = line.split(',');
             if (!url) return;
             groups[group][name] ||= {logo: '', urls: []};
-            groups[group][name].urls.push(url);
+            if (!groups[group][name].urls.includes(url)) groups[group][name].urls.push(url);
         });
         return groups;
     }
