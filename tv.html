@@ -75,6 +75,7 @@
         const pushUrl = `${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`;
         if (location.protocol !== 'https:') {
             fetch(pushUrl);
+            e.preventDefault()
             return;
         }
         const win = window.open(pushUrl, '_blank');
