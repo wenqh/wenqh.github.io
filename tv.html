@@ -45,8 +45,9 @@
         <button onclick="document.querySelectorAll('#right a').forEach((a,i) => {a.textContent = a.getAttribute('href'); a.style.display = 'block'})">🧐显示播放地址</button>
     </div>
     <script>
-        document.getElementById('tvbox-url').value=localStorage.getItem('tvbox-url') || 'http://192.168.1.2:9978';
-        document.getElementById('play-list-url').value=localStorage.getItem('play-list-url');
+        document.getElementById('tvbox-url').value = localStorage.getItem('tvbox-url') || 'http://192.168.1.2:9978';
+        document.getElementById('play-list-url').value = localStorage.getItem('play-list-url') || 'tv-auto.m3u';
+        document.getElementById('play-list-url').onchange();
     </script>
 </div>
 </body>
@@ -60,7 +61,7 @@
 
             [...document.querySelectorAll('#right ul')].forEach((u, i) => u.classList.toggle('active', i === index-1 || index === 0));
 
-            document.getElementById('#right').scrollTop = 0;
+            document.getElementById('right').scrollTop = 0;
         }
     });
 
@@ -87,7 +88,7 @@
 </script>
 <script>
     let no = 0;
-    load('tv-auto.m3u');
+    //load('tv-auto.m3u');
     function load(...urls) {
         urls.reduce((p, url) =>
                 p.then(() =>
