@@ -107,7 +107,7 @@
                                 ).join('')}</ul>`
                             ).join('');
                         }).catch(err => {
-                        alert(err.message);
+                        alert(url + ': ' + err.message);
                         console.error(err);
                     })
                 )
