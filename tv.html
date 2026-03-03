@@ -101,13 +101,13 @@
                                 Object.keys(datas).map(d => `<li>${d}</li>`).join('')
                             }`;
                             /*.insertAdjacentHTML('beforeend',*/
-                            document.getElementById('right').innerHTML += Object.entries(datas).map(([group, items]) =>
+                            document.getElementById('right').insertAdjacentHTML('beforeend', Object.entries(datas).map(([group, items]) =>
                                 `<ul>${Object.entries(items).map(([name, item]) =>
                                     `<li>${String(++no).padStart(3, '0')} <img src="${item.logo}" loading="lazy">${name}${item.urls.map((u, i) => `<a href="${u}" target="_blank">路线${i+1}</a>`).join('')}</li>`
                                 ).join('')}</ul>`
-                            ).join('');
+                            ).join(''));
                         }).catch(err => {
-                        alert(err.message + ': ' + url);
+                        alert(err.message + '\n' + url);
                         console.error(err);
                     })
                 )
