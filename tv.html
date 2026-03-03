@@ -47,7 +47,9 @@
     <script>
         document.getElementById('tvbox-url').value = localStorage.getItem('tvbox-url') || 'http://192.168.1.2:9978';
         document.getElementById('play-list-url').value = localStorage.getItem('play-list-url') || 'tv-auto.m3u';
-        document.getElementById('play-list-url').onchange();
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('play-list-url').onchange();
+        });
     </script>
 </div>
 </body>
