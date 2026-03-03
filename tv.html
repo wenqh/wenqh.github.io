@@ -38,7 +38,7 @@
          <!--onclick="menu.style.display=menu.style.display === 'none' ? 'block' : 'none'"-->
     <div class="menu-body" style="background: white; padding: 10px">
         <label>推送URL：</label>
-        <input onchange="localStorage.setItem('tvbox-url', value)" id="tvbox-url"> <!--onfocus=-->
+        <input onchange="localStorage.setItem('tvbox-url', value);tvBoxUrl=value" id="tvbox-url"> <!--onfocus=-->
         <label>直播源：</label>
         <textarea onchange="load(...value.split('\n').filter(Boolean))" rows="10" id="play-list-url"></textarea>
         <button onclick="localStorage.setItem('play-list-url', previousElementSibling.value)">💾保存播放列表</button>
