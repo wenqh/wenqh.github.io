@@ -78,9 +78,9 @@
 
         const url = (e.target.closest('a') || li.querySelector('a'))?.href;//播放点击的链接或者第一个链接
         const pushUrl = `${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`;
+        e.preventDefault()
         if (location.protocol !== 'https:') {
             fetch(pushUrl);
-            e.preventDefault()
             return;
         }
         const win = window.open(pushUrl, '_blank');
