@@ -23,7 +23,7 @@ public class TvCrawler {
             "https://wenqh.github.io/tv1.m3u",
             "https://raw.githubusercontent.com/Jsnzkpg/Jsnzkpg/refs/heads/Jsnzkpg/Jsnzkpg1.m3u",
             "https://raw.githubusercontent.com/Jsnzkpg/Jsnzkpg/refs/heads/Jsnzkpg/Jsnzkpg1.m3u",
-            "https://tv.iill.top/m3u/Gather"
+            "https://tv.iill.top/m3u/Gather"//https://github.com/YanG-1989/m3u/
     );
 
     public static void main(String[] args) throws IOException {
@@ -52,5 +52,6 @@ public class TvCrawler {
         return response.body();
     }
 }
+
 
 
