@@ -43,7 +43,7 @@
         <textarea onchange="load(...value.split('\n').filter(Boolean))" rows="10" id="play-list-url"></textarea>
         <button onclick="localStorage.setItem('play-list-url', previousElementSibling.value)">💾保存播放列表</button>
         <button onclick="document.querySelectorAll('#right a').forEach((a, i) => {a.textContent = a.getAttribute('href'); a.style.display = 'block'})">🧐显示播放地址</button>
-        <button onclick="document.querySelectorAll('#left').forEach(a => a.hidden=!a.hidden)">🙈切换隐藏分类</button>
+        <button onclick="document.querySelectorAll('#left li').forEach(a => a.hidden=!a.hidden)">🙈切换隐藏分类</button>
         <textarea onchange="localStorage.setItem('hide-category', this.value); __done()" rows="5" id="hide-category"></textarea>
     </div>
     <script>
