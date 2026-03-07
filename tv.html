@@ -53,7 +53,7 @@
         document.addEventListener('DOMContentLoaded', () => document.getElementById('play-list-url').onchange(null));
         function __done() {
             const hideList = (localStorage.getItem('hide-category') || '').split('\n');
-            document.querySelectorAll('#left li').forEach(li => hideList.includes(li.textContent) && (li.hidden = true));
+            document.querySelectorAll('#left li').forEach(li => li.hidden = hideList.includes(li.textContent)/* && (li.hidden = true)*/);
         }
     </script>
 </div>
