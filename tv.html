@@ -125,7 +125,7 @@
                         `<li>${String(++no).padStart(3, '0')} <img src="${item.logo}" loading="lazy">${name}${item.urls.map((u, i) => `<a href="${u}" target="_blank">路线${i + 1}</a>`).join('')}</li>`
                     ).join('')}</ul>`
                 ).join('')
-            )
+            ).join('')
         }).then(() => __done());
 
 
