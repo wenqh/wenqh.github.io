@@ -46,7 +46,6 @@
         <button onclick="document.querySelectorAll('#left li').forEach(a => a.hidden=!a.hidden)">🙈切换隐藏分类</button>
         <a href="tv-epg.html" target="_blank">节目表</a>
         <textarea onchange="localStorage.setItem('hide-category', this.value); __done()" rows="5" id="hide-category"></textarea>
-        <a href="tv-epg.html" target="_blank">节目表</a>
     </div>
     <script>
         document.getElementById('tvbox-url').value = localStorage.getItem('tvbox-url') || 'http://192.168.1.2:9978';
@@ -196,3 +195,4 @@
 </script>
 
 </html>
+
