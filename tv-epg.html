@@ -21,7 +21,8 @@
             border-color: #007bff;
         }
         .channel { margin-bottom: 1em; }
-        .channel-name { font-weight: bold; font-size: 1.2em;
+        .channel-name {font-size: 1.0em; display: inline; background: black; color: white;}
+        .channel-name1 { font-weight: bold; font-size: 1.2em;
                       color: white;
 text-shadow: 
     -1px -1px 0 black,
@@ -37,11 +38,11 @@ text-shadow:
 <body>
 <h1>正在播放的节目</h1>
 <div class="source-links" id="source-links">
+    <a href="https://raw.githubusercontent.com/taksssss/tv/refs/heads/main/epg/51zmte2.xml">51zmt</a>
+    <a href="http://epg.51zmt.top:8000/e.xml">51zmt备</a>
     <a href="https://raw.githubusercontent.com/linitfor/epg/refs/heads/main/merged.xml" class="active">台湾</a>
     <a href="https://raw.githubusercontent.com/dujq666/tv/refs/heads/master/output/epg/epg.xml">国内</a>
     <a href="https://raw.githubusercontent.com/1ncred4/iptv/refs/heads/master/output/epg/epg.xml">节点</a>
-    <a href="https://raw.githubusercontent.com/taksssss/tv/refs/heads/main/epg/51zmte2.xml">台湾</a>
-    <a href="http://epg.51zmt.top:8000/e.xml">台湾</a>
 </div>
 
 <div id="content">加载中...</div>
