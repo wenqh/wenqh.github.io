@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh"><head>
+    <meta charset="UTF-8">
+    <title>📺当前节目</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: sans-serif; padding: 1em; }
+        .source-links a {
+            margin: 10px;
+            padding: 0.4em 0.8em;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .source-links a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .channel { margin-bottom: 1em; }
+        .channel-name {font-size: 1.0em; display: inline; background: black; color: white;}
+        .channel-name1 { font-weight: bold; font-size: 1.2em;
+            color: white;
+            text-shadow:
+                    -1px -1px 0 black,
+                    1px -1px 0 black,
+                    -1px  1px 0 black,
+                    1px  1px 0 black;
+
+            1-webkit-text-stroke: 1px black;
+        }
+        .next-program {color: #888;}
+    </style>
+</head>
+<body>
+<!-- <h1>正在播放的节目</h1> -->
+<div class="source-links" id="source-links">
+    <a href="https://raw.githubusercontent.com/taksssss/tv/refs/heads/main/epg/51zmte2.xml" class="active">51zmt</a><!-- http://epg.51zmt.top:8000/e.xml -->
+    <a href="https://raw.githubusercontent.com/linitfor/epg/refs/heads/main/merged.xml">台湾</a>
+    <a href="https://raw.githubusercontent.com/dujq666/tv/refs/heads/master/output/epg/epg.xml">国内</a>
+    <a href="https://raw.githubusercontent.com/1ncred4/iptv/refs/heads/master/output/epg/epg.xml">节点</a>
+</div>
+
+<div id="content">
+</div>
+
+<script>
+    const sourceLinks = document.getElementById('source-links');
+    const content = document.getElementById('content');
+
+    function loadEPG(url) {
+        content.textContent = '加载中...';
+        fetch(url)
+            .then(response => response.text())
+            .then(txt => {
+                const doc = new DOMParser().parseFromString(txt, "application/xml");
+                const now = new Date(Date.now() + 8 * 3600_000).toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
+
+                const currentPrograms = [];
+                for (const programme of doc.getElementsByTagName('programme')) {
+                    const channelId = programme.getAttribute('channel');
+                    const start = programme.getAttribute('start');
+                    const stop = programme.getAttribute('stop');
+                    if (now >= start && now < stop) {
+                        const channelName = doc.getElementById(channelId)?.getElementsByTagName('display-name')[0]?.textContent || channelId;
+                        const nowProgramme = programme.getElementsByTagName('title')[0]?.textContent || '未知节目';
+                        const nextProgramme = programme.nextElementSibling?.getElementsByTagName('title')[0]?.textContent || '未知节目';
+
+                        currentPrograms.push({ channelName, nowProgramme, nextProgramme });
+                    }
+                }
+
+                content.innerHTML = currentPrograms.map(p =>
+                    `<div class="channel">
+                            <div class="channel-name">${p.channelName}</div>
+                            <div class="program">${p.nowProgramme}</div>
+                            <div class="next-program">接下来: ${p.nextProgramme}</div>
+                        </div>`
+                ).join('');
+            })
+            .catch(err => {
+                content.textContent = '加载失败：' + err;
+                console.error(err);
+            });
+    }
+
+    // 点击 a 时加载并高亮
+    sourceLinks.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+            e.preventDefault();
+            for (const a of sourceLinks.querySelectorAll('a')) {
+                a.classList.remove('active');
+            }
+            e.target.classList.add('active');
+            loadEPG(e.target.href);
+        }
+    });
+
+    // 初始加载第一个链接
+    loadEPG(sourceLinks.querySelector('a').href);
+</script>
+</body></html>
