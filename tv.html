@@ -15,27 +15,32 @@
         #right ul {display: none}
         #right ul.active {display: block}
         #right li {display: flex; align-items: center; gap: 5px}
-        #right a {margin: 0 5px; color: inherit}
+        #right a {margin11: 0 5px; color: inherit}
         #right a:first-of-type {display: none}
         #right img {width: 40px; max-height: 23px; object-fit: contain;}
+
+        #right .title {flex: 1; min-width: 0; overflow: hidden; display: flex; flex-wrap: wrap; gap: 5px;}
+        #right .title a{white-space: nowrap;}
     </style>
 </head>
 <body>
 <div class="container">
-    <ul id="left"><li>全部</li></ul>
+    <ul id="left"><!--<li>全部</li>--></ul>
     <div id="right" style="flex: 1"></div>
 </div>
 
 
-<div class="menu" tabindex="0" style="position: absolute; top: 0; width: 100%;">
-    <style>.menu-body{display: none} .menu:focus-within .menu-body{display: block}
+<div class="menu" id="menu" tabindex="0" style="position: absolute; top: 0; width: 100%;">
+    <style>.menu-body, .menu-layer{display: none} .menu:focus-within .menu-body, .menu:focus-within .menu-layer{display: block}
     label {display: block} input, textarea {width: 100%; box-sizing: border-box; font-size: 1.2em}
-    #right li {flex-wrap: wrap; white-space: nowrap}/*可以放上面*/
+    /*#right li {flex-wrap: wrap; white-space: nowrap}可以放上面*/
     #right a {opacity: 0.65; text-decoration: none} #right a:focus{opacity: 1}/*可以放上面*/
     </style>
+    <div class="menu-layer" onclick="menu.blur()" style="position:fixed; z-index: 1; inset:0; background:rgba(0,0,0,.2)"></div>
+
     <div style="position: fixed; bottom: 20px; right: 10px; width:40px; height:40px; border-radius:50%; border: solid 1px #aaa; background: white; display:flex; justify-content:center; align-items:center;">+</div>
     <!--onclick="menu.style.display=menu.style.display === 'none' ? 'block' : 'none'"-->
-    <div class="menu-body" style="background: white; padding: 10px">
+    <div class="menu-body" style="background: white; padding: 10px; position: fixed; z-index: 2">
         <label>推送URL：</label>
         <input onchange="localStorage.setItem('tvbox-url', value);tvBoxUrl=value" id="tvbox-url"> <!--onfocus=-->
         <label>直播源：</label>
@@ -45,6 +50,7 @@
         <button onclick="document.querySelectorAll('#left li').forEach(a => a.hidden=!a.hidden)">🙈切换隐藏分类</button>
         <textarea onchange="localStorage.setItem('hide-category', this.value); __done()" rows="5" id="hide-category"></textarea>
         <a href="tv-epg.html" target="_blank">节目表</a>
+        <div id="history"></div>
     </div>
     <script>
         document.getElementById('tvbox-url').value = localStorage.getItem('tvbox-url') || 'http://192.168.1.2:9978';
@@ -122,7 +128,9 @@
             document.getElementById('right').innerHTML = all.map(datas =>
                 Object.entries(datas).map(([group, items]) =>
                     `<ul>${Object.entries(items).map(([name, item]) =>
-                        `<li>${String(++no).padStart(3, '0')} <img src="${item.logo}" loading="lazy">${name}${item.urls.map((u, i) => `<a href="${u}" target="_blank">路线${i + 1}</a>`).join('')}</li>`
+                        `<li>${String(++no).padStart(3, '0')} <img src="${item.logo}" loading="lazy">
+                            <div class="title"><span>${name}</span>${item.urls.map((u, i) => `<a href="${u}" target="_blank">路线${i + 1}</a>`).join('')}</div>
+                        </li>`
                     ).join('')}</ul>`
                 ).join('')
             ).join('')

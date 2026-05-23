@@ -5,22 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body { font-family: sans-serif; padding: 1em; }
+        .source-links {display: flex; gap: 15px}
         .source-links a {
-            margin: 10px;
             padding: 0.4em 0.8em;
             text-decoration: none;
-            color: #007bff;
-            border: 1px solid transparent;
+            color: black;
             border-radius: 4px;
             display: inline-block;
         }
         .source-links a.active {
-            background-color: #007bff;
+            background-color: black;
             color: white;
-            border-color: #007bff;
         }
-        .channel { margin-bottom: 1em; }
-        .channel-name {font-size: 1.0em; display: inline; background: black; color: white;}
+        .channel { margin: 10px 0; }
+        .channel-name {font-size: 1.0em; display1: inline; width: fit-content; background: black; color: white;}
         .channel-name1 { font-weight: bold; font-size: 1.2em;
             color: white;
             text-shadow:
@@ -31,7 +29,12 @@
 
             1-webkit-text-stroke: 1px black;
         }
-        .next-program {color: #888;}
+        .program {display: flex; gap: 20px; white-space: nowrap; overflow: hidden;}
+        .program div{width: 50%; text-overflow: ellipsis; overflow: hidden;}
+        .next-program {color: #888; white-space: nowrap; overflow: hidden;}
+
+
+        #category div {padding: 10px}
     </style>
 </head>
 <body>
@@ -42,7 +45,13 @@
     <a href="https://raw.githubusercontent.com/dujq666/tv/refs/heads/master/output/epg/epg.xml">国内</a>
     <a href="https://raw.githubusercontent.com/1ncred4/iptv/refs/heads/master/output/epg/epg.xml">节点</a>
 </div>
-
+<div id="category" style="display: flex;">
+    <div data=".*">全部</div>
+    <div data="电影|经典|洋片">电影</div>
+    <div data="^(?![A-Za-z]+$).+">综合</div>
+    <div data="戏剧|偶像|影剧">戏剧</div>
+    <div data="卡通|儿童|MOMO亲子台|东森幼幼台|DREAMWORKS|Nickelodeon|NickJr.">儿童</div>
+</div>
 <div id="content">
 </div>
 
@@ -75,8 +84,10 @@
                 content.innerHTML = currentPrograms.map(p =>
                     `<div class="channel">
                         <div class="channel-name">${p.channelName}</div>
-                        <div class="program">${p.nowProgramme}</div>
-                        <div class="next-program">接下来: ${p.nextProgramme}</div>
+                        <div class="program">
+                            <div class="program1">${p.nowProgramme}</div>
+                            <div class="next-program">${p.nextProgramme}</div>
+                        </div>
                     </div>`
                 ).join('');
             })
@@ -97,6 +108,14 @@
             loadEPG(e.target.href);
         }
     });
+    category.addEventListener('click', (e) => {
+        const data = e.target.getAttribute('data');
+        if (data) {
+            const regex = new RegExp(data);
+            Array.from(document.querySelectorAll('.channel')
+                .forEach(c => c.style.display = regex.test(c.firstElementChild.textContent) ? '' : 'none'));
+        }
+    })
 
     // 初始加载第一个链接
     loadEPG(sourceLinks.querySelector('a').href);
