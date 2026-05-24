@@ -14,25 +14,15 @@
     }
 
     const css = `
-        /* .h1_b8gRO */
-        #slidelist {
-            width: 100%;
-            height: 100%;
-            z-index: 504;
-            background-color: #000;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-        #slidelist div:first-child {
-            padding-right: 0 !important;
-        }
+            body {min-width: 100% !important}
+            #1douyin-navigation {display: none}
+            #slidelist div:first-child {padding-right: 0 !important;}
+            #douyin-header>div {min-width: 100% !important;}
     `;
 
     const style = document.createElement('style');
     style.textContent = css;
 
-    (document.head || document.documentElement).appendChild(style);
+    document.head.appendChild(style);
+    setTimeout(()=>document.getElementById('douyin-navigation').style.display = 'none', 5000);
 })();
