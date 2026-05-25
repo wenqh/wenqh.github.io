@@ -94,9 +94,11 @@
 
 </script>
 <script>
-    let no = 0;
+    //let no = 0;
     //load('tv-auto.m3u');
     function load(...urls) {
+        let no = 0;
+
         Promise.all(
             urls.map(url =>
                 fetch(url)
@@ -116,8 +118,8 @@
                     })
             )
         ).then(all => {
-            document.getElementById('left').innerHTML = '<li>全部</li>' + all.map(datas =>
-                Object.keys(datas).map(d => `<li>${d}</li>`).join('')
+            document.getElementById('left').innerHTML = '<li>全部</li>' + all.map((datas, i) =>
+                Object.keys(datas).map(d => `<li>${i} ${d}</li>`).join('')
             ).join('')
             document.getElementById('right').innerHTML = all.map(datas =>
                 Object.entries(datas).map(([group, items]) =>
