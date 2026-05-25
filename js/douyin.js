@@ -26,12 +26,17 @@
     document.head.appendChild(style);
     setTimeout(() => {
         const menu = document.getElementById('douyin-navigation');
-        menu.style.display = 'none';
 
         const b = document.createElement('button');
         b.textContent = '菜单';
-        b.style.cssText = 'position: fixed; top: 0; z-index: 999; margin: 16px; padding: 6px';
+        b.style.cssText = 'position: fixed; top: 0; z-index: 999; padding: 15px';
         b.addEventListener('click', () => {menu.style.display = menu.style.display === 'none' ? '' : 'none';});
         document.body.append(b);
-    }, 5000);
+
+        menu.addEventListener('click', (e) => {
+            if (e.target.closest('a')) {
+                e.currentTarget.style.display = 'none';
+            }
+        });
+    }, 2000);
 })();
