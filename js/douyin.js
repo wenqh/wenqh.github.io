@@ -19,7 +19,7 @@
             #slidelist div:first-child {padding-right: 0 !important;}
             #douyin-header>div {min-width: 100% !important;}
 
-            .isDark {background-color: white !important}
+            .isDark {background-color: black !important}
     `;
 
     const style = document.createElement('style');
