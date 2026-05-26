@@ -8,6 +8,7 @@
         ul {list-style-type: none; padding: 0 4px}
         li {padding: 10px 0;}
         li.active {background: black; color: white}
+        a {color: black;}
 
         .container {display: flex; height: 100%}
         .container > * {overflow-y: scroll; overflow-x: hidden;}
@@ -15,7 +16,6 @@
         #right ul {display: none}
         #right ul.active {display: block}
         #right li {display: flex; align-items: center; gap: 5px}
-        #right a {margin11: 0 5px; color: inherit}
         #right a:first-of-type {display: none}
         #right img {width: 40px; max-height: 23px; object-fit: contain;}
 
@@ -30,11 +30,12 @@
 </div>
 
 
+<input id="search" placeholder="搜索" style="position: fixed; top: 0; right: 0; width: 50px" onfocus="style.width = '30%'; select()" onblur="style.width = '50px';">
 <div class="menu" id="menu" tabindex="0" style="position: absolute; top: 0; width: 100%;">
     <style>.menu-body, .menu-layer{display: none} .menu:focus-within .menu-body, .menu:focus-within .menu-layer{display: block}
     label {display: block} input, textarea {width: 100%; box-sizing: border-box; font-size: 1.2em}
     /*#right li {flex-wrap: wrap; white-space: nowrap}可以放上面*/
-    #right a {opacity: 0.65; text-decoration: none} #right a:focus{opacity: 1}/*可以放上面*/
+    #right a {opacity: 0.65; text-decoration: none} #right a:focus{opacity: 1} .hide {display: none !important;}/*可以放上面*/
     </style>
     <div class="menu-layer" onclick="menu.blur()" style="position:fixed; z-index: 1; inset:0; background:rgba(0,0,0,.2)"></div>
 
@@ -61,6 +62,21 @@
             const hideList = (localStorage.getItem('hide-category') || '').split('\n');
             document.querySelectorAll('#left li').forEach(li => li.hidden = hideList.includes(li.textContent)/* && (li.hidden = true)*/);
         }
+
+        //搜索
+        let t;
+        document.getElementById('search').addEventListener('input', (e) => {
+            clearTimeout(t);
+            t = setTimeout(() => {
+                let kw = e.target.value;
+                document.querySelectorAll('#right li').forEach(li => {
+                    li.classList.toggle('hide', kw && !li.querySelector('span').textContent.includes(kw));
+                });
+
+                document.querySelectorAll('#right ul').forEach(ul => ul.classList.toggle('active', kw));//所有分类
+                document.querySelector('#left li.active')?.classList.remove('active');
+            }, 500);
+        });
     </script>
 </div>
 </body>
