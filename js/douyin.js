@@ -31,7 +31,7 @@
 
         const b = document.createElement('button');
         b.textContent = '菜单';
-        b.style.cssText = 'position: fixed; top: 0; z-index: 999; padding: 15px';
+        b.style.cssText = 'position: fixed; top: 0; z-index: 999; padding: 15px; background-color: inherit;';
         b.addEventListener('click', () => {menu.style.display = menu.style.display === 'none' ? '' : 'none';});
         document.body.append(b);
 
