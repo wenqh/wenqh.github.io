@@ -20,6 +20,9 @@
             #douyin-header>div {min-width: 100% !important;}
 
             .isDark {background-color: black !important}
+
+            :root .isDark {--color-text-t1: white !important;}
+            #videoSideCard {filter: invert(1);}}
     `;
 
     const style = document.createElement('style');
