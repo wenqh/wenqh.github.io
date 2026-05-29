@@ -22,7 +22,8 @@
             .isDark {background-color: black !important}
 
             :root .isDark {--color-text-t1: white !important;}
-            #videoSideCard {filter: invert(1);}}
+            #videoSideCard {filter: invert(1);}
+            #videoSideCard img {filter: invert(1);}
     `;
 
     const style = document.createElement('style');
@@ -34,7 +35,7 @@
 
         const b = document.createElement('div');
         b.textContent = '菜单';
-        b.style.cssText = 'position: fixed; top: 0; z-index: 999; padding: 15px; background-color: white;';
+        b.style.cssText = 'position: fixed; top: 0; z-index: 999; padding: 15px; color: white; background-color: black;';
         b.addEventListener('click', () => {menu.style.display = menu.style.display === 'none' ? '' : 'none';});
         document.body.append(b);
 
