@@ -41,7 +41,7 @@
 
     <div style="position: fixed; bottom: 20px; right: 15px; width:45px; height:45px; border-radius:50%; border: solid 1px #aaa; background: white; display:flex; justify-content:center; align-items:center;">+</div>
     <!--onclick="menu.style.display=menu.style.display === 'none' ? 'block' : 'none'"-->
-    <div class="menu-body" style="background: white; padding: 10px; position: fixed; z-index: 2">
+    <div class="menu-body" style="background: white; padding: 15px; position: fixed; z-index: 2">
         <label>推送URL：</label>
         <input onchange="localStorage.setItem('tvbox-url', value);tvBoxUrl=value" id="tvbox-url"> <!--onfocus=-->
         <label>直播源：</label>
@@ -106,13 +106,13 @@
         const url = (e.target.closest('a') || li.querySelector('a'))?.href;//播放点击的链接或者第一个链接
         const pushUrl = `${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`;
         e.preventDefault();
-        if(1===1) {new Image().src=pushUrl;return}
-        if (location.protocol === 'http:') {
+        new Image().src = pushUrl
+        /*if (location.protocol === 'http:') {
             fetch(pushUrl);
             return;
         }
         const win = window.open(pushUrl, '_blank');
-        setTimeout(() => win.close(), 300);
+        setTimeout(() => win.close(), 300);*/
     });
 
 </script>
