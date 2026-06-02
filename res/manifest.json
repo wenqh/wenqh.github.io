@@ -1,8 +1,8 @@
 {
-  "name": "📺 TV",
-  "short_name": "TV",
-  "start_url": "../tv.html",
-  "scope": "../",
+  "name": "电视",
+  "short_name": "电视",
+  "start_url": "/tv.html",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1a1a1a",
