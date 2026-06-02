@@ -2,8 +2,9 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">    <title>📺</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="manifest" href="res/manifest.json">
+    <title>📺</title>
     <style>
         html, body {height: 100%; margin: 0}
         ul {list-style-type: none; padding: 0 4px}
@@ -124,12 +125,11 @@
     function load(...urls) {
         Promise.all(
             urls.map(url =>
-                /*fetch(url)
+                fetch(url)
                     .then(r => {
                         if (!r.ok) throw new Error(`加载失败：${r.status}`);
                         return r.text();
-                    })*/
-                fetchCached(url)
+                    })
                     .then(text => {
                         return text.startsWith("#EXTM3U") || text.includes("#EXTINF:") ?
                             parseM3U(text) :
@@ -220,27 +220,5 @@
         return groups;
     }
 </script>
-<script>
-    // ===== 离线缓存：播放列表用 Cache API 存，1天 TTL 的 stale-while-revalidate =====
-    const CACHE_TTL = 24 * 60 * 60 * 1000; // 1天
 
-    // 有缓存就先返缓存秒开；只有过期时才后台刷新一次（留给下次打开），不过期连请求都不发。
-    // 无缓存才等网络。
-    async function fetchCached(url) {
-        const hit = await caches.match(url);
-        const refresh = async () => {      // 拉最新并写入缓存
-            const r = await fetch(url);
-            if (!r.ok) throw new Error(`加载失败：${r.status}`);
-            const text = await r.text();
-            const cache = await caches.open('tv-lists');
-            await cache.put(url, new Response(text, { headers: { 'x-cached-at': Date.now() } }));
-            return text;
-        };
-        if (hit) {
-            if (Date.now() - hit.headers.get('x-cached-at') >= CACHE_TTL) refresh().catch(() => {}); // 过期才后台刷新
-            return hit.text();             // 立刻返回缓存
-        }
-        return refresh();                  // 无缓存：等网络
-    }
-</script>
 </html>
