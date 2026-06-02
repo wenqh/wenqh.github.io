@@ -15,12 +15,8 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-    // 只接管页面导航：在线走网络并更新外壳，离线回退缓存。其它请求一律放行。
+    // 只接管页面导航：在线走网络（永远最新），离线回退缓存的外壳。其它请求一律放行。
     if (e.request.mode === 'navigate') {
-        e.respondWith(
-            fetch(e.request)
-                .then(r => { caches.open(SHELL).then(c => c.put('tv.html', r.clone())); return r; })
-                .catch(() => caches.match('tv.html'))
-        );
+        e.respondWith(fetch(e.request).catch(() => caches.match('tv.html')));
     }
 });

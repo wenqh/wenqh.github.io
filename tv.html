@@ -224,24 +224,23 @@
     // ===== 离线缓存：播放列表用 Cache API 存，1天 TTL 的 stale-while-revalidate =====
     const CACHE_TTL = 24 * 60 * 60 * 1000; // 1天
 
-    // 1天内：先返缓存秒开，后台静默刷新缓存（不重渲染，留给下次打开）；
-    // 过期/无缓存：拉最新；拉不到（离线）再回退旧缓存。
+    // 有缓存就先返缓存秒开；只有过期时才后台刷新一次（留给下次打开），不过期连请求都不发。
+    // 无缓存才等网络。
     async function fetchCached(url) {
         const hit = await caches.match(url);
-        const p = (async () => {      // 拉最新并写入缓存，只发一次请求
+        const refresh = async () => {      // 拉最新并写入缓存
             const r = await fetch(url);
             if (!r.ok) throw new Error(`加载失败：${r.status}`);
             const text = await r.text();
             const cache = await caches.open('tv-lists');
             await cache.put(url, new Response(text, { headers: { 'x-cached-at': Date.now() } }));
             return text;
-        })();
-        if (hit && Date.now() - hit.headers.get('x-cached-at') < CACHE_TTL) {
-            p.catch(() => {});        // 后台静默刷新，吞掉报错
-            return hit.text();
+        };
+        if (hit) {
+            if (Date.now() - hit.headers.get('x-cached-at') >= CACHE_TTL) refresh().catch(() => {}); // 过期才后台刷新
+            return hit.text();             // 立刻返回缓存
         }
-        return p.catch(e => { if (hit) return hit.text(); throw e; }); // 过期：等最新，拉不到回退旧缓存
+        return refresh();                  // 无缓存：等网络
     }
 </script>
-
 </html>
