@@ -156,9 +156,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let lastHash;
     window.addEventListener('hashchange', () => {
-        if(location.hash === '' || lastHash === '#modal2') {
+        if(location.hash === '') {
             // 优先点第一个；找不到就退回点“关闭”按钮（用 || 短路取第一个存在的）
-            (document.querySelector('.Modal-content > div > div > div > div')
+            (document.querySelector('.Modal-content > div:nth-child(2) > div > div > div')
                 || document.querySelector('button[aria-label="关闭"]')
             )?.click();
         }
