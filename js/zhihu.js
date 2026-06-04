@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name        haoZhihu Desktop on Mobile
-// @name:zh-CN  好知乎桌面版适配移动端
+// @name        Zhihu Desktop on Mobile
+// @name:zh-CN  知乎桌面版适配移动端
 // @description Use full-featured desktop web zhihu on your phone.
 // @description:zh-CN 在你的手机上使用全功能的知乎桌面网页版。
 // @namespace   https://greasyfork.org/users/197529 //https://greasyfork.org/zh-CN/scripts/546526-zhihu-desktop-on-mobile
-// @version     0.1.3
-// @author      kkocdko
+// @version     0.1
+// @author      wqh
 // @license     Unlicense
 // @match       *://*.zhihu.com/*
 // @run-at      document-start
