@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name        Zhihu Desktop on Mobile
-// @name:zh-CN  知乎桌面版适配移动端
+// @name        haoZhihu Desktop on Mobile
+// @name:zh-CN  好知乎桌面版适配移动端
 // @description Use full-featured desktop web zhihu on your phone.
 // @description:zh-CN 在你的手机上使用全功能的知乎桌面网页版。
 // @namespace   https://greasyfork.org/users/197529 //https://greasyfork.org/zh-CN/scripts/546526-zhihu-desktop-on-mobile
@@ -13,17 +13,9 @@
 
 (function () {
     const CSS = `
-        .ContentItem-title,
-        .QuestionHeader-title {
-            font-weight: normal;
-        }
-        .OpenInAppButton,
-        .PlaceHolder.List-item {
-            display: none;
-        }
         @media (orientation: portrait) {
-            header.AppHeader {
-                overflow: auto;
+            header.AppHeader,.SearchTabs,.ContentItem-actions {
+                overflow-x: auto;
             }
             header.AppHeader,
             .Topstory-container,
@@ -41,8 +33,7 @@
                 margin-top: -10px;
             }
             .Question-mainColumn + *,
-            .Topstory-mainColumn + *
-            /*,.ContentItem-actions > :not(:first-child) svg*/ {
+            .Topstory-mainColumn + * {
                 display: none;
             }
             .Search-container .List-item,
@@ -53,31 +44,20 @@
                 padding: 4px 4px 8px;
             }
             .ContentItem-actions {
-                left: 0;
                 padding: 4px 0 0 0;
                 margin: 0;
-                overflow: auto;
-                overflow: overlay;
-                overflow-y: hidden;
             }
             .ContentItem-actions > * {
                 margin: 0 8px 0 0;
             }
-            .ContentItem-actions.is-fixed {
-                width: 100%;
-                padding: 0;
-            }
+            
             .Modal-content {
                 max-width: 100%;
             }
-    
-    
+
             /* 搜索框位置 */
             .AppHeader-Tabs, .SearchTabs-actions {
                 order: 9;
-            }
-            .SearchTabs {
-                overflow-x: scroll;
             }
             /* 搜索页侧边 */
             .SearchMain + *, .Question-sideColumn {
@@ -91,7 +71,7 @@
                 width: 100%;
             }
             .AuthorInfo-badgeText {
-                width: auto;
+                width: auto !important;
             }
             /* 评论框 */
             div:has(> div > .Modal-content) {
@@ -102,12 +82,12 @@
             .Modal-content > div > :last-child, .Modal-content > div > :first-child {
                 display: none;
             }
-    
-            .Pc-word-new {display: none}
             .css-kt4t4n {margin: 0}
-            
+
             .QuestionMainAction.ViewAll-QuestionMainAction {background-color: #ddd; color: black}/* 查看全部回答 */
             .QuestionHeader-Comment {order: -1}/* 问题评论 */
+            
+            .Pc-word-new {display: none}/*广告*/
         }
     `;
     const el = document.createElement('style');
@@ -133,13 +113,13 @@
     document.addEventListener('click', (e) => {
         const btn = e.target.closest('.Modal-content .Button.Button--secondary');
         if (btn && /查看全部\s*\d+\s*条回复/.test(btn.textContent)) {
-            if(location.hash === '#modal') location.hash = "#modal2";
+            if (location.hash === '#modal') location.hash = "#modal2";
         }
     });
 
     let lastHash;
     window.addEventListener('hashchange', () => {
-        if(location.hash === '' || lastHash === '#modal2') {
+        if (location.hash === '' || lastHash === '#modal2') {
             // 优先点第一个；找不到就退回点“关闭”按钮（用 || 短路取第一个存在的）
             (document.querySelector('.Modal-content > div:nth-child(2) > div > div > div')
                 || document.querySelector('button[aria-label="关闭"]')
