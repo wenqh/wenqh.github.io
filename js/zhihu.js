@@ -45,7 +45,8 @@
             }
             .ContentItem-actions {
                 padding: 4px 0 0 0;
-                margin: 0;
+                margin-left: 0;
+                margin-right: 0;
             }
             .ContentItem-actions > * {
                 margin: 0 8px 0 0;
