@@ -41,14 +41,11 @@
             .Profile-mainColumn .List-item,
             .Topstory-mainColumn .TopstoryItem,
             .QuestionAnswer-content {
-                padding: 4px 4px 15px;
+                padding: 4px 4px 8px;
             }
             .ContentItem-actions {
                 padding: 4px 0 0 0;
-                margin-left: 0;
-                margin-right: 0;
-                margin-left: 0;
-                margin-right: 0;
+                margin: 0;
                 overflow-y: hidden;
             }
             .ContentItem-actions > * {
