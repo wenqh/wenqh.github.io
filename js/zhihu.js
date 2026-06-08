@@ -85,7 +85,7 @@
             }
             .css-kt4t4n {margin: 0}
 
-            .QuestionMainAction.ViewAll-QuestionMainAction {background-color: #ddd; color: black}/* 查看全部回答 */
+            .QuestionMainAction.ViewAll-QuestionMainAction {background-color: #eee; color: black}/* 查看全部回答 */
             .QuestionHeader-Comment {order: -1}/* 问题评论 */
             
             .Pc-word-new {display: none}/*广告*/
