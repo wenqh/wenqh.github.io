@@ -26,19 +26,18 @@ self.addEventListener('fetch', e => {
         const cache = await caches.open(DATA);
         const hit = await cache.match(req);
 
-        const refresh = async () => {        // 拉最新、盖时间戳存入（blob 读一次，无需 clone）
+        const refresh = async () => {
             const r = await fetch(req);
-            if (!r.ok) return;
-            const headers = new Headers(r.headers);
-            headers.set('x-cached-at', Date.now());
-            await cache.put(req, new Response(await r.blob(), { status: r.status, headers }));
+            if (r.ok) {
+                const headers = new Headers(r.headers);
+                headers.set('x-cached-at', Date.now());
+                await cache.put(req, new Response(r.clone().body, { headers }));
+            }
+            return r;                              // r 未被读，原样返回给页面
         };
 
-        if (hit) {
-            if (Date.now() - hit.headers.get('x-cached-at') >= TTL) e.waitUntil(refresh().catch(() => {})); // 过期后台刷
-            return hit;                      // 有缓存秒开
-        }
-        await refresh().catch(() => {});     // 冷启动：等网络写入
-        return (await cache.match(req)) || fetch(req);
+        if (!hit) return refresh();                // 冷启动：等网络
+        if (Date.now() - hit.headers.get('x-cached-at') >= TTL) e.waitUntil(refresh().catch(() => {}));  // 过期：后台刷，下次生效
+        return hit;                                // 有缓存：秒开
     })());
 });
