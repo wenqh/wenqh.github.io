@@ -45,6 +45,8 @@
         <button onclick="document.querySelectorAll('#left li').forEach(a => a.hidden=!a.hidden)">🙈切换隐藏分类</button>
         <textarea onchange="localStorage.setItem('hide-category', this.value); __done()" rows="5" id="hide-category"></textarea>
         <a href="tv-epg.html" target="_blank">节目表</a>
+        <a href="tv-epg.html" onclick="window.open(tvBoxUrl)">盒子</a>
+        <button id="export">导出</button>
     </div>
     <script>
         document.getElementById('tvbox-url').value = localStorage.getItem('tvbox-url') || 'http://192.168.1.2:9978';
@@ -96,6 +98,7 @@
 <script>
     //let no = 0;
     //load('tv-auto.m3u');
+    let ALL;
     function load(...urls) {
         let no = 0;
 
@@ -128,6 +131,7 @@
                     ).join('')}</ul>`
                 ).join('')
             ).join('')
+            ALL = all;
         }).then(() => __done());
 
 
@@ -181,7 +185,7 @@
         const groups = {}, lines = txt.split(/\r?\n/);
         let group;
         lines.forEach((line, i) => {
-            if (line.endsWith(',#genre#')) {
+            if (line.includes(',#genre#')) {
                 group = line.replace(',#genre#', '');
                 groups[group] ||= {};
                 return;
@@ -193,6 +197,27 @@
         });
         return groups;
     }
+</script>
+
+<!--下载-->
+<script>
+    document.getElementById('export').addEventListener('click', () => {
+        const m3u = '#EXTM3U\n' + ALL.map(datas =>
+            Object.entries(datas).map(([group, items]) =>
+                Object.entries(items).map(([name, item]) =>
+                    item.urls.map(url =>
+                        `#EXTINF:-1 tvg-logo="${item.logo}" group-title="${group}",${name}\n${url}`
+                    ).join('\n')
+                ).join('\n')
+            ).join('\n')
+        ).join('\n');
+
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([m3u], {type: 'application/octet-stream'}));
+        a.download = 'tv.m3u';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    })
 </script>
 
 </html>
