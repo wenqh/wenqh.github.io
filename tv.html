@@ -53,7 +53,7 @@
         <button onclick="document.querySelectorAll('#right a').forEach((a, i) => {a.textContent = a.getAttribute('href'); a.style.display = 'block'})">🧐显示播放地址</button>
         <button onclick="document.querySelectorAll('#left li').forEach(a => a.hidden=!a.hidden)">🙈切换隐藏分类</button>
         <textarea onchange="localStorage.setItem('hide-category', this.value); __done()" rows="5" id="hide-category"></textarea>
-        <a href="tv-epg.html">节目表</a> <a href="" onclick="window.open(tvBoxUrl)">盒子</a> 
+        <div style="display: flex; gap: 10px"><a href="tv-epg.html">节目表</a><a href="" onclick="window.open(tvBoxUrl)">盒子</a></div>
         <div id="history"></div>
     </div>
     <script>
