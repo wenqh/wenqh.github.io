@@ -24,6 +24,8 @@
             :root .isDark {--color-text-t1: white !important; --color-text-t4: rgba(255,255,255,.6) !important; }
             #videoSideCard {filter: invert(1);}
             #videoSideCard img {filter: invert(1);}
+
+            div[data-e2e="im-dialog"] {width: 100%}
     `;
 
     const style = document.createElement('style');
