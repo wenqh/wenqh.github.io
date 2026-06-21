@@ -25,7 +25,7 @@
             #videoSideCard {filter: invert(1);}
             #videoSideCard img {filter: invert(1);}
 
-            div[data-e2e="im-dialog"] {width: 100%}
+            div[data-e2e="im-dialog"] {width: 100% !important}
     `;
 
     const style = document.createElement('style');

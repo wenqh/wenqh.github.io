@@ -89,6 +89,7 @@
             .QuestionHeader-Comment {order: -1}/* 问题评论 */
             
             .Pc-word-new {display: none}/*广告*/
+            .Modal-content > div > div:nth-child(2) > :last-child {border: 5px  solid black}
         }
     `;
     const el = document.createElement('style');
