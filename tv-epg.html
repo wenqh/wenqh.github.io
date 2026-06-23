@@ -127,6 +127,12 @@
 
     // 初始加载第一个链接
     loadEPG(sourceLinks.querySelector('a').href);
+
+    content.addEventListener('click', (e) => {
+        if(e.target.closest('.channel-name')) {
+            navigator.clipboard.writeText(e.target.innerText);
+        }
+    })
 </script>
 </body>
 </html>
