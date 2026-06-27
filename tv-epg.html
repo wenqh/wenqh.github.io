@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh"><head>
     <meta charset="UTF-8">
@@ -55,6 +54,8 @@
 <div class="source-links" id="source-links">
     <a href="https://raw.githubusercontent.com/taksssss/tv/refs/heads/main/epg/51zmte2.xml" class="active">台湾</a><!-- http://epg.51zmt.top:8000/e.xml -->
     <a href="https://raw.githubusercontent.com/taksssss/tv/refs/heads/main/epg/51zmt.xml">国内</a>
+    <a href="https://epg.pw/xmltv/epg_TW.xml">台湾</a>
+    <a href="https://raw.githubusercontent.com/litiande03/epg/refs/heads/master/pl.xml.gz">台湾</a>
     <!-- <a href="https://raw.githubusercontent.com/dujq666/tv/refs/heads/master/output/epg/epg.xml">国内</a>-->
 </div>
 <div id="category" style="display: flex;">
@@ -73,7 +74,8 @@
     function loadEPG(url) {
         content.textContent = '加载中...';
         fetch(url)
-            .then(response => response.text())
+            //.then(response => response.text())
+            .then(r => url.endsWith('.gz') ? new Response(r.body.pipeThrough(new DecompressionStream('gzip'))).text() : r.text())
             .then(txt => {
                 const doc = new DOMParser().parseFromString(txt, "application/xml");
                 const now = new Date(Date.now() + 8 * 3600_000).toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
