@@ -18,16 +18,9 @@
        - 中后段低于对角线：浅灰/浅色被压暗 → 这就是你喜欢的效果
        - 末尾必须是 1：纯白保持纯白
        想更暗：把中间几个数(0.33~0.75)调小；想更轻：调大。必须单调递增。 */
-    //const CURVE = [0, 0.12, 0.20, 0.27, 0.33, 0.41, 0.52, 0.68, 1];
-    
-    // 第①档 狠：线条明显变黑，浅灰整体下沉
-    //const CURVE = [0, 0.12, 0.22, 0.29, 0.35, 0.40, 0.47, 0.58, 1];
+    const CURVE = [0, 0.11, 0.20, 0.26, 0.31, 0.36, 0.42, 0.52, 1];//[0, 0.06, 0.1, 0.14, 0.18, 0.22, 0.28, 0.42, 1];//[0, 0.02, 0.10, 0.17, 0.23, 0.31, 0.42, 0.58, 1];//[0, 0.12, 0.20, 0.27, 0.33, 0.41, 0.52, 0.68, 1];
 
-    // 第②档 更狠：浅灰线压到中灰，对比强（推荐先试）
-    const CURVE = [0, 0.11, 0.20, 0.26, 0.31, 0.36, 0.42, 0.52, 1];
-
-    // 第③档 最狠：接近白的浅线都拉成深灰，极限黑
-    //const CURVE = [0, 0.11, 0.19, 0.24, 0.29, 0.33, 0.38, 0.46, 1];
+    const KEEP_MEDIA = true; // true=图片/视频/canvas 反向补偿，保持原亮度不被压暗
 
     // 由正向曲线自动算出逆曲线（在均匀 y 上重采样），改 CURVE 时无需手动维护
     function invert(fwd, n) {
@@ -65,24 +58,14 @@
     style.textContent = css;
     document.documentElement.appendChild(style);
 })();
-// ==UserScript==
-// @name         v1E-ink 阅读加深（纯白保持纯白）
-// @namespace    eink
-// @version      1.0
-// @description  用 gamma 曲线压暗中间调与彩色，纯白背景保持绝对白；图片/视频反向补偿不被压暗。document-start 注入防闪烁。
-// @author       wen
-// @match        *://*/*
-// @grant        none
-// @run-at       document-start
-// ==/UserScript==
 
+/*
 (function () {
     'use strict';
 
-    /* ===== 可调参数 ===== */
+    // ===== 可调参数 =====
     const GAMMA = 3;        // 压暗强度：1=无效果，2 适中，2.5 / 3 更狠，1.5 更轻
     const KEEP_MEDIA = true; // true=图片/视频/canvas 反向补偿，保持原亮度不被压暗
-    /* ==================== */
 
     // 逆 gamma：(x^GAMMA)^(1/GAMMA) = x，用来把媒体还原回原始亮度
     const inv = (1 / GAMMA).toFixed(4);
@@ -110,3 +93,4 @@
     style.textContent = css;
     document.documentElement.appendChild(style);
 })();
+ */

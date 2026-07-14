@@ -76,7 +76,7 @@
             }
             /* 评论框 */
             div:has(> div > .Modal-content) {
-                width: 95%;
+                width: 100%;
                 max-height: 100%;
                 height: 100%;
             }
