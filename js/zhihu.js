@@ -71,6 +71,7 @@
             .QuestionHeader-main {
                 width: 100%;
             }
+            .QuestionPage > div {width: 100%;}
             .AuthorInfo-badgeText {
                 width: auto !important;
             }
