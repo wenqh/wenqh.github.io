@@ -36,7 +36,7 @@
 <input id="search" placeholder="搜索" style="position: fixed; top: 16px; right: 20px; width: 50px" onfocus="style.width = '30%'; select()" onblur="style.width = '50px';">
 <div class="menu" id="menu" tabindex="0" style="position: absolute; top: 0; width: 100%;">
     <style>.menu-body, .menu-layer{display: none} .menu:focus-within .menu-body, .menu:focus-within .menu-layer{display: block}
-    input, textarea {width: 100%; box-sizing: border-box; font-size: 1.2em}
+    input[type="text"], textarea {width: 100%; box-sizing: border-box; font-size: 1.2em}
     /*#right li {flex-wrap: wrap; white-space: nowrap}可以放上面*/
     #right a {opacity: 0.65; text-decoration: none} #right a:focus{opacity: 1} .hide {display: none !important;}/*可以放上面*/
     </style>
@@ -96,13 +96,13 @@
                 if (now - last > COOLDOWN) {  // 节流
                     last = now;
                     
-                    document.querySelector('#right li.active').nextElementSibling.click();
+                    document.querySelector('#right li.active')?.nextElementSibling?.click();
                 }
             }
         }
 
         const toggle = document.getElementById('remote');
-        toggle.addEventListener('change', function () {alert(1212)
+        toggle.addEventListener('change', function () {
             if (this.checked) {
                 window.addEventListener('devicemotion', handler);
             } else {
