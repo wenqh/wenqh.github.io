@@ -13,15 +13,16 @@
         a {color: inherit;}
 
         .container {display: flex; height: 100%}
-        .container > * {overflow-y: scroll; overflow-x: hidden; padding-inline: 4px}
+        .container > * {overflow-y: scroll; padding-inline: 4px}
         #left {text-align: center; max-width: 24%; white-space: nowrap;}
+        #left li {overflow-x: hidden}
         #right ul {display: none}
         #right ul.active {display: block}
         #right li {display: flex; align-items: center; gap: 5px}
         #right a:first-of-type {display: none}
         #right img {width: 40px; max-height: 23px; object-fit: contain;}
 
-        #right .title {flex: 1; min-width: 0; overflow: hidden; display: flex; flex-wrap: wrap; gap: 5px;}
+        #right .title {flex: 1; min-width: 0; /*overflow: hidden;*/ display: flex; flex-wrap: wrap; gap: 5px;}
         #right .title a{white-space: nowrap;}
     </style>
     <script>//if ('serviceWorker' in navigator) navigator.serviceWorker.register('tv-sw.js');</script>
