@@ -129,7 +129,7 @@
 
         document.querySelector('#left li.active')?.classList.remove('active');
         e.target.classList.add('active');
-        e.target.scrollIntoView({block: 'center', behavior: 'auto'});
+        e.target.scrollIntoView({block: 'nearest', behavior: 'auto'});
 
         [...document.querySelectorAll('#right ul')].forEach((u, i) => u.classList.toggle('active', i === idx-1 || idx === 0));
 
