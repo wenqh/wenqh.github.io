@@ -119,9 +119,9 @@
 
         const idx = ([...e.target.parentNode.children].indexOf(e.target));
 
+        document.querySelector('#left li.active')?.classList.remove('active');
         e.target.classList.add('active');
         e.target.scrollIntoView({block: 'center', behavior: 'auto'});
-        document.querySelector('#left li.active')?.classList.remove('active');
 
         [...document.querySelectorAll('#right ul')].forEach((u, i) => u.classList.toggle('active', i === idx-1 || idx === 0));
 
@@ -134,9 +134,9 @@
         const li = e.target.closest('li');
         if (!li) return;
 
+        document.querySelector('#right li.active')?.classList.remove('active');
         li.classList.add('active');
         li.scrollIntoView({block: 'center', behavior: 'auto'});
-        document.querySelector('#right li.active')?.classList.remove('active');
 
         const url = (e.target.closest('a') || li.querySelector('a'))?.href;//播放点击的链接或者第一个链接
         const pushUrl = `${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`;
