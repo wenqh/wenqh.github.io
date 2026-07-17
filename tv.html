@@ -6,14 +6,14 @@
     <link rel="manifest" href="res/manifest.json">
     <title>📺</title>
     <style>
-        html, body {height: 100%; margin: 0}
-        ul {list-style-type: none; padding: 0 4px}
-        li {padding: 10px 0;}
-        li.active {background: black; color: white}
+        html, body {height: 100%; margin-block: 0;}
+        ul {list-style-type: none; padding-left: 0}
+        li {padding: 10px 2px; border: 2px solid transparent;}
+        li.active {/*background: black; color: white*/ border-color: currentColor; border-radius: 6px;}
         a {color: inherit;}
 
         .container {display: flex; height: 100%}
-        .container > * {overflow-y: scroll; overflow-x: hidden;}
+        .container > * {overflow-y: scroll; overflow-x: hidden; padding-inline: 4px}
         #left {text-align: center; max-width: 24%; white-space: nowrap;}
         #right ul {display: none}
         #right ul.active {display: block}
@@ -36,7 +36,7 @@
 <input id="search" placeholder="搜索" style="position: fixed; top: 16px; right: 20px; width: 50px" onfocus="style.width = '30%'; select()" onblur="style.width = '50px';">
 <div class="menu" id="menu" tabindex="0" style="position: absolute; top: 0; width: 100%;">
     <style>.menu-body, .menu-layer{display: none} .menu:focus-within .menu-body, .menu:focus-within .menu-layer{display: block}
-    input[type="text"], textarea {width: 100%; box-sizing: border-box; font-size: 1.2em}
+    input:not([type="checkbox"]), textarea {width: 100%; box-sizing: border-box; font-size: 1.2em;}
     /*#right li {flex-wrap: wrap; white-space: nowrap}可以放上面*/
     #right a {opacity: 0.65; text-decoration: none} #right a:focus{opacity: 1} .hide {display: none !important;}/*可以放上面*/
     </style>
@@ -44,9 +44,9 @@
 
     <div style="position: fixed; bottom: 20px; right: 15px; width:45px; height:45px; border-radius:50%; border: solid 1px #aaa; background: white; display:flex; justify-content:center; align-items:center;">+</div>
     <!--onclick="menu.style.display=menu.style.display === 'none' ? 'block' : 'none'"-->
-    <div class="menu-body" style="background: white; padding: 15px; position: fixed; z-index: 2">
+    <div class="menu-body" style="background: white; padding: 15px; position: fixed; left:0; z-index: 2">
         <label>推送URL：</label>
-        <input type="text" onchange="localStorage.setItem('tvbox-url', value);tvBoxUrl=value" id="tvbox-url"> <!--onfocus=-->
+        <input onchange="localStorage.setItem('tvbox-url', value);tvBoxUrl=value" id="tvbox-url"> <!--onfocus=-->
         <label>直播源：</label>
         <textarea onchange="load(...value.split('\n').filter(s => s && !s.startsWith('#')))" rows="10" id="play-list-url"></textarea>
         <button onclick="localStorage.setItem('play-list-url', previousElementSibling.value)">💾保存播放列表</button>
@@ -95,7 +95,7 @@
                 const now = Date.now();
                 if (now - last > COOLDOWN) {  // 节流
                     last = now;
-                    
+
                     document.querySelector('#right li.active')?.nextElementSibling?.click();
                 }
             }
