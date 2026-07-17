@@ -33,7 +33,8 @@
 </div>
 
 
-<input id="search" placeholder="搜索" style="position: fixed; top: 16px; right: 20px; width: 50px" onfocus="style.width = '30%'; select()" onblur="style.width = '50px';">
+<input id="search" placeholder="搜索" style="position: fixed; top: 16px; right: 20px; width: 50px" onfocus="style.width = '30%'; select()" onblur="if(value === '') style.width = '50px';">
+<button id="cancel" style="position: fixed; top: 16px; right: 20px; display: none">✕</button>
 <div class="menu" id="menu" tabindex="0" style="position: absolute; top: 0; width: 100%;">
     <style>.menu-body, .menu-layer{display: none} .menu:focus-within .menu-body, .menu:focus-within .menu-layer{display: block}
     input:not([type="checkbox"]), textarea {width: 100%; box-sizing: border-box; font-size: 1.2em;}
@@ -69,7 +70,9 @@
 
         //搜索
         let t;
-        document.getElementById('search').addEventListener('input', (e) => {
+        let search = document.getElementById('search');
+        let cancel = document.getElementById('cancel');
+        search.addEventListener('input', (e) => {
             clearTimeout(t);
             t = setTimeout(() => {
                 let kw = e.target.value;
@@ -88,6 +91,12 @@
                     activeLi?.scrollIntoView({block: 'center', behavior: 'auto'});
                 }
             }, 500);
+            cancel.style.display = e.target.value ? 'block' : 'none';
+        });
+        cancel.addEventListener('click', () => {
+            search.value = '';
+            search.dispatchEvent(new Event('input'));   // 手动触发，让上面的恢复逻辑跑起来
+            search.style.width = '50px'
         });
     </script>
     <script>
