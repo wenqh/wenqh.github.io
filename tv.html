@@ -77,8 +77,16 @@
                     li.classList.toggle('hide', kw && !li.querySelector('span').textContent.includes(kw));
                 });
 
-                document.querySelectorAll('#right ul').forEach(ul => ul.classList.toggle('active', kw));//所有分类
+                document.querySelectorAll('#right ul').forEach(ul => ul.classList.toggle('active', kw));//有关键词时显示所有分类
+
                 document.querySelector('#left li.active')?.classList.remove('active');
+                if (!kw) {
+                    // 清空搜索：切回选中频道所在分类（无选中则回「全部」），并把它滚到中间
+                    const activeLi = document.querySelector('#right li.active');
+                    const idx = [...document.querySelectorAll('#right ul')].indexOf(activeLi?.closest('ul'));
+                    document.querySelectorAll('#left li')[idx + 1]?.click();
+                    activeLi?.scrollIntoView({block: 'center', behavior: 'auto'});
+                }
             }, 500);
         });
     </script>
