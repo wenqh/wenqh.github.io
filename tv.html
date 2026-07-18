@@ -113,7 +113,9 @@
                 if (now - last > COOLDOWN) {  // 节流
                     last = now;
 
-                    document.querySelector('#right li.active')?.nextElementSibling?.click();
+                    let li = document.querySelector('#right li.active')?.nextElementSibling;
+                    li?.click();
+                    li?.scrollIntoView({block: 'center', behavior: 'auto'});
                 }
             }
         }
@@ -153,7 +155,7 @@
 
         document.querySelector('#right li.active')?.classList.remove('active');
         li.classList.add('active');
-        li.scrollIntoView({block: 'center', behavior: 'auto'});
+        //li.scrollIntoView({block: 'center', behavior: 'auto'});
 
         const url = (e.target.closest('a') || li.querySelector('a'))?.href;//播放点击的链接或者第一个链接
         const pushUrl = `${tvBoxUrl}/action?do=push&url=${encodeURIComponent(url)}`;
