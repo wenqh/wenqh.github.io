@@ -87,7 +87,7 @@
             .Modal-content > div > :last-child, .Modal-content > div > :first-child {
                 display: none;
             }
-            .css-kt4t4n {margin: 0}/*回复框*/
+            .css-kt4t4n {margin: 0; display: none}/*写评论*/
 
             .QuestionHeader-Comment {order: -1}/* 问题标题评论 */
             .QuestionMainAction.ViewAll-QuestionMainAction {background-color: #eee; color: black}/* 查看全部回答 */
