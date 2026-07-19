@@ -94,6 +94,7 @@
             
             .Modal-content > div > div:nth-child(2) > :last-child {border: 10px solid #ddd}
             .Pc-word-new {display: none}/*广告*/
+            .css-5ym188 {background-color: inherit;}/*模态框灰背景*/
         }
     `;
     const el = document.createElement('style');
