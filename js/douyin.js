@@ -19,6 +19,9 @@
             #slidelist div:first-child {padding-right: 0 !important;}
             #douyin-header>div {min-width: 100% !important;}
 
+	.fullscreen_capture_feedback  {left: 0 !important; min-width: 100% !important;}
+	.page-recommend-container {min-width: 100%}
+
             .isDark {background-color: black !important}
 
             :root .isDark {--color-text-t1: white !important; --color-text-t4: rgba(255,255,255,.6) !important; }
