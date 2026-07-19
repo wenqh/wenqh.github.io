@@ -14,26 +14,28 @@
 (function () {
     const CSS = `
         @media (orientation: portrait) {
-            header.AppHeader,.SearchTabs,.ContentItem-actions {
+            header.AppHeader, .SearchTabs_ {
                 overflow-x: auto;
             }
             header.AppHeader,
             .Topstory-container,
             .Topstory-mainColumn,
-            .Question-main,
+            .Question-main_,
             .Question-mainColumn,
+            .QuestionPage > div,
             .Search-container,
             .SearchMain,
             .Profile-main,
-            .Profile-mainColumn {
+            .Profile-mainColumn,
+            .ProfileHeader {
                 width: 100%;
                 min-width: 100%;
                 padding: 0;
                 margin: 0;
-                margin-top: -10px;
             }
-            .Question-mainColumn + *,
-            .Topstory-mainColumn + * {
+            .Question-mainColumn_ + *,
+            .Topstory-mainColumn + *,
+            .Profile-mainColumn + * {
                 display: none;
             }
             .Search-container .List-item,
@@ -46,18 +48,16 @@
             .ContentItem-actions {
                 padding: 4px 0 0 0;
                 margin: 0;
+                overflow-x: auto;
                 overflow-y: hidden;
             }
             .ContentItem-actions > * {
                 margin: 0 8px 0 0;
             }
             
-            .Modal-content {
-                max-width: 100%;
-            }
 
             /* 搜索框位置 */
-            .AppHeader-Tabs, .SearchTabs-actions {
+            .SearchTabs-actions {
                 order: 9;
             }
             /* 搜索页侧边 */
@@ -69,13 +69,16 @@
                 min-width: 100%;
             }
             .QuestionHeader-main {
-                width: 100%;
+                width: 100%; padding-left: 4px;
             }
-            .QuestionPage > div {width: 100%; padding-inline: 0;}
             .AuthorInfo-badgeText {
                 width: auto !important;
             }
-            /* 评论框 */
+            
+            /* 评论模态框 */
+            /*.Modal-content {
+                max-width: 100%;
+            }*/
             div:has(> div > .Modal-content) {
                 width: 100%;
                 max-height: 100%;
@@ -84,13 +87,13 @@
             .Modal-content > div > :last-child, .Modal-content > div > :first-child {
                 display: none;
             }
-            .css-kt4t4n {margin: 0}
+            .css-kt4t4n {margin: 0}/*回复框*/
 
+            .QuestionHeader-Comment {order: -1}/* 问题标题评论 */
             .QuestionMainAction.ViewAll-QuestionMainAction {background-color: #eee; color: black}/* 查看全部回答 */
-            .QuestionHeader-Comment {order: -1}/* 问题评论 */
             
-            .Pc-word-new {display: none}/*广告*/
             .Modal-content > div > div:nth-child(2) > :last-child {border: 10px solid #ddd}
+            .Pc-word-new {display: none}/*广告*/
         }
     `;
     const el = document.createElement('style');
