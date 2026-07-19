@@ -14,7 +14,7 @@
 (function () {
     const CSS = `
         @media (orientation: portrait) {
-            header.AppHeader, .SearchTabs_ {
+            header.AppHeader, .SearchTabs {
                 overflow-x: auto;
             }
             header.AppHeader,
