@@ -2,7 +2,7 @@
 // @name         抖音
 // @namespace    https://viayoo.com/
 // @version      0.1
-// @run-at       document-end
+// @run-at       document-start
 // @match        https://www.douyin.com/*
 // @grant        none
 // ==/UserScript==
@@ -20,7 +20,7 @@
             #douyin-header>div {min-width: 100% !important;}
 
 	.fullscreen_capture_feedback  {left: 0 !important; min-width: 100% !important;}
-	.page-recommend-container {min-width: 100%}
+	.dySwiperSlide.page-recommend-container {min-width: 100% !important;}
 
             .isDark {background-color: black !important}
 
@@ -35,7 +35,9 @@
     style.textContent = css;
 
     document.head.appendChild(style);
-    //setTimeout(() => {
+	
+	
+    document.addEventListener("DOMContentLoaded", () => {
         const menu = document.getElementById('douyin-navigation');
 
         const b = document.createElement('div');
@@ -49,5 +51,6 @@
                 e.currentTarget.style.display = 'none';
             }
         });
-    //}, 2000);
+    });
+    
 })();
