@@ -29,6 +29,7 @@
             #videoSideCard img {filter: invert(1);}
 
             div[data-e2e="im-dialog"] {width: 100% !important}
+            #douyin-header button{width: 40px;} #douyin-header button .btn-title {display: none}
     `;
 
     const style = document.createElement('style');
