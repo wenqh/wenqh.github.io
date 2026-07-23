@@ -43,7 +43,7 @@
 
         const b = document.createElement('div');
         b.textContent = '菜单';
-        b.style.cssText = 'position: fixed; top: 0; z-index: 999; padding: 22px; color: white; background-color: black;';
+        b.style.cssText = 'position: fixed; top: 0; z-index: 999; padding: 23px; color: white; background-color: black;';
         b.addEventListener('click', () => {menu.style.display = menu.style.display === 'none' ? '' : 'none';});
         document.body.append(b);
 
