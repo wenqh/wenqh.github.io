@@ -25,12 +25,11 @@
             .isDark {background-color: black !important}
 
             :root .isDark {--color-text-t1: white !important; --color-text-t4: rgba(255,255,255,.6) !important; }
-            #videoSideCard {filter: invert(1); background-color: white}
+            #videoSideCard {filter: invert(1); background-color: black !important}
             #videoSideCard img {filter: invert(1);}
 
             div[data-e2e="im-dialog"] {width: 100% !important}
             #douyin-header button{width: 40px;} #douyin-header button .btn-title {display: none}
-			.semi-always-dark svg{border: solid 1px white;}
     `;
 
     const style = document.createElement('style');
@@ -44,7 +43,7 @@
 
         const b = document.createElement('div');
         b.textContent = '菜单';
-        b.style.cssText = 'position: fixed; top: 0; z-index: 999; padding: 15px; color: white; background-color: black;';
+        b.style.cssText = 'position: fixed; top: 0; z-index: 999; padding: 22px; color: white; background-color: black;';
         b.addEventListener('click', () => {menu.style.display = menu.style.display === 'none' ? '' : 'none';});
         document.body.append(b);
 
