@@ -25,11 +25,12 @@
             .isDark {background-color: black !important}
 
             :root .isDark {--color-text-t1: white !important; --color-text-t4: rgba(255,255,255,.6) !important; }
-            #videoSideCard {filter: invert(1);}
+            #videoSideCard {filter: invert(1); background-color: white}
             #videoSideCard img {filter: invert(1);}
 
             div[data-e2e="im-dialog"] {width: 100% !important}
             #douyin-header button{width: 40px;} #douyin-header button .btn-title {display: none}
+			.semi-always-dark svg{border: solid 1px white;}
     `;
 
     const style = document.createElement('style');
