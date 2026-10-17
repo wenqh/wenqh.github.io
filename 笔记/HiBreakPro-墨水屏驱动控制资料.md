@@ -42,7 +42,7 @@
 | 加深 | SurfaceFlinger 颜色矩阵，k=1.5 | 2.10 |
 | 前光亮度 | 写 LM3630A 节点，开机恢复 | 2.12 |
 | 锁屏关前光 | 监听灭屏 / 亮屏 | 6.1 |
-| 锁屏待机画面 | 灭屏时显示画面并全刷 | 6.2 |
+| 锁屏待机画面 | 要用 LSPosed 延迟断电（`SCREEN_OFF` 广播来不及，已实测） | 6.2 |
 | 手动全刷（可选） | `force_global_refresh_mode`，用来清残影 | 2.6 |
 
 ### 0.3 GSI 里做不到的
@@ -521,27 +521,37 @@ class LightService : Service() {
 
 也就是说，原厂在“开始休眠”和“屏幕断电”之间**留了约 1.5 秒**：先关前光、显示待机画面、让墨水屏刷新完，再断电。
 
-**GSI 里的方案**（建议按顺序尝试）：
+**GSI 实测**（2026-10-17，按电源键锁屏时的日志）：
 
-1. **工具 App 抢时间（最简单，先试）**
-   - 在前台服务或无障碍服务里监听 `ACTION_SCREEN_OFF`（开始休眠时就会发出，跟锁屏关前光用同一个）；
-   - 收到后马上：关前光 → 显示全屏待机画面（无障碍服务可以用 `TYPE_ACCESSIBILITY_OVERLAY`，能盖在锁屏界面上面）→ 强制全刷一次（2.6）；
-   - 收到 `ACTION_SCREEN_ON` 时移除待机画面；
-   - **风险**：GSI 里从 `SCREEN_OFF` 广播到屏幕断电之间有多少时间**还没测**。时间不够的话，画面会刷到一半就断电。
-2. **像原厂一样延迟断电（方案 1 来不及时用）**
-   - 原生安卓本来就有“断电前等一下”的机制（日志里的 `Blocking screen off`，系统会等锁屏界面准备好）。用 **LSPosed 模块** hook `PhoneWindowManager.screenTurningOff()`（或 `DisplayPowerController` 对应的地方），等待机画面画完、墨水屏刷完，再让系统断电；
+| 时间 | 事件 |
+|---|---|
+| 0 ms | `Going to sleep due to power_button`，开始休眠 |
+| +67 ms | `Blocking screen off`：系统等锁屏界面准备好 |
+| +69 ms | 墨水屏最后一次刷新（`update image`） |
+| +71 ms | `Unblocked screen off after 4 ms`：锁屏界面就绪，放行断电 |
+| **+110 ms** | **屏幕断电**（`Display ... OFF`，HWC `SetPowerMode(0)`） |
+| +595 ms | `setPowerMode` 才返回（日志提示 `Excessive delay in setPowerMode()`） |
+| **+600 ms 以后** | **`SCREEN_OFF` 广播才发出来** |
+
+- 从按电源键到断电**只有约 110 毫秒**（原厂留了 1.5 秒），墨水屏刷一帧要几百毫秒，锁屏界面来不及刷上去：实测断电后**屏幕停在按电源键前的应用画面**，不是锁屏界面。
+- **`SCREEN_OFF` 广播比断电晚约 0.5 秒**，所以“收到 `SCREEN_OFF` 再显示待机画面”**行不通**；锁屏壁纸也来不及显示。
+
+**GSI 里的方案**：
+
+1. ~~工具 App 收到 `SCREEN_OFF` 后显示待机画面~~ ❌ 实测来不及（见上表）。
+2. **像原厂一样延迟断电（推荐）**
+   - 原生安卓本来就有“断电前等一下”的机制（上表的 `Blocking screen off`，系统会等锁屏界面准备好）。用 **LSPosed 模块** hook `PhoneWindowManager.screenTurningOff()`（或 `DisplayPowerController` 对应的地方），先通知工具显示待机画面、等墨水屏刷完（约 1～1.5 秒），再放行断电；
    - 需要 Magisk + Zygisk + LSPosed。
 3. **AOD（息屏显示，备选）**
-   - 锁屏时屏幕进入低功耗的“息屏显示”状态，不会真正断电，系统会画 AOD 界面。海信 A9 的 GSI 社区、Vasu 的 HiBreak 包用的都是这个办法；
+   - 锁屏时屏幕进入低功耗的“息屏显示”状态，不会真正断电，系统会画 AOD 界面。Vasu 的 HiBreak 包就是这样做的（Phh 设置里的 “Force allow Always-On Display”），海信 A9 的 GSI 社区也是；
    - 缺点：**比真正关屏费电**（显示通路要保持工作，时钟和通知每分钟左右更新一次，每次都要唤醒 CPU、刷新墨水屏）；AOSP 的 AOD 是黑底白字时钟，在墨水屏上不好看，自定义要改 SystemUI。
-   - 只想锁屏时显示一张固定的图，用方案 1 或 2 最省电：断电前刷好，之后完全不耗电。
+   - 只想锁屏时显示一张固定的图，方案 2 最省电：断电前刷好，之后完全不耗电。
 
-**第一步要测的**：按电源键锁屏，看日志里从 `Going to sleep` 到 `Display ... OFF` 之间有多少时间：
+**复测方法**：
 ```sh
 adb shell "su -c 'logcat -b all -c'"      # 先清空日志，然后按电源键锁屏，等几秒
-adb shell "su -c 'logcat -b all -d -v time'" | grep -E "Going to sleep|SCREEN_OFF|Display device changed state|SetPowerMode"
+adb shell "su -c 'logcat -b all -d -v time'" | grep -E "Going to sleep|Blocking screen off|Unblocked screen off|SCREEN_OFF|Display device changed state|SetPowerMode|update image"
 ```
-超过 0.5～1 秒，方案 1 应该就够用了。
 
 ---
 
