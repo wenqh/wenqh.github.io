@@ -31,19 +31,19 @@
 
 | 设置 | 作用 | 详见 |
 |---|---|---|
-| 节点 `clean_a2=1` | 允许驱动连续刷新，**解决滑动卡顿** | 2.2 |
-| `vendor.xrz.disable_eink_vsync=1` | 滑动更平滑 | 2.4 |
+| 节点 `clean_a2=1` | 允许驱动连续刷新，**解决滑动卡顿** | 2.3 |
+| `vendor.xrz.disable_eink_vsync=1` | 滑动更平滑 | 2.9 |
 | `debug.sf.nobootanimation=1` | 关开机动画，避免开机黑屏（不属于墨水屏功能，见刷机指南 4.5） | — |
 
 ### 0.2 要由工具负责的（GSI 里没有服务做，重启后也不会保留）
 
 | 功能 | 怎么做 | 详见 |
 |---|---|---|
-| 加深 | SurfaceFlinger 颜色矩阵，k=1.5 | 2.10 |
-| 前光亮度 | 写 LM3630A 节点，开机恢复 | 2.12 |
+| 加深 | SurfaceFlinger 颜色矩阵，k=1.5 | 2.5 |
+| 前光亮度 | 写 LM3630A 节点，开机恢复 | 2.8 |
 | 锁屏关前光 | 监听灭屏 / 亮屏 | 6.1 |
 | 锁屏待机画面 | 要用 LSPosed 延迟断电（`SCREEN_OFF` 广播来不及，已实测） | 6.2 |
-| 手动全刷（可选） | `force_global_refresh_mode`，用来清残影 | 2.6 |
+| 手动全刷（可选） | `force_global_refresh_mode`，用来清残影 | 2.4 |
 
 上面这些参数（以及第 2 节的大部分功能）可以用调试工具直接调，见 7.5。
 
@@ -51,7 +51,7 @@
 
 **原厂的实现方式在 GSI 里用不了的**：对比度、墨水浓度（亮度）、鲜艳增强、文字增强（情景模式的隐藏预设，不是无障碍的高对比度文字）、按应用设置刷新模式、页面滑动优化的“整屏翻页”、应用漂白、按应用 DPI。原因见 1.2。
 
-**其中可以换个方式实现的**：对比度用颜色矩阵加深代替（2.10）；按应用切换刷新模式改成工具监听前台应用、切换全局模式（2.1）；“应用漂白”里的文字增强本来就是安卓自带的高对比度文字，可以直接用。
+**其中可以换个方式实现的**：对比度用颜色矩阵加深代替（2.5）；按应用切换刷新模式改成工具监听前台应用、切换全局模式（2.1）；“应用漂白”里的文字增强本来就是安卓自带的高对比度文字，可以直接用。
 
 ---
 
@@ -111,14 +111,14 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 |---|---|---|---|
 | GC16 | 16 级 | **闪**（像素先黑白翻转一遍） | 高质量画面；清残影用的“全刷” |
 | INIT | — | **闪**，很慢 | 屏幕初始化用 |
-| GL16 | 16 级 | 闪（这块屏跟 GC16 一样，见 2.6） | 白底文字 |
-| GLR16 | 16 级 | 不闪（这块屏被换成 GU16，见 2.6） | 白底文字 |
+| GL16 | 16 级 | 闪（这块屏跟 GC16 一样，见 2.4） | 白底文字 |
+| GLR16 | 16 级 | 不闪（这块屏被换成 GU16，见 2.4） | 白底文字 |
 | DU | 黑白 | 不闪 | 菜单、手写 |
 | A2 | 黑白 | 不闪，最快 | 翻页、滑动、动画。灰色只能用黑白点阵模拟（看灰色区域像“抹布”的纹理），残影最多 |
 
-上表是 E Ink 的通用说法。这块屏的实际行为不一定跟名字对得上（比如 GC4 不闪、GL16 会闪，见 2.6），名字只当编号看，以实测为准。
+上表是 E Ink 的通用说法。这块屏的实际行为不一定跟名字对得上（比如 GC4 不闪、GL16 会闪，见 2.4），名字只当编号看，以实测为准。
 
-理解这张表就能理解大部分取舍：**快 = A2（灰色是点阵纹理，残影多），干净 = GC16（会闪）**。防闪烁是在“什么时候用会闪的全刷”上做取舍（2.3）；自动消残影 `clean_a2` 则跟波形无关，它决定驱动能不能连续刷新（2.2）。
+理解这张表就能理解大部分取舍：**快 = A2（灰色是点阵纹理，残影多），干净 = GC16（会闪）**。防闪烁是在“什么时候用会闪的全刷”上做取舍（2.6）；自动消残影 `clean_a2` 则跟波形无关，它决定驱动能不能连续刷新（2.3）。
 
 本文两个说法的区别：**“麻点”** 指残影，是上一页没清干净留下的一颗颗**很浅很浅**的小点（点之间有空隙，要仔细看才看得出来）；**“抹布感”** 指灰色本身的显示效果：快速刷新用黑白点阵模拟灰色，看灰色区域像抹布的纹理。
 
@@ -132,8 +132,8 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 
 - **怎么设**：`setprop vendor.xrz.global_refresh_mode <代码>`，或者 `echo <代码> > /sys/kernel/debug/eink_debug/global_mode`（在原厂 3.4.6 上验证过，效果一样）。
 - **原厂默认**：`global_refresh_mode=0`（不强制，交给 HWC，默认 NORMAL 178）；`ro.vendor.xrz.default_refresh_mode=178`（原厂代码里的 `EINK_DEFAULT_MODE` 读的就是它）。GSI 里两个都没设，同样交给 HWC，实际是 NORMAL。
-- **原厂**是按应用、按图层设置刷新模式的（魔改 SurfaceFlinger 的 `setLayerRefreshMode`），GSI 做不到，只能全局切；想按应用切换，就由工具监听前台 App。
-- **常用模式**：177 HD、180 REGAL、**178 NORMAL**（默认）、179 FAST、183 HYPER。刷新模式决定刷新速度，从慢到快是 **高清256 / HD → NORMAL（原厂“快刷”）→ FAST（“极速”）→ HYPER（“Hyper”）**，越快画质越差、残影越多；REGAL（原厂“Regal”）在 GSI 里等于 HD（见下表）。括号里是原厂墨水屏设置里的名称。依据是使用经验：高清256 最慢、快刷比极速慢、Hyper 最快；“快刷 = NORMAL、极速 = FAST”是按名字和顺序推断的，没查原厂代码确认。`clean_a2`（2.2）也会影响帧速，开了更流畅。Hyper 模式原厂还会把系统帧率设成 120（见 2.8）。
+- **原厂**是按应用、按图层设置刷新模式的（魔改 SurfaceFlinger 的 `setLayerRefreshMode`），GSI 做不到，只能全局切；想按应用切换，就由工具监听前台 App。原厂的情景模式（一次设一组参数）见第 4 节。
+- **常用模式**：177 HD、180 REGAL、**178 NORMAL**（默认）、179 FAST、183 HYPER。刷新模式决定刷新速度，从慢到快是 **高清256 / HD → NORMAL（原厂“快刷”）→ FAST（“极速”）→ HYPER（“Hyper”）**，越快画质越差、残影越多；REGAL（原厂“Regal”）在 GSI 里等于 HD（见下表）。括号里是原厂墨水屏设置里的名称。`clean_a2`（2.3）也会影响帧速，开了更流畅。Hyper 模式原厂还会把系统帧率设成 120（见 2.10）。
 - **各模式实际送给驱动的参数**（GSI 实测，滑动时看驱动每帧日志）：
 
   | 设的模式 | HWC 送给驱动的模式 | 实际波形 | 驱动默认的灰度显示方式 |
@@ -146,7 +146,7 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 
   - **GSI 里 REGAL 等于 HD**（复测过）。原因应该是这块屏不支持 REGAL：原厂 `XrzEinkManager.java` 报告的 `support_regal` 取的是 `ro.vendor.xrz.support_sunina_hw`，原厂 build.prop 里它是 0（`vendor.xrz.regal_support=1` 虽然也读了，但没用上）。HWC 和 `libimage_process.so` 里也搜不到 `regal`。原厂漫画模式（180）大概率也是 HD，只是还叠加了对比度、鲜艳增强，看起来不一样（原厂上没抓驱动日志验证）。
   - **高清256**（`-2147483471` = HD + 256 灰阶标志，原厂“全部高清256”和杂志情景模式用的都是它）✅：`setprop vendor.xrz.global_refresh_mode -2147483471`，恢复用 `resetprop --delete vendor.xrz.global_refresh_mode`。效果是有灰阶、没残影、刷新慢。单独设 HD 看起来也一样，因为驱动在 HD 下默认就不做点阵；区别只有两点：高清256 由 HWC 指定 256 灰阶（日志 `dither=4(def=4)`，HD 是 `dither=0(def=0)`），而且**切进高清256 时 HWC 会先自动做一次 GC16 全刷**（日志第一帧就是 GC16），切进 HD 或 REGAL 时不会。所以这一档用高清256。
-  - FAST 和 HYPER 波形相同，HYPER 更快应该是 HWC 送帧方式和系统帧率（2.8）的差别。
+  - FAST 和 HYPER 波形相同，HYPER 更快应该是 HWC 送帧方式和系统帧率（2.10）的差别。
 
 **刷新模式代码**（原厂 `EinkRefreshMode.java`，加上新版的 Hyper）：
 
@@ -163,21 +163,68 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 | 32768 | AUTO | 1024 | RECT（矩形区域刷新，用途不明） |
 | **-2147483471** | **HD_256**（高清256：HD + 256 级灰度） | | |
 
-- **数值的高位是 HWC 标志**（原厂 `EinkRefreshMode.java` 里的 `HWC_EINK_*` 常量）。其中**最高 3 位（第 29～31 位）是灰度显示方式**，跟 `global_dither` 节点的 1～4 一一对应（见 2.7）：
+- **数值的高位是 HWC 标志**（原厂 `EinkRefreshMode.java` 里的 `HWC_EINK_*` 常量）。其中**最高 3 位（第 29～31 位）是灰度显示方式**，跟 `global_dither` 节点的 1～4 一一对应（见 2.2）：
 
   | 常量 | 值 | 灰度显示方式 | 对应 `global_dither` |
   |---|---|---|---|
-  | `HWC_EINK_DITHER_TEXT_EFFECT` | `536870912` | 二值化（纯黑白，效果跟模式有关，见 2.7） | 1 |
+  | `HWC_EINK_DITHER_TEXT_EFFECT` | `536870912` | 二值化（纯黑白，效果跟模式有关，见 2.2） | 1 |
   | `HWC_EINK_DITHER_PICTURE1_EFFECT` | `1073741824` | 点阵 1 | 2 |
   | `HWC_EINK_DITHER_PICTURE2_EFFECT` | `1610612736` | 点阵 2（NORMAL、FAST、HYPER 下的驱动默认） | 3 |
   | `HWC_EINK_DITHER_256_EFFECT` | `2147483648` | 256 级灰度 | 4 |
 
   刷新模式 = 基础模式 + 灰度标志，例如 HD（177）+ `DITHER_256`（2147483648）= 2147483825，超出了属性能存的整数范围，按 32 位有符号整数换算就是高清256 的 `-2147483471`；NORMAL（178）+ 二值化（536870912）= `536871090`。
 
-  ⚠️ 标志不是随便组合都有效，HWC 会按模式过滤（实测见 2.7）。
+  ⚠️ 标志不是随便组合都有效，HWC 会按模式过滤（实测见 2.2）。
 - 其他标志是原厂 SurfaceFlinger 给特定图层打的标记，GSI 没法设置，了解即可：`SURFACEVIEW`（65536，视频等）、`FORCE_REFRESH`（131072）、`HANDWRITTEN`（262144）、`HOME`（524288，桌面）、`HANDWRITTEN_BG`（1048576）、`MULTI_DAMAGE`（2097152，多区域刷新）、`INPUT_METHOD`（4194304）、`AUTO_DITHER`（8388608）、`DISABLE_LAYER`（16777216）、`OVERLAY`（33554432）、`LOGO`（67108864）、`CURSOR`（134217728）、`SKIP_FRAME`（-1）。
 
-### 2.2 自动消残影（连续刷新）`clean_a2` ✅（模块已设）
+### 2.2 灰度显示方式（dither）
+
+灰度显示方式（灰色怎么显示）有两种设法：
+
+| 设法 | 怎么设 | 特点 |
+|---|---|---|
+| **刷新模式 + 灰度标志**（推荐，原厂的做法） | `setprop vendor.xrz.global_refresh_mode <基础模式 + 标志>`（计算方法见 2.1） | 交给 HWC 处理，HWC 会配合（比如切进高清256 先自动全刷一次）。但 HWC 会按模式过滤，不是所有组合都有效 |
+| **驱动节点 `global_dither`**（调试开关，原厂不用） | `echo <值> > /sys/kernel/debug/eink_debug/global_dither` | 在驱动层**强制覆盖**灰度显示方式：HWC 没指定时用它，HWC 指定了也会被它盖过。测试完记得改回 0 |
+
+`gray_256_dither` **不是设置项**，是 HWC 报告的状态（3.1）：当前是 256 灰阶时 HWC 写 4，否则写 0，不要用它来控制。
+
+**`global_dither` 的值**：
+
+| 值 | 名称 | 灰色怎么显示 |
+|---|---|---|
+| 0 | 默认 | 不强制，跟着刷新模式走（见下表） |
+| 1 | 二值化 `DITHER_TEXT` | **只有纯白保持白，其他颜色（包括很浅的灰）都变纯黑**。文字最黑最实；有灰色元素的界面会出现大片黑块，只适合纯白底黑字 |
+| 2 | 点阵 1 `DITHER_PICTURE1` | 黑白点阵模拟灰色（抹布感），比点阵 2 粗，画质差一些 |
+| 3 | 点阵 2 `DITHER_PICTURE2` | 黑白点阵模拟灰色（抹布感），比点阵 1 细腻 |
+| 4 | 256 级灰度 `DITHER_256` | 像素本身是灰色，不用点阵，图片层次最好 |
+
+**各刷新模式下的效果**（工具里刷新模式下面的提示就是按这张表做的）：
+
+| 刷新模式 | 0（默认） | 1（二值化） | 2、3（点阵 1、点阵 2） | 4（256 灰阶） |
+|---|---|---|---|---|
+| 高清256 | 256 灰阶（HWC 指定 4） | 纯黑白，⚠️ 盖过了自带的 256 灰阶 | 点阵，⚠️ 盖过了自带的 256 灰阶 | 跟默认一样 |
+| HD / REGAL | 直接显示灰色（驱动默认 0，不做点阵） | 纯黑白 | 点阵 | 跟默认差不多，区别但不明显 |
+| NORMAL | 点阵 2（驱动默认 3） | 纯黑白 | 点阵（设 3 跟默认一样） | 有灰阶，但**残影很重** |
+| FAST / HYPER | 点阵 2（驱动默认 3） | ❌ 没效果 | ❌ 没效果 | ❌ 没效果 |
+
+- **规则**：0 跟着刷新模式走；不是 0 就在驱动层强制覆盖（HWC 指定了也会被盖过），但只有跟模式自带的值不一样、而且这个模式显示得出来时才看得出变化。FAST、HYPER 用 A2 波形，只有黑白两级，所以设什么都没变化。
+- **想要纯黑白**：HD、REGAL、NORMAL 下设 `global_dither=1`；NORMAL 也可以直接用组合值 `536871090`（工具里的“👤 纯黑白”，原厂没有这个选项）。
+- **想要灰阶**：直接用高清256（2.1），不要在 NORMAL 下单独设 4。
+- 新 vendor 上 2、4 都不卡（旧 vendor 上会很卡）。
+- `gpu_dither` 在 GSI 里无效（见第 3 节）。
+
+**实测的组合**（驱动日志看 `mode=…,dither=…`）：
+
+| 组合 | 值 | 驱动日志（十六进制，对照见 5.3） | 效果 |
+|---|---|---|---|
+| HD + 256 灰阶（高清256） | `global_refresh_mode=-2147483471` | `mode=0xb1(map=0x84),dither=4` ✅ | 有灰阶、没残影、刷新慢 |
+| NORMAL + 二值化 | `global_refresh_mode=536871090` | `mode=0xb2(map=0x2),dither=1` ✅ | **纯黑白**（跟 `global_dither=1` 效果一样） |
+| FAST + 二值化 | `global_refresh_mode=536871091` | `mode=0xb3(map=0x11),dither=1` ✅ | 刷新很快，但**不是纯黑白**，灰色还是点阵纹理（“抹布感”） |
+| FAST / HYPER + `global_dither` 任意值 | `global_refresh_mode=179` 或 `183` + 节点写 0～4 | FAST 写 1 时 `mode=0xb3(map=0x11),dither=0(def=1)` | ❌ 都没效果，跟默认看起来一样 |
+| 高清256 + `global_dither=1` | `global_refresh_mode=-2147483471` + 节点写 1 | `mode=0xb1(map=0x84),dither=4(def=1)` | **纯黑白**，灰阶没了：节点盖过了 HWC 指定的 256 灰阶 |
+| NORMAL + 256 灰阶 | `global_refresh_mode=-2147483470` | `mode=0xb2(map=0x2),dither=0` ❌ | 标志被 HWC 忽略。推测 256 灰阶只允许配合 HD（不全刷残影太重） |
+
+### 2.3 自动消残影（连续刷新）`clean_a2` ✅（模块已设）
 
 - **作用**（原厂叫“自动消残影”）：① 滑动时允许驱动**连续刷新**；② 停下后用同一种快速波形把最终画面**再多刷几遍**，压掉滑动时积下的残影，**不闪屏**。**GSI 滑动卡顿的根本原因就是它默认是 0。**
 - **怎么设**：`echo 1 > /sys/kernel/debug/eink_debug/clean_a2`（只能写节点，setprop 没用，见 5.1）。
@@ -198,40 +245,7 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 - **跟刷新模式的关系**：刷新模式决定刷新速度（2.1），`clean_a2` 在此基础上影响帧速，两者是叠加的。
 - **注意**：GSI 开机默认是 0。模块开机时写 1，工具不要把它写成 0。
 
-### 2.3 防闪烁 `anti_flicker`（取舍，模块没设）
-
-- **作用**：减少浅灰区域刷新时的闪烁。代价是清残影不彻底。
-- **怎么设**：`echo <等级> > /sys/kernel/debug/eink_debug/anti_flicker`。
-- **节点其实是“等级”，不是开关**：内核函数叫 `set_anti_flicker_level`，dmesg 显示 `set anti flicker level to N`。0、1、2、3、5、10 都能写进去，上限不明。
-- **原厂默认**：1。原厂只设属性 `vendor.xrz.anti_flicker_enabled`，节点由 HWC 写（GSI 里写不进去，见 1.2）。
-- **GSI 实测**（在同一个会闪的界面来回对比）：
-
-  | 等级 | 浅灰区域刷新 | 残影 / 麻点 |
-  |---|---|---|
-  | 0（GSI 开机默认） | 会闪 | 最干净 |
-  | 1（原厂默认） | 不闪 | 有一些：关掉浅灰色页面后，原来那块区域会残留麻点 |
-  | 2 | 不闪 | 麻点更多 |
-
-- **原理**：浅灰区域的“闪”来自会闪的灰阶全刷；清残影也要靠这种全刷。等级越高越倾向于不闪，清残影就越不彻底。**“麻点”就是没清干净的残影**（一颗颗很浅的小点，要靠会闪的全刷才能清掉），不是防闪烁自己产生的。
-- **结论**：实际可选的只有 0 和 1。选 1 的话，可以配合手动全刷（2.6）清掉麻点。
-- 防闪烁跟滑动速度无关。
-
-### 2.4 垂直同步 `disable_eink_vsync` ✅（模块已设）
-
-- **作用**：HWC 送画面时不等墨水屏驱动发回“上一帧刷完了”的信号。
-- **怎么设**：`setprop vendor.xrz.disable_eink_vsync 1`，立即生效。
-- **原厂默认**：1（写在原厂 build.prop 里，GSI 里丢了）。
-- **GSI 实测**：**滑动更平滑**。`clean_a2=1` 时效果明显；`clean_a2=0` 时驱动每帧都要等刷完、断电再上电（2.2），省下的这点等待时间被卡顿掩盖，看不出来。
-- 相关但没测：`vendor.xrz.disable_eink_vsync_for_fast`（只对快速模式）❓。
-
-### 2.5 抗锯齿 `anti_alias`
-
-- **怎么设**：`echo 1 > /sys/kernel/debug/eink_debug/anti_alias` 开，`echo 0` 关。
-- **读写格式不一样**：读出来是 `support value` 两个数（第一位固定 1 = 驱动支持，第二位才是开关，比如 `1 0` = 关）；**写入只认一个数字**。写 `"1 0"` 驱动只会读到前面的 1，结果是**打开**。dmesg 里能看到 `set anti-alias off`。
-- **原厂默认**：开。原厂规则：**只在 NORMAL（178）模式下打开**，其他模式一律关；属性 `vendor.xrz.anti_alias_enabled` ≥ 0 时优先用它。
-- **GSI 实测**：开和关画面都看不出区别。GSI 开机默认关，模块没管它。
-
-### 2.6 全屏刷新一次（清残影）✅
+### 2.4 全屏刷新一次（清残影）✅
 
 - **怎么做**：
   ```sh
@@ -262,47 +276,75 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 
 - 用途：清掉残影和麻点（比如防闪烁设成 1 之后）。
 
-### 2.7 灰度显示方式（dither）
+### 2.5 加深（代替对比度）：SurfaceFlinger 颜色矩阵 ✅
 
-灰度显示方式（灰色怎么显示）有两种设法：
+公式：`输出 = 1 - k × (1 - 输入)`。**白色保持白色，灰色按比例加深**，亮度低于 `1 - 1/k` 的灰色直接变黑（k=1.5 时约 0.33）。
+```sh
+# k=1.5 示例（1-k = -0.5）。4×4 矩阵按列排列，最后一行前三个数是平移量 (1-k)
+service call SurfaceFlinger 1015 i32 1 \
+  f 1.5 f 0 f 0 f 0 \
+  f 0 f 1.5 f 0 f 0 \
+  f 0 f 0 f 1.5 f 0 \
+  f -0.5 f -0.5 f -0.5 f 1
+# 关闭（恢复原样）
+service call SurfaceFlinger 1015 i32 0
+```
+- 实测：**k=1.5 合适**（用户选定）；k=2.0 偏深。工具里建议做成滑块，范围大约 1.0～2.0。
+- **重启后失效**，开机后要重新执行。
+- ⚠️ 安卓的护眼模式、颜色校正、灰度也用这个颜色变换通道，切换它们时可能会冲掉你的矩阵，工具里最好有“重新应用”。
+- 这台机器所有图层都走 GPU 合成（`composition=CLIENT`），所以颜色矩阵一定会生效。
 
-| 设法 | 怎么设 | 特点 |
-|---|---|---|
-| **刷新模式 + 灰度标志**（推荐，原厂的做法） | `setprop vendor.xrz.global_refresh_mode <基础模式 + 标志>`（计算方法见 2.1） | 交给 HWC 处理，HWC 会配合（比如切进高清256 先自动全刷一次）。但 HWC 会按模式过滤，不是所有组合都有效 |
-| **驱动节点 `global_dither`**（调试开关，原厂不用） | `echo <值> > /sys/kernel/debug/eink_debug/global_dither` | 在驱动层**强制覆盖**灰度显示方式：HWC 没指定时用它，HWC 指定了也会被它盖过。测试完记得改回 0 |
+### 2.6 防闪烁 `anti_flicker`（取舍，模块没设）
 
-`gray_256_dither` **不是设置项**，是 HWC 报告的状态（3.1）：当前是 256 灰阶时 HWC 写 4，否则写 0，不要用它来控制。
+- **作用**：减少浅灰区域刷新时的闪烁。代价是清残影不彻底。
+- **怎么设**：`echo <等级> > /sys/kernel/debug/eink_debug/anti_flicker`。
+- **节点其实是“等级”，不是开关**：内核函数叫 `set_anti_flicker_level`，dmesg 显示 `set anti flicker level to N`。0、1、2、3、5、10 都能写进去，上限不明。
+- **原厂默认**：1。原厂只设属性 `vendor.xrz.anti_flicker_enabled`，节点由 HWC 写（GSI 里写不进去，见 1.2）。
+- **GSI 实测**（在同一个会闪的界面来回对比）：
 
-**实测的组合**（驱动日志看 `mode=…,dither=…`）：
-
-| 组合 | 值 | 驱动日志（十六进制，对照见 5.3） | 效果 |
-|---|---|---|---|
-| HD + 256 灰阶（高清256） | `global_refresh_mode=-2147483471` | `mode=0xb1(map=0x84),dither=4` ✅ | 有灰阶、没残影、刷新慢 |
-| NORMAL + 二值化 | `global_refresh_mode=536871090` | `mode=0xb2(map=0x2),dither=1` ✅ | **纯黑白**（跟 `global_dither=1` 效果一样） |
-| FAST + 二值化 | `global_refresh_mode=536871091` | `mode=0xb3(map=0x11),dither=1` ✅ | 刷新很快，但**不是纯黑白**，灰色还是点阵纹理（“抹布感”） |
-| FAST / HYPER + `global_dither` 任意值 | `global_refresh_mode=179` 或 `183` + 节点写 0～4 | FAST 写 1 时 `mode=0xb3(map=0x11),dither=0(def=1)` | ❌ 都没效果，跟默认看起来一样 |
-| 高清256 + `global_dither=1` | `global_refresh_mode=-2147483471` + 节点写 1 | `mode=0xb1(map=0x84),dither=4(def=1)` | **纯黑白**，灰阶没了：节点盖过了 HWC 指定的 256 灰阶 |
-| NORMAL + 256 灰阶 | `global_refresh_mode=-2147483470` | `mode=0xb2(map=0x2),dither=0` ❌ | 标志被 HWC 忽略。推测 256 灰阶只允许配合 HD（不全刷残影太重） |
-
-结论：
-- **灰度显示方式的实际效果取决于刷新模式**：同样是二值化（1），HD、REGAL、NORMAL 下是纯黑白；FAST（A2 波形）、HYPER 下**所有灰度显示方式都没效果**，只能显示点阵纹理（抹布感）。不管用标志还是节点，结果一样；
-- 想要“纯黑白”：HD、REGAL、NORMAL 下设 `global_dither=1`（NORMAL 也可以直接用组合值 `536871090`）；**FAST、HYPER 下做不到**。
-
-**`global_dither` 各值的效果**（新 vendor 实测，刷新模式 NORMAL、`clean_a2=1`。在其他模式下驱动也会采用这个值，但实际效果取决于模式，FAST / HYPER 下所有值都看不出变化，见上表）：
-
-  | 值 | 灰色怎么显示 | 效果 |
+  | 等级 | 浅灰区域刷新 | 残影 / 麻点 |
   |---|---|---|
-  | 0（默认） | 不强制，用驱动默认类型，**跟模式有关**：HD、REGAL 是 0（不做点阵），NORMAL、FAST、HYPER 是 3（点阵 2）（2.1） | NORMAL 等模式下是黑白点阵模拟灰度（看灰色像“抹布”的纹理），日志 `dither=0(def=3)`；HD 下直接显示灰色，日志 `dither=0(def=0)` |
-  | 1 | 二值化 `DITHER_TEXT` | **只有纯白保持白，其他颜色（包括很浅的灰）都变纯黑**。文字最黑最实；有灰色元素的界面会出现大片黑块，只适合纯白底黑字。 |
-  | 2 | 点阵 1 `DITHER_PICTURE1` | 文字基本不变，**图片灰阶层次变少** |
-  | 3 | 点阵 2 `DITHER_PICTURE2` | 图片灰阶层次中等（NORMAL、FAST、HYPER 的驱动默认值，这几个模式下跟 0 一样） |
-  | 4 | **256 级灰度** `DITHER_256`（像素本身是灰色，不用点阵） | 图片层次最好，但**残影很重**：灰阶像素局部刷新时清不干净。 |
+  | 0（GSI 开机默认） | 会闪 | 最干净 |
+  | 1（原厂默认） | 不闪 | 有一些：关掉浅灰色页面后，原来那块区域会残留麻点 |
+  | 2 | 不闪 | 麻点更多 |
 
-- **4（256 灰阶）要配合 HD**：单独设 4（比如 NORMAL 下）残影很重；HD 下本身就是灰阶，直接用高清256（2.1）。
-- 新 vendor 上 2、4 都不卡（旧 vendor 上会很卡）。
-- `gpu_dither` 在 GSI 里无效（见第 3 节）。
+- **原理**：浅灰区域的“闪”来自会闪的灰阶全刷；清残影也要靠这种全刷。等级越高越倾向于不闪，清残影就越不彻底。**“麻点”就是没清干净的残影**（一颗颗很浅的小点，要靠会闪的全刷才能清掉），不是防闪烁自己产生的。
+- **结论**：实际可选的只有 0 和 1。选 1 的话，可以配合手动全刷（2.4）清掉麻点。
+- 防闪烁跟滑动速度无关。
 
-### 2.8 帧率
+### 2.7 字体加粗 ✅（不需要 root）
+
+原厂的 `persist.vendor.xrz.global_fonts_weight` 依赖原厂改过的 Typeface 类，GSI 里无效。改用安卓自带的全局字重调节：
+```sh
+adb shell settings put secure font_weight_adjustment 500   # 最粗：常规文字 400 → 900（Black）
+adb shell settings put secure font_weight_adjustment 300   # 等于 设置 → 无障碍 →“粗体文字”
+adb shell settings put secure font_weight_adjustment 0     # 关闭（系统默认）
+```
+- 所有文字的字重都加上这个值，最大到 1000。ponces 16 的中文字体 `NotoSansCJK-Regular.ttc` 是**可变字体**（100～900），所以中文也能变粗；**900 是上限，500 就是最粗效果**。
+- 实测 500 比 300 明显更粗。**重启后保留**。
+- 在系统设置里切换“粗体文字”开关，会把它重置成 300 或 0。
+- 工具里修改需要 `WRITE_SECURE_SETTINGS` 权限（`adb shell pm grant <包名> android.permission.WRITE_SECURE_SETTINGS` 授予一次），或者用 root 执行。
+
+### 2.8 前光（冷光 / 暖光）✅
+
+```sh
+L=/sys/devices/platform/11d01000.i2c7/i2c-7/7-0036
+echo 20 > $L/lm3630a_warm_light    # 暖光，0～254，0 = 关
+echo 0  > $L/lm3630a_cold_light    # 冷光，0～254，0 = 关
+```
+- 需要 root。前光芯片是 TI **LM3630A**（双通道，i2c7 总线，地址 0x36），同目录下还有 `lm3630a_version`。
+- 原厂用 `settings system screen_brightness_cold/warm` 记住亮度，**GSI 里没有服务读它们**，只能当作“保存当前值”的地方，开机后由工具读出来再写回节点。
+- 锁屏关前光见 6.1。
+
+### 2.9 垂直同步 `disable_eink_vsync` ✅（模块已设）
+
+- **作用**：HWC 送画面时不等墨水屏驱动发回“上一帧刷完了”的信号。
+- **怎么设**：`setprop vendor.xrz.disable_eink_vsync 1`，立即生效。
+- **原厂默认**：1（写在原厂 build.prop 里，GSI 里丢了）。
+- **GSI 实测**：**滑动更平滑**。`clean_a2=1` 时效果明显；`clean_a2=0` 时驱动每帧都要等刷完、断电再上电（2.3），省下的这点等待时间被卡顿掩盖，看不出来。
+- 相关但没测：`vendor.xrz.disable_eink_vsync_for_fast`（只对快速模式）❓。
+
+### 2.10 帧率
 
 | 设置 | 怎么设 | GSI 实测 |
 |---|---|---|
@@ -310,7 +352,7 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 | 帧率分档 | `persist.vendor.xrz.fps` / `fps_high` / `fps_low`，原厂 120 / 50 / 40 | 没看出改善（只在 `clean_a2=0` 时测过，效果可能被掩盖）。`persist` 属性会一直保留，删除用 `resetprop -p --delete` |
 | 系统帧率（Hyper） | `settings put system min_refresh_rate 120`（不需要 root） | ❓ 没测。原厂规则：Hyper（183）设成 `persist.vendor.xrz.fps`（120），其他模式设 60 |
 
-### 2.9 翻页动画、页面滑动优化
+### 2.11 翻页动画、页面滑动优化
 
 **翻页动画**（类似 Kindle，原厂只在部分情景模式下提供）❓ 没测：
 
@@ -329,47 +371,12 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 | 智能刷新 | 1 | 手指拖动超过 10 像素时设 `vendor.xrz.is_scrolling=1`（HWC 会读），抬手后按滑动速度延迟 400～2000 ms 再设回 0。用来防止在高清、Regal 模式下滑动时闪烁 | 设 `scroll_flip_type` 本身没用；工具可以自己在滑动时设 `is_scrolling` 来模拟（单独设 `is_scrolling=1` 时滑动速度没变化，画质效果没测） |
 | 整屏翻页 | 2 | 调用原厂改过的 `View.setScoling()` | ❌ GSI 没有这个接口（用户自己的工具已有更好的实现） |
 
-### 2.10 加深（代替对比度）：SurfaceFlinger 颜色矩阵 ✅
+### 2.12 抗锯齿 `anti_alias`
 
-公式：`输出 = 1 - k × (1 - 输入)`。**白色保持白色，灰色按比例加深**，亮度低于 `1 - 1/k` 的灰色直接变黑（k=1.5 时约 0.33）。
-```sh
-# k=1.5 示例（1-k = -0.5）。4×4 矩阵按列排列，最后一行前三个数是平移量 (1-k)
-service call SurfaceFlinger 1015 i32 1 \
-  f 1.5 f 0 f 0 f 0 \
-  f 0 f 1.5 f 0 f 0 \
-  f 0 f 0 f 1.5 f 0 \
-  f -0.5 f -0.5 f -0.5 f 1
-# 关闭（恢复原样）
-service call SurfaceFlinger 1015 i32 0
-```
-- 实测：**k=1.5 合适**（用户选定）；k=2.0 偏深。工具里建议做成滑块，范围大约 1.0～2.0。
-- **重启后失效**，开机后要重新执行。
-- ⚠️ 安卓的护眼模式、颜色校正、灰度也用这个颜色变换通道，切换它们时可能会冲掉你的矩阵，工具里最好有“重新应用”。
-- 这台机器所有图层都走 GPU 合成（`composition=CLIENT`），所以颜色矩阵一定会生效。
-
-### 2.11 字体加粗 ✅（不需要 root）
-
-原厂的 `persist.vendor.xrz.global_fonts_weight` 依赖原厂改过的 Typeface 类，GSI 里无效。改用安卓自带的全局字重调节：
-```sh
-adb shell settings put secure font_weight_adjustment 500   # 最粗：常规文字 400 → 900（Black）
-adb shell settings put secure font_weight_adjustment 300   # 等于 设置 → 无障碍 →“粗体文字”
-adb shell settings put secure font_weight_adjustment 0     # 关闭（系统默认）
-```
-- 所有文字的字重都加上这个值，最大到 1000。ponces 16 的中文字体 `NotoSansCJK-Regular.ttc` 是**可变字体**（100～900），所以中文也能变粗；**900 是上限，500 就是最粗效果**。
-- 实测 500 比 300 明显更粗。**重启后保留**。
-- 在系统设置里切换“粗体文字”开关，会把它重置成 300 或 0。
-- 工具里修改需要 `WRITE_SECURE_SETTINGS` 权限（`adb shell pm grant <包名> android.permission.WRITE_SECURE_SETTINGS` 授予一次），或者用 root 执行。
-
-### 2.12 前光（冷光 / 暖光）✅
-
-```sh
-L=/sys/devices/platform/11d01000.i2c7/i2c-7/7-0036
-echo 20 > $L/lm3630a_warm_light    # 暖光，0～254，0 = 关
-echo 0  > $L/lm3630a_cold_light    # 冷光，0～254，0 = 关
-```
-- 需要 root。前光芯片是 TI **LM3630A**（双通道，i2c7 总线，地址 0x36），同目录下还有 `lm3630a_version`。
-- 原厂用 `settings system screen_brightness_cold/warm` 记住亮度，**GSI 里没有服务读它们**，只能当作“保存当前值”的地方，开机后由工具读出来再写回节点。
-- 锁屏关前光见 6.1。
+- **怎么设**：`echo 1 > /sys/kernel/debug/eink_debug/anti_alias` 开，`echo 0` 关。
+- **读写格式不一样**：读出来是 `support value` 两个数（第一位固定 1 = 驱动支持，第二位才是开关，比如 `1 0` = 关）；**写入只认一个数字**。写 `"1 0"` 驱动只会读到前面的 1，结果是**打开**。dmesg 里能看到 `set anti-alias off`。
+- **原厂默认**：开。原厂规则：**只在 NORMAL（178）模式下打开**，其他模式一律关；属性 `vendor.xrz.anti_alias_enabled` ≥ 0 时优先用它。
+- **GSI 实测**：开和关画面都看不出区别。GSI 开机默认关，模块没管它。
 
 ---
 
@@ -384,8 +391,8 @@ echo 0  > $L/lm3630a_cold_light    # 冷光，0～254，0 = 关
 | `hwc_idle` | 画面静止 1 / 刷新中 0 | 原厂 `DisplayPolicyService` 每秒读一次：为 0 时持有 4 秒唤醒锁，防止刷新途中休眠。**跟画质无关**，手动设没用 |
 | `cur_fps` | 3、4、8、12… | 当前帧率报告 |
 | `gray_256_dither` | 当前是 256 灰阶时 4，否则 0 | **当前灰度显示方式的报告**（实测：杂志模式下 HWC 写 4，默认模式写 0；原厂 system 代码里没有任何地方设置它）。原厂快照里杂志模式是 4，就是 HWC 写上去的 |
-| `fps_limit` | 反复写回 0 | 像是“一次性请求”：HWC 读到后再清零。原厂上 setprop 会马上被清掉；GSI 里清不掉，所以 setprop 后会**一直生效**（2.8） |
-| `force_global_refresh_mode` | 刷完后写回 -1 | 全刷请求：HWC 执行完一次全刷就复位。GSI 里复位失败，所以要手动改回 -1（2.6） |
+| `fps_limit` | 反复写回 0 | 像是“一次性请求”：HWC 读到后再清零。原厂上 setprop 会马上被清掉；GSI 里清不掉，所以 setprop 后会**一直生效**（2.10） |
+| `force_global_refresh_mode` | 刷完后写回 -1 | 全刷请求：HWC 执行完一次全刷就复位。GSI 里复位失败，所以要手动改回 -1（2.4） |
 
 **可以改进（还没做）**：在 Magisk 模块里加一条 SELinux 规则（`sepolicy.rule`），允许 HWC（`hal_graphics_composer_default`）设置 `vendor_default_prop` 类属性。这样 HWC 就能像原厂一样自己复位上面这些请求、更新 `hwc_idle` / `cur_fps` 状态，GSI 的行为会更接近原厂，工具里也不用手动复位了。
 
@@ -393,23 +400,23 @@ echo 0  > $L/lm3630a_cold_light    # 冷光，0～254，0 = 关
 
 | 属性 / 节点 | 原厂用途 | 为什么无效 / 实测 |
 |---|---|---|
-| `vendor.xrz.global_contrast` | 对比度 | 原厂 SurfaceFlinger / `libxrzUtil.so` 处理，HWC 不读。用颜色矩阵代替（2.10） |
+| `vendor.xrz.global_contrast` | 对比度 | 原厂 SurfaceFlinger / `libxrzUtil.so` 处理，HWC 不读。用颜色矩阵代替（2.5） |
 | `vendor.xrz.global_brightness_level` | 墨水浓度（不是前光） | ❌ 实测设 80、0 墨色都没变化（原厂默认 20） |
 | `vendor.xrz.global_color_enhance`、`global_text_enhance`、`persist.vendor.xrz.global_dark_level` | 鲜艳增强、文字增强、加深 | 原厂 SurfaceFlinger / `libxrzUtil.so` 处理，HWC 里没有这些名字（没逐个实测） |
 | `vendor.xrz.gpu_dither` | 原厂 GPU 灰度处理（杂志 1，Hyper 2，其他 0） | HWC 和 `libimage_process.so` 都没引用 |
 | `vendor.xrz.enable_gpu_image_process`、`regal_support` | 原厂 build.prop 默认 1 | HWC 和 `libimage_process.so` 都没引用 |
-| `vendor.xrz.scroll_flip_type` | 页面滑动优化 | 原厂 framework 在 App 进程里读（2.9） |
+| `vendor.xrz.scroll_flip_type` | 页面滑动优化 | 原厂 framework 在 App 进程里读（2.11） |
 | `vendor.xrz.clean_frequency` | 原厂“刷新频率”：开了刷新设置时 = 策略里的 `refreshFrequency`，否则 0 | ❌ 实测 -1、5、43 都没看到周期性全刷，麻点也没被清掉 |
 | `vendor.xrz.enable_home_clean` | 回桌面清屏 | ❌ 回桌面没闪（旧 vendor） |
 | `vendor.xrz.hwc.color_restoration_suppoort` | 原厂 build.prop 默认 1 | ❌ 设不设画面都看不出区别（属性名里 `suppoort` 是原厂的拼写错误） |
 | `vendor.xrz.hwc.image_smoothing_suppoort`、`hwc.enable_image_smoothing` | 图像平滑，原厂默认 0（不支持） | ❌ 没看出变化 |
 | `vendor.xrz.driver_color_enhance` | — | ❌ 没变化 |
 | 节点 `contrast` / `brightness` / `saturation` | — | ❌ 写 0～255 画面没变化，`brightness` 也不是前光；原厂也不用这些节点 |
-| `persist.vendor.xrz.global_fonts_weight` | 原厂字体粗细 | 依赖原厂 Typeface，用安卓自带字重代替（2.11） |
+| `persist.vendor.xrz.global_fonts_weight` | 原厂字体粗细 | 依赖原厂 Typeface，用安卓自带字重代替（2.7） |
 
 ### 3.3 还没测的
 
-`vendor.xrz.color_restoration_enabled`（颜色还原）、`disable_eink_vsync_for_fast`、`disable_cursor_blink`（原厂在 178、179 以外的模式设 1，关光标闪烁）、翻页动画（2.9）、Hyper 的 120Hz（2.8）。
+`vendor.xrz.color_restoration_enabled`（颜色还原）、`disable_eink_vsync_for_fast`、`disable_cursor_blink`（原厂在 178、179 以外的模式设 1，关光标闪烁）、翻页动画（2.11）、Hyper 的 120Hz（2.10）。
 
 ---
 
@@ -479,8 +486,8 @@ echo 0  > $L/lm3630a_cold_light    # 冷光，0～254，0 = 关
 | 属性 | 原厂值 | GSI 里 |
 |---|---|---|
 | `ro.vendor.xrz.default_refresh_mode` | 178 | 不设时读到 0，交给 HWC，实际还是 NORMAL（178） |
-| `vendor.xrz.disable_eink_vsync` | 1 | ✅ 模块已补回（2.4） |
-| `persist.vendor.xrz.fps` / `fps_high` / `fps_low` | 120 / 50 / 40 | 见 2.8 |
+| `vendor.xrz.disable_eink_vsync` | 1 | ✅ 模块已补回（2.9） |
+| `persist.vendor.xrz.fps` / `fps_high` / `fps_low` | 120 / 50 / 40 | 见 2.10 |
 | `vendor.xrz.hwc.color_restoration_suppoort` | 1 | ❌ 没区别（3.2） |
 | `vendor.xrz.hwc.image_smoothing_suppoort` | 0 | ❌ 没区别 |
 
@@ -497,11 +504,11 @@ echo 0  > $L/lm3630a_cold_light    # 冷光，0～254，0 = 关
 | 节点 | 读到的值 | 含义 | 详见 | 风险 |
 |---|---|---|---|---|
 | `global_mode` | `mode=0x0` | 全局刷新模式，可直接写模式代码 | 2.1 | 低 |
-| `clean_a2` | `clean_a2=0/1` | 原厂叫“自动消残影”：滑动时允许连续刷新，停下后把最终画面多刷几遍压残影（1 = 滑动流畅） | 2.2 | 低 |
-| `anti_flicker` | `anti_flicker=N` | 防闪烁**等级** | 2.3 | 低 |
-| `anti_alias` | `1 0` | 抗锯齿（读 `support value`，写单个数字） | 2.5 | 低 |
-| `eink_animation` | `eink_animation=0/1` | 翻页动画（新版新增） | 2.9 | 低 |
-| `global_dither` | `dither=0x0` | 驱动层强制覆盖灰度显示方式（会盖过 HWC 指定的类型），HD / REGAL / NORMAL 下 1 = 纯黑白 | 2.7 | 低 |
+| `clean_a2` | `clean_a2=0/1` | 原厂叫“自动消残影”：滑动时允许连续刷新，停下后把最终画面多刷几遍压残影（1 = 滑动流畅） | 2.3 | 低 |
+| `anti_flicker` | `anti_flicker=N` | 防闪烁**等级** | 2.6 | 低 |
+| `anti_alias` | `1 0` | 抗锯齿（读 `support value`，写单个数字） | 2.12 | 低 |
+| `eink_animation` | `eink_animation=0/1` | 翻页动画（新版新增） | 2.11 | 低 |
+| `global_dither` | `dither=0x0` | 驱动层强制覆盖灰度显示方式（会盖过 HWC 指定的类型），HD / REGAL / NORMAL 下 1 = 纯黑白 | 2.2 | 低 |
 | `contrast` / `brightness` / `saturation` | 0 | 写入后看不出效果，原厂也不用 | 3.2 | 低 |
 | `manual_refresh` | `init=0,pos(0,0,0), neg(0,0,0),loop=0` | 手动刷新？用法不明 | — | 低 |
 | `frame_data` | `frame_mode=0x4` | 帧数据 / 模式信息 | — | 只读 |
@@ -512,7 +519,7 @@ echo 0  > $L/lm3630a_cold_light    # 冷光，0～254，0 = 关
 | `waveform` / `machine_waveform` | `570_VSK029_HU0701_EC103KH3C6_SC1452-KCE_TC.awf 2024.10.7` | 当前使用的波形（机器自带） | 5.2 | ⚠️ **高，不要写** |
 | `wf_ota` | 读取报错 | 波形更新 | — | ⚠️ **高，不要写** |
 | `version` | `v5.19_20260521` | 驱动版本 | — | 只读 |
-| `print_level` | 0 | 驱动日志详细程度，可写。设 1 会打出像素处理阶段的日志（`init pipe`、`new insert`、屏幕上电等，2.2 的分析就靠它），日志很多，用完改回 0 | 2.2 | 低 |
+| `print_level` | 0 | 驱动日志详细程度，可写。设 1 会打出像素处理阶段的日志（`init pipe`、`new insert`、屏幕上电等，2.3 的分析就靠它），日志很多，用完改回 0 | 2.3 | 低 |
 | `panel_type` / `dc_count` | — | 信息、调试用 | — | 只读 |
 | `save_level` | — | 可写，用途不明，没测 | — | — |
 
@@ -540,7 +547,7 @@ echo 0  > $L/lm3630a_cold_light    # 冷光，0～254，0 = 关
 ```
 update image: order=6852,panel=0,mode=0xb2(map=0x2),dither=0(def=3),an=0,area(0,0)~(1647,823),auto_clean(1, 1, 0)
 ```
-`mode=0xb2` 是上层要求的刷新模式（178 NORMAL），`map=0x2` 是驱动换算后的波形（DU），`dither=X(def=Y)` 是灰度显示方式：X 是 HWC 指定的类型（0 = 没指定），Y 是驱动最终用的类型（`global_dither` 节点不是 0 时就用节点的值，会盖过 X；节点是 0 时 HWC 指定了就用 X，没指定就用驱动默认值，跟模式有关：HD 是 0，NORMAL、FAST、HYPER 是 3）（2.1、2.7）；`an` 是抗锯齿，`auto_clean(...)` 的第一个数就是 `clean_a2` 的值。改了设置后看这行有没有变化，比用眼睛判断可靠。
+`mode=0xb2` 是上层要求的刷新模式（178 NORMAL），`map=0x2` 是驱动换算后的波形（DU），`dither=X(def=Y)` 是灰度显示方式：X 是 HWC 指定的类型（0 = 没指定），Y 是驱动最终用的类型（`global_dither` 节点不是 0 时就用节点的值，会盖过 X；节点是 0 时 HWC 指定了就用 X，没指定就用驱动默认值，跟模式有关：HD 是 0，NORMAL、FAST、HYPER 是 3）（2.1、2.2）；`an` 是抗锯齿，`auto_clean(...)` 的第一个数就是 `clean_a2` 的值。改了设置后看这行有没有变化，比用眼睛判断可靠。
 
 日志里的数字是十六进制，常见的对照：
 
@@ -550,7 +557,7 @@ update image: order=6852,panel=0,mode=0xb2(map=0x2),dither=0(def=3),an=0,area(0,
 | `map=0x2` | DU（NORMAL） |
 | `map=0x84` | GU16（HD、REGAL、高清256） |
 | `map=0x11` | A2（FAST、HYPER） |
-| `map=0x4` / `0x20` / `0x1` / `0x8` / `0x88` | GC16 / GL16 / INIT / GC4 / GU4（强刷时见到，2.6） |
+| `map=0x4` / `0x20` / `0x1` / `0x8` / `0x88` | GC16 / GL16 / INIT / GC4 / GU4（强刷时见到，2.4） |
 
 想看驱动内部更细的处理（实际刷新次数、屏幕电源开关），先 `echo 1 > /sys/kernel/debug/eink_debug/print_level`，再看 `dmesg`，用完改回 0。
 
@@ -662,14 +669,14 @@ adb shell "su -c 'logcat -b all -d -v time'" | grep -E "Going to sleep|Blocking 
   | `ro.*` | `ro.vendor.xrz.default_refresh_mode` | `setprop` 改不了，只能用 Magisk 的 `resetprop` 强改 | 丢失。读它的程序多半只在启动时读一次，运行中改了不一定生效 |
 
 - 设之前先确认这个属性**在 GSI 里有效**（第 2、3 节），否则设了也没反应。
-- **`fps_limit` 设了会一直生效**，不用时要清掉（3.1）；`gray_256_dither` 是 HWC 的状态报告，不要用来控制灰度显示方式，改用刷新模式的灰度标志或 `global_dither`（2.1、2.7）。
-- **`force_global_refresh_mode` 设完要在约 0.6 秒后改回 -1**（2.6）。
+- **`fps_limit` 设了会一直生效**，不用时要清掉（3.1）；`gray_256_dither` 是 HWC 的状态报告，不要用来控制灰度显示方式，改用刷新模式的灰度标志或 `global_dither`（2.1、2.2）。
+- **`force_global_refresh_mode` 设完要在约 0.6 秒后改回 -1**（2.4）。
 - **别把模块管的值写成 0**：`clean_a2`、`disable_eink_vsync`（0.1）。
 - **合并成一条命令执行**：写节点和设属性可以合并成一条 su 命令（用 `;` 连接），比每条命令单独开一次 su 快得多。libsu 本身就会保持一个常驻的 root shell。
 
 ### 7.3 用 GSI 模拟原厂的“情景模式”
 
-全局切换就够用：按第 4 节的参数，挑 GSI 里有效的项一起设置，比如刷新模式（2.1，可以带灰度标志，杂志模式只要一条 `global_refresh_mode=-2147483471`）、颜色矩阵 k 值（2.10，代替对比度）、防闪烁（2.3）、抗锯齿（2.5）。需要按应用切换时，工具监听前台 App 再切。
+全局切换就够用：按第 4 节的参数，挑 GSI 里有效的项一起设置，比如刷新模式（2.1，可以带灰度标志，杂志模式只要一条 `global_refresh_mode=-2147483471`）、颜色矩阵 k 值（2.5，代替对比度）、防闪烁（2.6）、抗锯齿（2.12）。需要按应用切换时，工具监听前台 App 再切。
 
 ### 7.4 抓取原厂参数的方法（以后原厂再更新时可以复用）
 
@@ -699,7 +706,7 @@ settings list system; settings list secure; settings list global                
 
 ### A.1 跟滑动速度无关的因素
 
-GSI 滑动卡顿的原因是 `clean_a2=0`（2.2），模块已解决。以下因素实测对滑动速度没有影响：CPU 频率（锁最高频也一样）、SurfaceFlinger / HWC 所在的 CPU 核组（它们在 `system-background`，只用小核 0～5，移到 `foreground` 也一样）、GPU（一直在最低频 385 MHz，占用只有约 10%）、HWC 转灰度（每帧只要 7 ms）、`is_scrolling=1`。帧率分档 `persist.vendor.xrz.fps*` 只在 `clean_a2=0` 时测过，没看出变化。
+GSI 滑动卡顿的原因是 `clean_a2=0`（2.3），模块已解决。以下因素实测对滑动速度没有影响：CPU 频率（锁最高频也一样）、SurfaceFlinger / HWC 所在的 CPU 核组（它们在 `system-background`，只用小核 0～5，移到 `foreground` 也一样）、GPU（一直在最低频 385 MHz，占用只有约 10%）、HWC 转灰度（每帧只要 7 ms）、`is_scrolling=1`。帧率分档 `persist.vendor.xrz.fps*` 只在 `clean_a2=0` 时测过，没看出变化。
 
 ### A.2 旧 vendor（1.9.6 DSU）上的结论
 
