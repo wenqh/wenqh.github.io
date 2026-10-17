@@ -1,8 +1,8 @@
-# Bigme HiBreak Pro 墨水屏驱动控制资料（v2）
+# Bigme HiBreak Pro 墨水屏驱动控制资料
 
 > 用途：给“墨水屏控制小工具”做参考，以及刷 GSI 后怎么用回原厂的墨水屏功能。
 > 基于原厂固件 **3.4.6**（`Bigme_HiBreak_V1.0_20260831`，墨水屏驱动 `v5.19_20260521`），GSI 是 ponces Android 16。
-> 更新时间：2026-10-17（v2：按功能重新整理；内容对照了 3.4.6 原厂 `services.jar` / `framework.jar` 反编译源码）
+> 更新时间：2026-10-17（按功能重新整理；内容对照了 3.4.6 原厂 `services.jar` / `framework.jar` 反编译源码）
 > 旧版 1.9.6 的数据见 `HiBreakPro-墨水屏驱动控制资料-旧版1.9.6.md`。
 >
 > 标记：✅ 实测有效　❌ 实测无效　❓ 没测或没有结论
@@ -20,7 +20,7 @@
 5. [`eink_debug` 驱动节点](#5-eink_debug-驱动节点)
 6. [锁屏：关前光、待机画面](#6-锁屏关前光待机画面)
 7. [工具实现](#7-工具实现)
-- [附录 A：排查记录](#附录-a排查记录)
+- [附录 A：补充记录](#附录-a补充记录)
 - [附录 B：资料来源](#附录-b资料来源)
 
 ---
@@ -159,10 +159,23 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 
 ### 2.2 自动消残影 `clean_a2` ✅（模块已设）
 
-- **作用**：连续滑动时驱动改用最快的 A2 波形，停下后再自动清残影。关掉时每一帧都用当前模式的完整波形，所以很慢。**这是 GSI 滑动卡顿的根本原因。**
-- **怎么设**：`echo 1 > /sys/kernel/debug/eink_debug/clean_a2`。
-- **原厂默认**：开。原厂由 system 的 JNI 直接写节点，同时设属性 `vendor.xrz.auto_clean_enabled=1`。
-- **GSI 实测**：只写节点就够了，滑动跟原厂差不多；只设属性 `auto_clean_enabled` 没用（HWC 不会因为属性自动打开节点）。拆分测试见附录 A。
+- **作用**：允许驱动**连续刷新**。滑动期间先积着残影，停下来再统一清理。**GSI 滑动卡顿的根本原因就是它默认是 0。**
+- **怎么设**：`echo 1 > /sys/kernel/debug/eink_debug/clean_a2`（只能写节点，setprop 没用，见 5.1）。
+- **原厂默认**：开。原厂由 system 的 JNI 直接写节点，同时设属性 `vendor.xrz.auto_clean_enabled=1`（这个属性单独设没用）。
+- **原理**（`print_level=1` 打开驱动详细日志后实测，滑动约 3 秒）：
+
+  | | `clean_a2=1` | `clean_a2=0` |
+  |---|---|---|
+  | HWC 送来的帧 | 71 | 74 |
+  | 驱动实际做的刷新（`init pipe`） | **39** | **21** |
+  | 走“连续插入”快速通道（`new insert handwritting/video`） | 35 次 | 5 次 |
+  | 屏幕电源芯片开 / 关 | 6 / 4 次 | **34 / 34 次** |
+  | 用的波形 | DU（`0x2`） | DU（`0x2`） |
+
+  - `clean_a2=1`：驱动把连续滑动当成“手写 / 视频”这类连续画面，新的一帧直接插进正在进行的刷新里，不用等上一帧刷完，屏幕电源一直开着；
+  - `clean_a2=0`：每次刷新都要等上一帧刷完 → 关掉屏幕电源芯片 → 下一帧再重新上电（每次上电要等好几个 10 毫秒），实际刷新次数只有一半，所以卡；
+  - **两种情况用的波形一样**，卡顿跟波形无关，跟“能不能连续刷新”有关。
+- **跟刷新模式的关系**：刷新模式决定刷新速度（2.1），`clean_a2` 在此基础上影响帧速，两者是叠加的。
 - **注意**：GSI 开机默认是 0。模块开机时写 1，工具不要把它写成 0。
 
 ### 2.3 防抖动 `anti_flicker`（取舍，模块没设）
@@ -601,49 +614,13 @@ settings list system; settings list secure; settings list global                
 
 ---
 
-## 附录 A：排查记录
+## 附录 A：补充记录
+改
+### A.1 跟滑动速度无关的因素
 
-### A.1 GSI 滑动卡顿（2026-10-17，已解决）
+GSI 滑动卡顿的原因是 `clean_a2=0`（2.2），模块已解决。以下因素实测对滑动速度没有影响：CPU 频率（锁最高频也一样）、SurfaceFlinger / HWC 所在的 CPU 核组（它们在 `system-background`，只用小核 0～5，移到 `foreground` 也一样）、GPU（一直在最低频 385 MHz，占用只有约 10%）、HWC 转灰度（每帧只要 7 ms）、`is_scrolling=1`。帧率分档 `persist.vendor.xrz.fps*` 只在 `clean_a2=0` 时测过，没看出变化。
 
-**现象**：正式刷入 ponces 16 GSI（3.4.6 vendor）后，快速模式下滑动明显比原厂卡，HWC 每秒只提交 7～8 帧、每帧全屏刷新。
-
-**原因**：原厂开机后会按“默认”情景模式设置一组属性和节点，GSI 里这些全是空的或关闭的。
-
-**先按原厂“默认”情景模式全部设一遍**（滑动跟原厂差不多）：
-```sh
-E=/sys/kernel/debug/eink_debug
-setprop vendor.xrz.global_refresh_mode 0
-setprop vendor.xrz.anti_flicker_enabled 1; echo 1 > $E/anti_flicker
-setprop vendor.xrz.auto_clean_enabled 1; setprop vendor.xrz.clean_frequency -1; echo 1 > $E/clean_a2
-echo 1 > $E/anti_alias
-```
-
-**再拆分测试，找出关键只在节点 `clean_a2`**：
-
-| 测试 | 防抖动 | 属性 `auto_clean_enabled` | 节点 `clean_a2` | 滑动 |
-|---|---|---|---|---|
-| 两个都开 | 开 | 1 | 1 | 快 |
-| 只开防抖动 | 开 | 0 | 0 | 卡 |
-| 只开自动消残影 | 关 | 1 | 1 | 快 |
-| 只写节点 | 关 | 0 | **1** | **快** |
-| 只设属性 | 关 | 1 | 0 | 卡 |
-
-之后又发现在 `clean_a2=1` 的基础上加 `disable_eink_vsync=1` 会更平滑（2.4），两项一起放进了模块。
-
-**排除掉的方向**（当时都没有改善，不过都是在 `clean_a2=0` 时测的，部分效果可能被掩盖）：单独切刷新模式（各模式之间速度有差别，但 `clean_a2=0` 时整体都慢一档，切到快速模式也追不上原厂）、单独设 `disable_eink_vsync=1`、帧率分档 `persist.vendor.xrz.fps*`、`is_scrolling=1`、CPU 锁最高频、把 SurfaceFlinger/HWC 从 `system-background`（只能用小核 0～5）移到 `foreground`。GPU 一直在最低频 385 MHz，但占用只有约 10%；HWC 转灰度每帧只要 7 ms。
-
-### A.2 和原厂“默认”模式逐项对比（2026-10-17）
-
-用快照脚本对比原厂默认模式和 GSI，差异逐项测过：
-- 节点 `anti_flicker`（原厂 1 / GSI 0）：是取舍，结论见 2.3；
-- 节点 `anti_alias`（原厂开 / GSI 关）：看不出区别（2.5）；
-- `disable_eink_vsync`：有效，已加进模块（2.4）；
-- `color_restoration_suppoort`：没区别；
-- `hwc_idle`、`fps_limit`、`gray_256_dither`：原来是 HWC 写的状态（3.1）；
-- `clean_frequency`：无效（3.2）；
-- `enable_gpu_image_process`、`regal_support`、`gpu_dither`：HWC 不引用（3.2）。
-
-### A.3 旧 vendor（1.9.6 DSU）上的结论
+### A.2 旧 vendor（1.9.6 DSU）上的结论
 
 `gray_256_dither`、`fps_limit`、`enable_home_clean`、`driver_color_enhance`、节点 `contrast` / `brightness` 的结果都是在旧 vendor 上测的（已分别写在第 2、3 节并标注）。新 vendor 上没有重测。
 
