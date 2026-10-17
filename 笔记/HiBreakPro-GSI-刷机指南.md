@@ -171,8 +171,7 @@ adb reboot
 ```
 重启后会**直接进桌面，不再跑开机向导**。实测之后屏幕一直正常，也没有再出现看门狗重启。
 
-**原理**：通过 logcat 发现，`system_server` 卡在 `SurfaceControl.nativeGetCompositionDataspaces`（在等 SurfaceFlinger），看门狗等了 68 秒就把它杀了。
-后来在正式刷机后抓到了调用栈，SurfaceFlinger 卡死的真正原因是**开机动画和 SurfaceFlinger 在 GPU 上死锁**（见 4.5）。开机向导正好是开机动画之后出现的第一个界面，所以最容易撞上；跳过向导、少走这一段，就能大大降低卡死的概率。之后再装 6.5 的模块，关掉开机动画，就能从根本上避开；如果第一次开机就一直黑屏、盲按也不行，可以刷 4.6 的备用 boot。
+**原理**：SurfaceFlinger 卡死的根本原因是**开机动画和 SurfaceFlinger 在 GPU 上死锁**（见 4.5）。开机向导是开机动画之后出现的第一个界面，向导期间 `system_server` 卡在 `SurfaceControl.nativeGetCompositionDataspaces`（在等 SurfaceFlinger），看门狗等 68 秒就把它杀了，于是反复重启。跳过向导能大大降低卡死的概率；装上 6.5 的模块关掉开机动画，就能从根本上避开；如果第一次开机就一直黑屏、盲按也不行，可以刷 4.6 的备用 boot。
 
 ### 4.4 关于“关闭 HW 叠加层”
 网上很多教程说开机后要执行 `service call SurfaceFlinger 1008 i32 1`，或者在开发者选项里勾“停用 HW 叠加层”。
@@ -191,7 +190,7 @@ adb reboot
 | 开机动画 | 渲染线程卡在 Mali 驱动里；`ged-swd` 线程在等上一帧的 fence |
 | HWC（显示合成器） | 所有线程都空闲，在等新任务 |
 
-所以这个问题**跟墨水屏、HWC 都无关**，也跟 Phh 设置里的背压、GED 开关关系不大。开机后 SurfaceFlinger 已经通知开机动画退出了，但开机动画卡在 GPU 里，没法退出；把原厂 build.prop 里那几个 HWC 属性（`disable_eink_vsync`、`color_restoration_suppoort`、`image_smoothing_suppoort`）补回来，也没有任何改善；后来去掉它们，只关开机动画，照样不黑屏。（其中 `disable_eink_vsync=1` 后来发现能让滑动更平滑，所以又加回了模块，但跟黑屏无关。）日志里能看到类似这些（都是结果，不是原因）：
+所以这个问题**跟墨水屏、HWC 都无关**，也跟 Phh 设置里的背压、GED 开关关系不大。开机后 SurfaceFlinger 已经通知开机动画退出了，但开机动画卡在 GPU 里，没法退出；原厂 build.prop 里那几个 HWC 属性（`disable_eink_vsync`、`color_restoration_suppoort`、`image_smoothing_suppoort`）也跟黑屏无关：补回它们照样黑屏，不补、只关开机动画就不黑屏。（模块里保留了 `disable_eink_vsync=1`，是因为它能让滑动更平滑，见 6.5。）日志里能看到类似这些（都是结果，不是原因）：
 ```
 E GED : dequeueBuffer: fence 37 didn't signal in 1000 ms (try = 138)      ← 开机动画一直等不到上一帧
 E hwcomposer: [OVL] processImage: wait CT fence timeout
