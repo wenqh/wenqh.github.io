@@ -136,16 +136,16 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 - **常用模式**：177 HD、180 REGAL、**178 NORMAL**（默认）、179 FAST、183 HYPER。刷新模式决定刷新速度，从慢到快是 **高清256 / HD → NORMAL（原厂“快刷”）→ FAST（“极速”）→ HYPER（“Hyper”）**，越快画质越差、残影越多；REGAL（原厂“Regal”）在 GSI 里等于 HD（见下表）。括号里是原厂墨水屏设置里的名称。依据是使用经验：高清256 最慢、快刷比极速慢、Hyper 最快；“快刷 = NORMAL、极速 = FAST”是按名字和顺序推断的，没查原厂代码确认。`clean_a2`（2.2）也会影响帧速，开了更流畅。Hyper 模式原厂还会把系统帧率设成 120（见 2.8）。
 - **各模式实际送给驱动的参数**（GSI 实测，滑动时看驱动每帧日志）：
 
-  | 设的模式 | HWC 送给驱动的 `mode` | 实际波形 `map` | 驱动默认的灰度显示方式 |
+  | 设的模式 | HWC 送给驱动的模式 | 实际波形 | 驱动默认的灰度显示方式 |
   |---|---|---|---|
-  | HD 177 | `0xb1` | GU16 `0x84` | 0（不做点阵，直接显示灰色） |
-  | REGAL 180 | **`0xb1`（被当成 HD）** | GU16 `0x84` | 0 |
-  | NORMAL 178 | `0xb2` | DU `0x2` | 3（点阵 2） |
-  | FAST 179 | `0xb3` | A2 `0x11` | 3（点阵 2） |
-  | HYPER 183 | **`0x11`（直接送 A2 波形）** | A2 `0x11` | 3（点阵 2） |
+  | HD 177 | 177 | GU16 | 0（不做点阵，直接显示灰色） |
+  | REGAL 180 | **177（被当成 HD）** | GU16 | 0 |
+  | NORMAL 178 | 178 | DU | 3（点阵 2） |
+  | FAST 179 | 179 | A2 | 3（点阵 2） |
+  | HYPER 183 | **直接送 A2 波形** | A2 | 3（点阵 2） |
 
   - **GSI 里 REGAL 等于 HD**（复测过）。原因应该是这块屏不支持 REGAL：原厂 `XrzEinkManager.java` 报告的 `support_regal` 取的是 `ro.vendor.xrz.support_sunina_hw`，原厂 build.prop 里它是 0（`vendor.xrz.regal_support=1` 虽然也读了，但没用上）。HWC 和 `libimage_process.so` 里也搜不到 `regal`。原厂漫画模式（180）大概率也是 HD，只是还叠加了对比度、鲜艳增强，看起来不一样（原厂上没抓驱动日志验证）。
-  - **高清256**（`-2147483471` = HD + 256 灰阶标志，原厂“全部高清256”和杂志情景模式用的都是它）✅：`setprop vendor.xrz.global_refresh_mode -2147483471`，恢复用 `resetprop --delete vendor.xrz.global_refresh_mode`。效果是有灰阶、没残影、刷新慢。单独设 HD 看起来也一样，因为驱动在 HD 下默认就不做点阵；区别只有两点：高清256 由 HWC 指定 256 灰阶（日志 `dither=4(def=4)`，HD 是 `dither=0(def=0)`），而且**切进高清256 时 HWC 会先自动做一次 GC16 全刷**（第一帧 `mode=0x4(map=0x4)`），切进 HD 或 REGAL 时不会。所以这一档用高清256。
+  - **高清256**（`-2147483471` = HD + 256 灰阶标志，原厂“全部高清256”和杂志情景模式用的都是它）✅：`setprop vendor.xrz.global_refresh_mode -2147483471`，恢复用 `resetprop --delete vendor.xrz.global_refresh_mode`。效果是有灰阶、没残影、刷新慢。单独设 HD 看起来也一样，因为驱动在 HD 下默认就不做点阵；区别只有两点：高清256 由 HWC 指定 256 灰阶（日志 `dither=4(def=4)`，HD 是 `dither=0(def=0)`），而且**切进高清256 时 HWC 会先自动做一次 GC16 全刷**（日志第一帧就是 GC16），切进 HD 或 REGAL 时不会。所以这一档用高清256。
   - FAST 和 HYPER 波形相同，HYPER 更快应该是 HWC 送帧方式和系统帧率（2.8）的差别。
 
 **刷新模式代码**（原厂 `EinkRefreshMode.java`，加上新版的 Hyper）：
@@ -167,15 +167,15 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 
   | 常量 | 值 | 灰度显示方式 | 对应 `global_dither` |
   |---|---|---|---|
-  | `HWC_EINK_DITHER_TEXT_EFFECT` | `0x20000000` | 二值化（纯黑白，效果跟模式有关，见 2.7） | 1 |
-  | `HWC_EINK_DITHER_PICTURE1_EFFECT` | `0x40000000` | 点阵 1 | 2 |
-  | `HWC_EINK_DITHER_PICTURE2_EFFECT` | `0x60000000` | 点阵 2（NORMAL、FAST、HYPER 下的驱动默认） | 3 |
-  | `HWC_EINK_DITHER_256_EFFECT` | `0x80000000` | 256 级灰度 | 4 |
+  | `HWC_EINK_DITHER_TEXT_EFFECT` | `536870912` | 二值化（纯黑白，效果跟模式有关，见 2.7） | 1 |
+  | `HWC_EINK_DITHER_PICTURE1_EFFECT` | `1073741824` | 点阵 1 | 2 |
+  | `HWC_EINK_DITHER_PICTURE2_EFFECT` | `1610612736` | 点阵 2（NORMAL、FAST、HYPER 下的驱动默认） | 3 |
+  | `HWC_EINK_DITHER_256_EFFECT` | `2147483648` | 256 级灰度 | 4 |
 
-  刷新模式 = 基础模式 + 灰度标志，例如高清256 `0x800000B1`（-2147483471）= HD（177）+ `DITHER_256`。
+  刷新模式 = 基础模式 + 灰度标志，例如 HD（177）+ `DITHER_256`（2147483648）= 2147483825，超出了属性能存的整数范围，按 32 位有符号整数换算就是高清256 的 `-2147483471`；NORMAL（178）+ 二值化（536870912）= `536871090`。
 
   ⚠️ 标志不是随便组合都有效，HWC 会按模式过滤（实测见 2.7）。
-- 其他标志是原厂 SurfaceFlinger 给特定图层打的标记，GSI 没法设置，了解即可：`SURFACEVIEW`（0x10000，视频等）、`FORCE_REFRESH`（0x20000）、`HANDWRITTEN`（0x40000）、`HOME`（0x80000，桌面）、`HANDWRITTEN_BG`（0x100000）、`MULTI_DAMAGE`（0x200000，多区域刷新）、`INPUT_METHOD`（0x400000）、`AUTO_DITHER`（0x800000）、`DISABLE_LAYER`（0x1000000）、`OVERLAY`（0x2000000）、`LOGO`（0x4000000）、`CURSOR`（0x8000000）、`SKIP_FRAME`（-1）。
+- 其他标志是原厂 SurfaceFlinger 给特定图层打的标记，GSI 没法设置，了解即可：`SURFACEVIEW`（65536，视频等）、`FORCE_REFRESH`（131072）、`HANDWRITTEN`（262144）、`HOME`（524288，桌面）、`HANDWRITTEN_BG`（1048576）、`MULTI_DAMAGE`（2097152，多区域刷新）、`INPUT_METHOD`（4194304）、`AUTO_DITHER`（8388608）、`DISABLE_LAYER`（16777216）、`OVERLAY`（33554432）、`LOGO`（67108864）、`CURSOR`（134217728）、`SKIP_FRAME`（-1）。
 
 ### 2.2 自动消残影（连续刷新）`clean_a2` ✅（模块已设）
 
@@ -190,7 +190,7 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
   | 屏幕电源芯片 | 滑动期间一直开着，停下后才关 | **每刷一次就关一次**，下一帧再重新上电（每次上电要等好几个 10 毫秒） |
   | 实际刷新次数 | 跟得上 HWC 送帧，大部分帧都刷了（例：送 71 帧，刷 39 次） | 跟不上，中间的帧被跳过（例：送 74 帧只刷 21 次；单次滑动送 41 帧只刷 10 次） |
   | 起始帧和停下后的最后一帧 | **各多刷几遍**（实测 4 遍，约 0.5 秒），把画面压实、压掉滑动时积下的残影 | 都只刷 1 遍 |
-  | 波形 | DU（`0x2`） | DU（`0x2`） |
+  | 波形 | DU | DU |
   | 会闪的全刷（GC16） | 没有 | 没有 |
 
   - 所以卡顿**跟波形无关**，跟“能不能连续刷新”有关；原厂叫它“自动消残影”，指的就是停下后多刷几遍、不闪屏的清理。
@@ -235,7 +235,7 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 
 - **怎么做**：
   ```sh
-  setprop vendor.xrz.force_global_refresh_mode 4     # 4 = GC16 全刷（驱动日志 mode=0x4(map=0x4)，已确认）
+  setprop vendor.xrz.force_global_refresh_mode 4     # 4 = GC16 全刷（驱动日志已确认）
   service call SurfaceFlinger 1004                   # 让系统重绘一帧（= SurfaceComposerClient::repaintEverything）
   sleep 0.6
   setprop vendor.xrz.force_global_refresh_mode -1    # -1 = 不强制（原厂默认）
@@ -247,16 +247,16 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
   | 值 | 驱动用的波形 | 屏幕表现 | 用途 |
   |---|---|---|---|
   | -1 | — | — | 不强制（原厂默认、正常状态） |
-  | 0 | 当前模式（NORMAL 时是 DU，`map=0x2`） | 不闪 | 原厂切换情景模式后重绘整屏 |
-  | 4 | **GC16**（`map=0x4`） | **闪**一两下，残影清干净 | 手动全刷、清残影（推荐） |
-  | 32 | GL16（`map=0x20`） | **闪**一两下，跟 4 看起来差不多 | 可以代替 4 |
-  | 1 | INIT（`map=0x1`） | **闪**，而且明显慢得多 | 屏幕初始化用的波形，不适合日常全刷 |
-  | 2 | DU（`map=0x2`） | 不闪 | — |
-  | 8 | GC4（`map=0x8`） | 不闪 | — |
-  | 16 | A2（`map=0x11`） | 不闪 | — |
-  | 64 / 128 | GLR16 / GLD16（驱动都换成 GU16，`map=0x84`） | 不闪 | — |
-  | 132 | GU16（`map=0x84`） | 不闪 | — |
-  | 136 | GU4（`map=0x88`） | 不闪 | — |
+  | 0 | 当前模式（NORMAL 时是 DU） | 不闪 | 原厂切换情景模式后重绘整屏 |
+  | 4 | **GC16** | **闪**一两下，残影清干净 | 手动全刷、清残影（推荐） |
+  | 32 | GL16 | **闪**一两下，跟 4 看起来差不多 | 可以代替 4 |
+  | 1 | INIT | **闪**，而且明显慢得多 | 屏幕初始化用的波形，不适合日常全刷 |
+  | 2 | DU | 不闪 | — |
+  | 8 | GC4 | 不闪 | — |
+  | 16 | A2 | 不闪 | — |
+  | 64 / 128 | GLR16 / GLD16（驱动都换成 GU16） | 不闪 | — |
+  | 132 | GU16 | 不闪 | — |
+  | 136 | GU4 | 不闪 | — |
 
   每次强刷驱动都是整屏刷 2～4 帧。偶尔重绘请求不出帧（屏幕没反应、驱动日志里也没有 `update image`），再执行一次就行。
 
@@ -275,7 +275,7 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 
 **实测的组合**（驱动日志看 `mode=…,dither=…`）：
 
-| 组合 | 值 | 驱动实际 | 效果 |
+| 组合 | 值 | 驱动日志（十六进制，对照见 5.3） | 效果 |
 |---|---|---|---|
 | HD + 256 灰阶（高清256） | `global_refresh_mode=-2147483471` | `mode=0xb1(map=0x84),dither=4` ✅ | 有灰阶、没残影、刷新慢 |
 | NORMAL + 二值化 | `global_refresh_mode=536871090` | `mode=0xb2(map=0x2),dither=1` ✅ | **纯黑白**（跟 `global_dither=1` 效果一样） |
@@ -285,7 +285,7 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 | NORMAL + 256 灰阶 | `global_refresh_mode=-2147483470` | `mode=0xb2(map=0x2),dither=0` ❌ | 标志被 HWC 忽略。推测 256 灰阶只允许配合 HD（不全刷残影太重） |
 
 结论：
-- **灰度显示方式的实际效果取决于刷新模式**：同样是二值化（1），HD、REGAL、NORMAL 下是纯黑白；FAST（A2 波形 `0x11`）、HYPER 下**所有灰度显示方式都没效果**，只能显示点阵纹理（抹布感）。不管用标志还是节点，结果一样；
+- **灰度显示方式的实际效果取决于刷新模式**：同样是二值化（1），HD、REGAL、NORMAL 下是纯黑白；FAST（A2 波形）、HYPER 下**所有灰度显示方式都没效果**，只能显示点阵纹理（抹布感）。不管用标志还是节点，结果一样；
 - 想要“纯黑白”：HD、REGAL、NORMAL 下设 `global_dither=1`（NORMAL 也可以直接用组合值 `536871090`）；**FAST、HYPER 下做不到**。
 
 **`global_dither` 各值的效果**（新 vendor 实测，刷新模式 NORMAL、`clean_a2=1`。在其他模式下驱动也会采用这个值，但实际效果取决于模式，FAST / HYPER 下所有值都看不出变化，见上表）：
@@ -438,7 +438,7 @@ echo 0  > $L/lm3630a_cold_light    # 冷光，0～254，0 = 关
 | 模式 | 刷新模式 | `gray_256_dither`（HWC 报告的状态） | `gpu_dither` | 防闪烁 | 自动消残影 | 抗锯齿 |
 |---|---|---|---|---|---|---|
 | 默认 | 178 NORMAL | 0 | 0 | 开 | 开 | 开 |
-| 杂志 | `0x800000B1`（HD + 256 灰阶） | **4** | **1** | 关 | 关 | 关 |
+| 杂志 | `-2147483471`（高清256：HD + 256 灰阶） | **4** | **1** | 关 | 关 | 关 |
 | 漫画 | 180 REGAL | 0 | 0 | 关 | 关 | 关 |
 | 视频 | 179 FAST | 0 | 0 | 开 | 开 | 关 |
 | 自定义 | 按设置 | 0 | **2**（Hyper 时） | 按开关 | 按开关 | 关 |
@@ -541,6 +541,16 @@ echo 0  > $L/lm3630a_cold_light    # 冷光，0～254，0 = 关
 update image: order=6852,panel=0,mode=0xb2(map=0x2),dither=0(def=3),an=0,area(0,0)~(1647,823),auto_clean(1, 1, 0)
 ```
 `mode=0xb2` 是上层要求的刷新模式（178 NORMAL），`map=0x2` 是驱动换算后的波形（DU），`dither=X(def=Y)` 是灰度显示方式：X 是 HWC 指定的类型（0 = 没指定），Y 是驱动最终用的类型（`global_dither` 节点不是 0 时就用节点的值，会盖过 X；节点是 0 时 HWC 指定了就用 X，没指定就用驱动默认值，跟模式有关：HD 是 0，NORMAL、FAST、HYPER 是 3）（2.1、2.7）；`an` 是抗锯齿，`auto_clean(...)` 的第一个数就是 `clean_a2` 的值。改了设置后看这行有没有变化，比用眼睛判断可靠。
+
+日志里的数字是十六进制，常见的对照：
+
+| 日志 | 含义 |
+|---|---|
+| `mode=0xb1` / `0xb2` / `0xb3` | 177 HD / 178 NORMAL / 179 FAST（REGAL 也显示 `0xb1`，HYPER 显示 `0x11`，见 2.1） |
+| `map=0x2` | DU（NORMAL） |
+| `map=0x84` | GU16（HD、REGAL、高清256） |
+| `map=0x11` | A2（FAST、HYPER） |
+| `map=0x4` / `0x20` / `0x1` / `0x8` / `0x88` | GC16 / GL16 / INIT / GC4 / GU4（强刷时见到，2.6） |
 
 想看驱动内部更细的处理（实际刷新次数、屏幕电源开关），先 `echo 1 > /sys/kernel/debug/eink_debug/print_level`，再看 `dmesg`，用完改回 0。
 
