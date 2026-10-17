@@ -2,7 +2,7 @@
 
 > 适用：Bigme HiBreak Pro（墨水屏，MediaTek MT6877，内核 4.19）
 > 目标：纯净 AOSP + 谷歌服务 + root，**能正常打电话 / 来电 / 通话有声音**
-> 整理时间：2026-10-15，2026-10-17 按正式刷机（原厂 3.4.6 vendor）的实测结果更新
+> 整理时间：2026-10-15，2026-10-17 按正式刷机（原厂 3.4.6 vendor）的实测结果更新（黑屏原因、打电话、模块 v7、vbmeta 可选、恢复出厂后的步骤）
 >
 > 本文的每一步都标了验证状态：
 > - ✅ **已实测**：在本机 DSU 或正式刷机后实际跑通
@@ -70,7 +70,7 @@ pnputil /add-driver .\usb_driver\android_winusb.inf /install
 
 ### 2.2 手机端前提
 
-- **bootloader 已解锁**：`adb shell getprop ro.boot.verifiedbootstate` 返回 `orange` 就说明已解锁。
+- **bootloader 已解锁**：`adb shell getprop ro.boot.verifiedbootstate` 返回 `orange` 就说明已解锁。⚠️ 装了 Magisk 以后它会被伪装成 `green`，这时用 `fastboot getvar unlocked` 看更可靠（见第 7 节）。
 - **原厂系统已经装好 Magisk**（修补原厂 boot 的方法见第 5 节）。
 - 开发者选项里打开 **USB 调试**，并且对电脑勾过“始终允许”。
 
@@ -79,7 +79,7 @@ pnputil /add-driver .\usb_driver\android_winusb.inf /install
 | 文件 | 说明 |
 |------|------|
 | `aosp-arm64-ab-gapps-16.0-20250625.img.xz` | ponces TrebleDroid AOSP 16，带 GApps。https://github.com/ponces/treble_aosp/releases |
-| `Magisk-v30.6.apk`（或者和手机上一致的版本） | https://github.com/topjohnwu/Magisk/releases |
+| `Magisk-v30.7.apk`（和修补 boot 用的版本一致；本机正式刷机用的是 30.7） | https://github.com/topjohnwu/Magisk/releases |
 | DSU Sideloader | 用 DSU 方式试系统用。https://github.com/VegaBobo/DSU-Sideloader/releases |
 
 **其他可选的 ROM**（没有在本机完整测过）：ponces 15 gapps 版；Vasu 给 HiBreak Pro 做的 Android 14 专用包（https://vbh.ai/hibreak-pro-gsi-release/）。
@@ -177,7 +177,7 @@ adb reboot
 ### 4.4 关于“关闭 HW 叠加层”
 网上很多教程说开机后要执行 `service call SurfaceFlinger 1008 i32 1`，或者在开发者选项里勾“停用 HW 叠加层”。
 - 这条命令**需要 root**，而且**重启后会失效**。
-- 在本机上查了一下，HWC 本来就把所有图层交给 GPU 合成（`composition=CLIENT`），所以**这一步不是关键**。真正导致卡死的是开机向导。
+- 在本机上查了一下，HWC 本来就把所有图层交给 GPU 合成（`composition=CLIENT`），所以**这一步不是关键**。真正导致卡死的是开机动画和 SurfaceFlinger 在 GPU 上死锁（4.5）。
 
 ### 4.5 黑屏救急：重启 SurfaceFlinger（✅ 实测有效）
 
@@ -237,8 +237,8 @@ fastboot reboot
 
 ## 5. 获取 root（Magisk）
 
-### 5.1 修补原厂 boot（原厂系统里做，⚠️ 按常规流程整理）
-1. 从手机导出 boot（见 2.4 节），或者从原厂固件包里提取。
+### 5.1 修补原厂 boot（原厂系统里做，✅ 3.4.6 实测）
+1. 从手机导出 boot（见 2.4 节），或者从原厂固件包里提取：原厂 OTA 全量包里是 `payload.bin`，用 [payload-dumper-go](https://github.com/ssut/payload-dumper-go) 执行 `payload-dumper-go -p boot <OTA 包.zip>` 就能单独解出 `boot.img`。
 2. 安装 Magisk App，选择“安装 → 选择并修补一个文件”，选 `boot_a.img`。
 3. 刷入修补好的镜像（这台机器是 4.19 内核，没有 `init_boot` 分区，直接修补 boot）：
    ```bash
@@ -246,11 +246,12 @@ fastboot reboot
    fastboot flash boot_a magisk_patched-xxxxx.img
    fastboot reboot
    ```
+   ⚠️ 注意刷到**当前槽位**：OTA 升级后槽位会切换，先用 `fastboot getvar current-slot` 确认（本机升级到 3.4.6 后是 `b`，刷的是 `boot_b`）。
 
 ### 5.2 在 GSI（或 DSU）里启用 Magisk（✅）
 1. GSI 里只有一个 Magisk“桩应用”，它需要**联网**下载完整版。没有网络的话，直接用 adb 安装完整版：
    ```bash
-   adb install -r Magisk-v30.6.apk
+   adb install -r Magisk-v30.7.apk
    ```
 2. 打开 Magisk，如果提示“需要修复运行环境”，点修复（会自动重启）。**要用 Magisk 模块就必须做这一步。**
 3. 用 adb 测试 root。第一次手机上会弹出授权框，点“允许”：
@@ -372,7 +373,7 @@ adb shell "su -mm -c 'sh /data/local/tmp/eaic.sh'; rm /data/local/tmp/eaic.sh"
 > ⚠️ **不建议直接用 issue 里作者做的 `eaic2-magisk.zip` 模块**：它会把整个 `libmtk-ril.so` 换成作者手机上的版本。对比过，跟本机原厂的库**大小和哈希都不一样**（4,787,760 字节对比 4,787,768 字节），属于不同版本的固件。本机原厂库本来就是 `=2`，只要撤掉 TrebleDroid 的覆盖就行。
 
 ### 6.5 Magisk 模块 hibreak_eink：让修复永久生效
-模块安装包是 `hibreak_eink-v7.zip`。在 Magisk 里选“从本地安装”，或者用 adb 安装：
+模块安装包是 `hibreak_eink-v7.zip`（本机放在 `D:\BIGME\`，解压好的源码在 `D:\BIGME\tools\hibreak_eink\`）。在 Magisk 里选“从本地安装”，或者用 adb 安装：
 ```bash
 adb push hibreak_eink-v7.zip /data/local/tmp/
 adb shell "su -c 'magisk --install-module /data/local/tmp/hibreak_eink-v7.zip'"
@@ -440,6 +441,17 @@ fastboot reboot
 **刷完之后**：按以下顺序来：第 4 节（OTG 授权、跳过开机向导）→ 第 5 节（Magisk，记得修复运行环境）→ 装 6.5 的模块（关开机动画，避免以后开机黑屏）→ 第 6 节（打电话：Phh 设置里的 IMS 和 Voice Call In 开关）。
 boot 分区保持“原厂 + Magisk 修补”就行，GSI 只替换 system，不动 boot。
 
+墨水屏相关的设置（滑动卡顿、刷新模式、加深、前光等）见另一份文档《HiBreakPro-墨水屏驱动控制资料》。
+
+### 7.1 恢复出厂设置后要重做什么
+恢复出厂设置只清空 `/data`，GSI（system）、Magisk 修补的 boot、bootloader 解锁状态、vbmeta 都不受影响。需要重做的：
+1. **adb 授权**：电脑公钥被清掉了，要重新授权（4.2）。第一次开机同样可能黑屏，盲按不行就刷 4.6 的备用 boot；
+2. **跳过或完成开机向导**（4.3）；
+3. **Magisk**：重装完整版 App 并修复运行环境（5.2）；
+4. **模块 `hibreak_eink`**：重新安装（6.5）；
+5. **Phh 设置**：IMS 三项、Disable "Voice Call In" route 都要重新设置，IMS APK 也要重新下载（第 6 节）；
+6. 其他个人设置，比如字体粗细、墨水屏工具的设置。
+
 ---
 
 ## 8. 排错速查表
@@ -450,7 +462,7 @@ boot 分区保持“原厂 + Magisk 修补”就行，GSI 只替换 system，不
 | 墨水屏黑屏或画面不动，开机动画不退出，但投屏能看到画面、adb 能用 | 开机动画和 SurfaceFlinger 在 GPU 上死锁 | 4.5（重启 SurfaceFlinger 救急；装 6.5 模块预防） |
 | `adb devices` 什么都没有 | 数据线只能充电、USB 模式不对、没装驱动 | 2.1 |
 | `adb devices` 显示 `unauthorized` | 没授权 | 4.2 |
-| 每 1～2 分钟自己重启，logcat 里有 `WATCHDOG KILLING` | 开机向导导致 SurfaceFlinger 卡死 | 4.3 |
+| 每 1～2 分钟自己重启，logcat 里有 `WATCHDOG KILLING` | SurfaceFlinger 卡死（开机动画 GPU 死锁），开机向导阶段 system_server 被看门狗杀掉 | 4.3 / 4.5 |
 | `adb root` 提示 production builds | 原厂 boot 的限制，正常现象 | 5 |
 | su 直接返回 `Permission denied` | 开机向导没完成 / Magisk 运行环境没修复 / 授权被拒 | 5.2 |
 | 打出提示“无法接通” | IMS 没装或者没注册 | 6.1 |

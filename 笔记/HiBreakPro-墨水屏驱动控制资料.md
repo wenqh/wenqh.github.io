@@ -218,12 +218,13 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 
 - **怎么做**：
   ```sh
-  setprop vendor.xrz.force_global_refresh_mode 4     # 4 = GC16 全刷
-  service call SurfaceFlinger 1004                   # 让系统重绘一帧
+  setprop vendor.xrz.force_global_refresh_mode 4     # 4 = GC16 全刷（驱动日志 mode=0x4(map=0x4)，已确认）
+  service call SurfaceFlinger 1004                   # 让系统重绘一帧（= SurfaceComposerClient::repaintEverything）
   sleep 0.6
   setprop vendor.xrz.force_global_refresh_mode -1    # -1 = 不强制（原厂默认）
   ```
-- ⚠️ **一定要改回 -1**：不改的话，之后**每次画面更新都会用这个模式全刷**，画面静止时看不出来，一滑动就连续闪。
+- **原厂的做法**（3.4.6 反汇编 `libXrzFramework_runtime.so` 的 `nativeForceGlobalRefresh`）：只做两步，设 `force_global_refresh_mode=<模式>`，再调用 `SurfaceComposerClient::repaintEverything()`，**不负责改回 -1**。改回 -1 是 **HWC 刷完后自己做的**。原厂自己调用时传的模式是 0（`DisplayPolicyController.repaint()`），0 的效果没测过。
+- ⚠️ **GSI 里一定要手动改回 -1**：HWC 刷完会尝试把它改回 -1，但 GSI 里 SELinux 不允许 HWC 写属性（logcat：`Unable to set property "vendor.xrz.force_global_refresh_mode" to "-1"`），改不回去。不手动改的话，之后**每次画面更新都会用这个模式全刷**，画面静止时看不出来，一滑动就连续闪。（跟 3.1 的 `fps_limit`、`gray_256_dither` 是同一个原因。）
 - 用途：清掉残影和麻点（比如防抖动设成 1 之后）；锁屏待机画面也要用它（6.2）。
 
 ### 2.7 抖动
@@ -330,6 +331,9 @@ echo 0  > $L/lm3630a_cold_light    # 冷光，0～254，0 = 关
 | `hwc_idle` | 画面静止 1 / 刷新中 0 | 原厂 `DisplayPolicyService` 每秒读一次：为 0 时持有 4 秒唤醒锁，防止刷新途中休眠。**跟画质无关**，手动设没用 |
 | `cur_fps` | 3、4、8、12… | 当前帧率报告 |
 | `fps_limit`、`gray_256_dither` | 反复写回 0 | 像是“一次性请求”：HWC 读到后再清零。原厂上 setprop 会马上被清掉；GSI 里清不掉，所以 setprop 后会**一直生效**（见 2.7、2.8） |
+| `force_global_refresh_mode` | 刷完后写回 -1 | 全刷请求：HWC 执行完一次全刷就复位。GSI 里复位失败，所以要手动改回 -1（2.6） |
+
+**可以改进（还没做）**：在 Magisk 模块里加一条 SELinux 规则（`sepolicy.rule`），允许 HWC（`hal_graphics_composer_default`）设置 `vendor_default_prop` 类属性。这样 HWC 就能像原厂一样自己复位上面这些请求、更新 `hwc_idle` / `cur_fps` 状态，GSI 的行为会更接近原厂，工具里也不用手动复位了。
 
 ### 3.2 GSI 里无效的
 
