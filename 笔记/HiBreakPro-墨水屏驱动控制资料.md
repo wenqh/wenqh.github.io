@@ -3,10 +3,10 @@
 > 用途：给“墨水屏控制小工具”做参考，以及刷 GSI 后怎么用回原厂的墨水屏功能。
 > 基于原厂固件 **3.4.6**（`Bigme_HiBreak_V1.0_20260831`，墨水屏驱动 `v5.19_20260521`）。
 > 旧版 1.9.6 的数据见存档 `HiBreakPro-墨水屏驱动控制资料-旧版1.9.6.md`。
-> 更新时间：2026-10-16
+> 更新时间：2026-10-17（对照 3.4.6 原厂 `services.jar` / `framework.jar` 反编译源码校正）
 >
 > 标记：✅ 实测有效　❌ 实测无效　❓ 没测或没有结论
-> 注意：**GSI 里的实测是在旧版 1.9.6 vendor 上做的**（ponces Android 16 DSU）。刷 GSI 用的是新版 vendor，结果应该基本一致，但需要再确认一遍。
+> 注意：标了“旧 vendor”的结论是在 1.9.6 vendor 的 DSU 里测的；2026-10-17 以后的实测都是在正式刷入的 ponces 16 GSI + 3.4.6 vendor 上做的。
 
 ---
 
@@ -16,14 +16,16 @@
 - 原厂给**每个 App** 保存一套显示策略（`DisplayPolicy`），用 `dumpsys xrz_display_policy_service` 可以看到全部。字段包括：`refreshMode`（刷新模式）、`refreshFrequency`、`appContrast`（对比度）、`appBrightnessLevel`（亮度 / 墨水浓度）、`appColorEnhance`（鲜艳增强）、`appTextEnhance`（文字增强）、`appColorMode`（情景模式）、`appAutoClean`、`appAntiFlicker`、`appAntiAlias`、`appScrollFlip`、`appEinkAnimation`（翻页动画）、`appDpi`、漂白模式等。
 - App 切到前台时，原厂系统按它的策略：
   1. 设置一组 `vendor.xrz.*` 全局属性，部分由 **vendor 里的 HWC** 读取；
-  2. 写一些 **`eink_debug` 驱动节点**（抗锯齿、防闪烁、自动清屏、翻页动画等）；
+  2. 写一些 **`eink_debug` 驱动节点**，分两种（3.4.6 源码确认）：
+     - `clean_a2`（自动消残影）、`anti_alias`（抗锯齿）：由 system 里的 `libXrzFramework_runtime.so`（JNI）**直接写节点**；
+     - `anti_flicker`（防抖动）、`eink_animation`（翻页动画）：system **只设属性**（`vendor.xrz.anti_flicker_enabled`、`eink_animation_mode`），由 **HWC 每帧按属性去写节点**。所以原厂 `init.eink.rc` 要把这些节点改成 `0666`，否则 HWC 写不进去（GSI 里 logcat 每帧都有 `hwcomposer: error writing to .../anti_flicker`）；
   3. 通过**原厂改过的 SurfaceFlinger**，把刷新模式、对比度、亮度、加深、增强、Gamma 等参数以**图层元数据**传给 HWC（HWC 字符串里的 `REFRESH_MODE`、`DARK_LEVEL`、`BRIGHTNESS_LEVEL`、`ENHANCE_LEVEL`、`GAMMA_LEVEL`，接口 `layerStateSetPerFrameMetadata` / `layerStateSetRefreshMode`）。HWC 再调用 vendor 里的 **`libimage_process.so`** 做图像处理（`adjustContrast`、`colorDither`、`convertToGray`、`process3DLUT` 等）。
 
 ### 1.2 GSI 里哪些能用
 GSI 只替换 system，vendor（HWC、驱动）不变，所以：
 - ✅ **HWC 自己读的 `vendor.xrz.*` 属性**：GSI 里用 root `setprop` 就能用；
 - ✅ **`eink_debug` 驱动节点**：GSI 里用 root 直接写；
-- ❓ **靠图层元数据传参的功能**（对比度、亮度 / 墨水浓度、加深、鲜艳增强、按 App 的刷新模式）：HWC 里找不到 `global_contrast`、`global_brightness_level` 这些属性名，参数应该是原厂 SurfaceFlinger 传的。GSI 的 SurfaceFlinger 是 AOSP 原版，不会传，所以**推测用不了，但还没在 GSI 里实测**。对比度目前用颜色矩阵模拟（第 4 节）。
+- ❓ **靠图层元数据传参的功能**（对比度、亮度 / 墨水浓度、加深、鲜艳增强、按 App 的刷新模式）：HWC 里找不到 `global_contrast`、`global_brightness_level` 这些属性名，参数应该是原厂 SurfaceFlinger 传的。3.4.6 源码确认：原厂 system 只是把这些值写进 `global_*` 属性，由原厂 SurfaceFlinger 和 `libxrzUtil.so`（`ditherToGray`、`runProcessGammaAndDither` 等）在 system 侧处理。GSI 的 SurfaceFlinger 是 AOSP 原版，所以**基本确定用不了**（还没逐个实测）。对比度目前用颜色矩阵模拟（第 4 节）。
 
 判断一个属性 GSI 里能不能用：
 ```sh
@@ -31,6 +33,14 @@ su -c "strings /vendor/lib64/hw/hwcomposer.mt6877.so | grep xrz"
 ```
 
 新版 HWC 读的属性（前缀 `vendor.xrz.`）：`global_refresh_mode`、`force_global_refresh_mode`、`anti_flicker_enabled`、`auto_clean_enabled`、`auto_clean_check_disable`、`clean_frequency`、`color_restoration_enabled`、`disable_auto_global_refresh`、`disable_commit`、`disable_driver_commit`、`disable_eink_vsync`、`disable_eink_vsync_for_fast`、`disable_image_copy`、`driver_color_enhance`、`eink_animation_mode`、`enable_home_clean`、`fps_limit`、`gray_256_dither`、`hwc.color_restoration_suppoort`、`hwc.image_smoothing_suppoort`、`hwc.show_commit_fps`、`hwc_idle`、`is_scrolling`、`cur_fps`、`update_waveform`、`check_commit`、`capture_commit`、`antutu_test`，以及 `persist.vendor.xrz.fps` / `fps_high` / `fps_low`。
+
+⚠️ 名字出现在 HWC 里不代表是“设置项”。2026-10-17 在 GSI 的 logcat 里发现，有几个是 **HWC 自己往外写的**（GSI 里 SELinux 不让 HWC 写 `vendor_default_prop`，所以都报 `Unable to set property ... PERMISSION_DENIED`）：
+
+| 属性 | HWC 写的值 | 说明 |
+|---|---|---|
+| `hwc_idle` | 画面静止 1 / 刷新中 0 | 原厂 `DisplayPolicyService` 每秒读一次：为 0 时持有 4 秒唤醒锁，防止刷新途中休眠。**跟画质无关**，GSI 里手动设没用 |
+| `cur_fps` | 3、4、8、12… | 当前帧率报告 |
+| `fps_limit`、`gray_256_dither` | 反复写回 0 | 像是“一次性请求”：HWC 读到后再清零。原厂上 setprop 会马上被清掉；GSI 里清不掉，所以 setprop 后会一直生效（第 3 节的实测就是这样） |
 
 ### 1.3 原厂开机时的默认设置（刷 GSI 后会丢失，需要补回）
 
@@ -64,9 +74,9 @@ on fs
 ```
 原厂开机时放开这些节点的权限，原厂 App 不用 root 就能写。GSI 里没有这一步，所以都要 root。
 
-**其余属性**（`anti_flicker_enabled`、`auto_clean_enabled`、`clean_frequency`、`hwc_idle`、`force_global_refresh_mode=-1`、`gray_256_dither`、`global_*` 等）是原厂系统服务按前台 App 运行时设置的，GSI 里由工具负责。
+**其余属性**（`anti_flicker_enabled`、`auto_clean_enabled`、`clean_frequency`、`force_global_refresh_mode=-1`、`global_*` 等）是原厂系统服务按前台 App 运行时设置的，GSI 里由工具负责。`hwc_idle` 是 HWC 自己写的状态，不是设置项（见 1.2）。
 
-**计划**：做一个 Magisk 模块，`system.prop` 补回上表的属性，`post-fs-data.sh` 按需放开节点权限，`service.sh` 按原厂“默认”情景模式设置一次。补回后，**之前 GSI 里没效果的自动消残影值得再测一次**。
+**已经做成 Magisk 模块 `hibreak_eink`**（v7，见刷机指南 6.5）：`system.prop` 补回 `vendor.xrz.disable_eink_vsync=1`（滑动更平滑），`service.sh` 开机写 `clean_a2=1`（解决滑动卡顿）。`color_restoration_suppoort` 实测没区别，没放；`anti_flicker` 是取舍（见 2.5），也没放；节点权限没有放开（放开后 HWC 会按属性接管 `anti_flicker`、`eink_animation`，手动写的值会被覆盖）。
 
 ---
 
@@ -94,9 +104,9 @@ on fs
 | 视频 | 0 | 0 | 开 | 开 | `1 0` |
 | 自定义 | 0 | **2** | 按开关 | 按开关 | `1 0` |
 
-- `gpu_dither` 不在 HWC 里，GSI 里大概率无效。
+- `gpu_dither` 不在 HWC 里，GSI 里无效。源码里的规则：杂志模式（`0x800000B1`）设 1，Hyper（183）设 2，其他设 0。
 - **防抖动**和**自动消残影**是两个独立的开关（各模式的预设值刚好相同）：
-  - 防抖动 = `vendor.xrz.anti_flicker_enabled` + 节点 `eink_debug/anti_flicker`
+  - 防抖动 = `vendor.xrz.anti_flicker_enabled` + 节点 `eink_debug/anti_flicker`（节点其实是等级，原厂开 = 1）
   - 自动消残影 = `vendor.xrz.auto_clean_enabled` + 节点 `eink_debug/clean_a2`
 
 **自定义模式实测**（刷新 Hyper、对比度 50、鲜艳增强 30、亮度 60、防抖动和自动消残影都开）：
@@ -122,11 +132,33 @@ on fs
 | 开 + 智能刷新 | 1 | 防止在高清、Regal 模式下滑动页面时闪烁 |
 | 开 + 整屏翻页 | 2 | 手指抬起时页面滑动到指定位置（用户自己的工具已有更好的实现） |
 
-`scroll_flip_type` 不在 HWC 里，应该是原厂 system 侧处理的，GSI 里推测无效。
+`scroll_flip_type` 是原厂 framework 在 App 进程里读的（`XrzEinkManagerInternal.checkScroll`）：
+- 类型 1（智能刷新）：手指拖动超过 10 像素时设 `vendor.xrz.is_scrolling=1`（HWC 会读），抬手后按滑动速度延迟 400～2000 ms 再设回 0；
+- 类型 2（整屏翻页）：调用原厂改过的 `View.setScoling()`，GSI 没有这个接口。
+
+GSI 里设 `scroll_flip_type` 本身没用；想模拟类型 1，可以由工具在滑动时设置 `is_scrolling`（之前单独设 `is_scrolling=1` 时滑动速度没变化，画质效果没测）。
 
 **“应用优化”页的其他设置**（都是原厂 system 侧按 App 处理的，GSI 里没有）：DPI 设置（`appDpi`）、应用漂白里的文字增强（`appBleachTextPlus`）、图标颜色（`appBleachIconColor`）、背景颜色（`appBleachBgColor`）。
 
-**原厂开机后的其他属性值**（GSI 里这些都是空的，可以参考原厂的值来设置）：`force_global_refresh_mode=-1`（**-1 = 不强制**）、`clean_frequency=0 或 -1`、`disable_eink_vsync=1`、`hwc_idle=1`、`enable_gpu_image_process=1`、`persist.vendor.xrz.fps=120`、`fps_high=50`、`fps_low=40`、`ro.vendor.xrz.default_refresh_mode=178`。
+**原厂开机后的其他属性值**（GSI 里这些都是空的，可以参考原厂的值来设置）：`force_global_refresh_mode=-1`（**-1 = 不强制**）、`clean_frequency=0 或 -1`、`disable_eink_vsync=1`、`enable_gpu_image_process=1`、`persist.vendor.xrz.fps=120`、`fps_high=50`、`fps_low=40`、`ro.vendor.xrz.default_refresh_mode=178`。`enable_gpu_image_process`、`regal_support`、`gpu_dither` 在 HWC 和 `libimage_process.so` 里都没有引用，GSI 里设了没用。
+
+### 2.1 原厂切换情景模式时实际做的事（3.4.6 源码 `DisplayPolicyController.applyDisplayPolicy`）
+
+| 项目 | 原厂做法 | GSI 里 |
+|---|---|---|
+| 刷新模式 | 魔改 SurfaceFlinger 的 `setLayerRefreshMode(包名, 模式)`，按图层设置 | 没有这个接口，用 `global_refresh_mode` 全局切 ✅ |
+| 刷新频率 | 打开“刷新设置”时 `clean_frequency` = 策略里的 `refreshFrequency`，否则 0 | 实测 -1、5、43 都看不出变化 ❓ |
+| 自动消残影 | `auto_clean_enabled` 属性 + JNI 直接写 `clean_a2` | 写 `clean_a2` ✅ |
+| 防抖动 | 只设 `anti_flicker_enabled`，节点由 HWC 写 | 节点只读，手动写节点 ✅ |
+| 抗锯齿 | **只在 NORMAL（178）模式下打开**，其他模式一律关；属性 `vendor.xrz.anti_alias_enabled` ≥ 0 时优先用它 | 写节点 ✅ |
+| 翻页动画 | 只设 `eink_animation_mode`，节点由 HWC 写 | 同防抖动 |
+| 光标闪烁 | 178、179 模式 `disable_cursor_blink=0`，其他模式设 1 | ❓ 没测 |
+| 文字增强 | 刷新模式不是 179 时才设 `global_text_enhance` | ❌ system 侧处理 |
+| 鲜艳增强 | 178、179 模式强制 0 | ❌ system 侧处理 |
+| 系统帧率 | Hyper（183）：`min_refresh_rate` = `persist.vendor.xrz.fps`（120）；其他模式 60 | 安卓自带设置，可以设，效果 ❓ |
+| 漂白文字加粗 | 安卓自带的 `high_text_contrast_enabled` | 安卓自带 |
+
+注意：策略里的 `appAutoClean`、`appAntiFlicker` 是**反的**，0 = 开、1 = 关。
 
 ---
 
@@ -155,8 +187,19 @@ echo 1 > $E/anti_alias                            # 抗锯齿（读出来变成 
   | 只设属性 | 关 | 1 | 0 | 卡（HWC 不会因为属性自动打开节点） |
 
   所以**最少只需要一行**：`echo 1 > /sys/kernel/debug/eink_debug/clean_a2`。推测是 `clean_a2` 让驱动在连续滑动时改用最快的 A2 黑白波形，停下后再自动清残影；关掉时每帧都用当前模式的完整波形，所以慢。
-- 防抖动（`anti_flicker`）跟滑动速度无关，它的作用是让灰色区域刷新时不闪，原厂默认是开的。
-- 这些都是临时设置，**重启后失效**，要做成 Magisk 模块开机自动执行（或由墨水屏工具设置）。
+- 防抖动（`anti_flicker`）跟滑动速度无关，影响的是**闪烁和残影之间的取舍**，原厂默认是 1。2026-10-17 在 GSI 上实测：
+  - 节点实际上是**等级**，不是开关（内核函数叫 `set_anti_flicker_level`，dmesg 显示 `set anti flicker level to N`）。0、1、2、3、5、10 都能写进去，上限不明；
+  - 原理推测：E Ink 的灰阶全刷（GC16 一类）会让像素先黑白翻转一遍，所以浅灰区域刷新时会“抖”；清残影也要靠这种会闪的全刷。防抖动等级越高，越倾向于不闪，清残影就越不彻底。滑动时用的快刷（A2）只有黑白两色，灰色是用黑白点模拟的，这些点和残影要靠停下后的全刷清掉；
+  - 实测效果（同一个会抖的界面来回对比）：
+
+    | 等级 | 浅灰区域刷新 | 残影 / 麻点 |
+    |---|---|---|
+    | 0（GSI 开机默认） | 会抖 | 最干净 |
+    | 1（原厂默认） | 不抖 | 有一些：关掉浅灰色页面后，原来那块区域会残留麻点 |
+    | 2 | 不抖 | 麻点更多 |
+
+  - “麻点”就是**没清干净的残影**，不是防抖动自己产生的。实际可选的只有 0 和 1，更高的等级只会更脏。需要时可以手动全刷一次清掉残影。目前没放进模块，GSI 开机默认是 0。
+- 这些都是临时设置，**重启后失效**。`clean_a2=1` 和下面的 `disable_eink_vsync=1` 已经放进 Magisk 模块 `hibreak_eink` 开机自动设置。
 
 - **再加 `vendor.xrz.disable_eink_vsync=1` 会更平滑**（2026-10-17 实测，来回切换对比过几次）。它单独也有作用（省掉了等驱动刷完信号的时间），但 `clean_a2=0` 时每帧都用完整波形、要刷几百毫秒，这点改善被卡顿完全掩盖，看不出来；`clean_a2=1` 换成快速波形后，才能感觉到它的效果。所以两个都要开。
 
@@ -173,16 +216,18 @@ echo 1 > $E/anti_alias                            # 抗锯齿（读出来变成 
 | **全局刷新模式** | `setprop vendor.xrz.global_refresh_mode <代码>`，或者 `echo <代码> > /sys/kernel/debug/eink_debug/global_mode`（用户在原厂 3.4.6 上验证过，效果差不多） | ✅ |
 | **全屏刷新一次** | `setprop vendor.xrz.force_global_refresh_mode 4` → `service call SurfaceFlinger 1004`（重绘）→ 等约 0.6 秒 → `setprop vendor.xrz.force_global_refresh_mode -1` | ✅ ⚠️ 不清掉的话，之后**每次画面更新都用这个模式全刷**：画面静止时不闪，一滑动就连续闪 |
 | **加深 / 对比度** | SurfaceFlinger 颜色矩阵，见第 4 节 | ✅ 效果明显 |
-| **256 级灰度抖动** | `setprop vendor.xrz.gray_256_dither 4`（原厂杂志模式的值；实测时用的是 1） | ✅ 图片上能看出变化 |
-| **帧率限制** | `setprop vendor.xrz.fps_limit <每秒帧数>`，恢复用 `setprop vendor.xrz.fps_limit ""` | ✅ 设 5 时滑动明显卡顿 |
+| **256 级灰度抖动** | `setprop vendor.xrz.gray_256_dither 4`（原厂杂志模式的值；实测时用的是 1） | ✅ 图片上能看出变化（旧 vendor）。HWC 会反复把它写回 0，GSI 里写不进去所以能一直生效 |
+| **帧率限制** | `setprop vendor.xrz.fps_limit <每秒帧数>`，恢复用 `setprop vendor.xrz.fps_limit ""` | ✅ 设 5 时滑动明显卡顿（旧 vendor）。同样会被 HWC 反复写回 0 |
+| `hwc_idle` | — | ❌ 不是设置项，是 HWC 报告的空闲状态（见 1.2） |
 | **驱动全局抖动** | `echo <值> > /sys/kernel/debug/eink_debug/global_dither` | ✅ **1**：非黑即白，对比度最高（实用）；2：画面不变但很卡；3：画面不变；4：画面不变但卡；0：默认 |
 | Hyper | 刷新模式 183 + `settings put system min_refresh_rate 120`（这一条不需要 root） | ❓ 待测 |
-| 抗锯齿 | `eink_debug/anti_alias`：读出来是 `support value`（第一位固定 1 = 驱动支持，第二位 = 开关）；**写入只认一个数字**，`echo 1` 开、`echo 0` 关（写 `"1 0"` 只会读到前面的 1，等于打开）。dmesg 里能看到 `set anti-alias off` | ✅ 节点可写；GSI 实测开关画面看不出区别（原厂默认开） |
-| 翻页动画 | `vendor.xrz.eink_animation_mode=1` + `eink_debug/eink_animation=1` | ❓ 待测 |
+| 抗锯齿（原厂只在 NORMAL 178 模式开） | `eink_debug/anti_alias`：读出来是 `support value`（第一位固定 1 = 驱动支持，第二位 = 开关）；**写入只认一个数字**，`echo 1` 开、`echo 0` 关（写 `"1 0"` 只会读到前面的 1，等于打开）。dmesg 里能看到 `set anti-alias off` | ✅ 节点可写；GSI 实测开关画面看不出区别（原厂默认开） |
+| 翻页动画 | `vendor.xrz.eink_animation_mode=1` + `eink_debug/eink_animation=1`（节点原厂由 HWC 按属性写，GSI 里节点只读，要手动写） | ❓ 待测 |
 | 颜色还原 | `vendor.xrz.color_restoration_enabled` | ❓ 待测 |
 | 快速模式关垂直同步 | `vendor.xrz.disable_eink_vsync_for_fast` | ❓ 待测 |
-| 自动清残影 | `vendor.xrz.auto_clean_enabled=1` + `clean_frequency` + `eink_debug/clean_a2=1` | ❌ 旧 vendor 上没看到自动全刷，可以参考原厂的值再试 |
-| 回桌面清屏 | `vendor.xrz.enable_home_clean=1` | ❌ 回桌面没闪 |
+| 自动清残影 | `eink_debug/clean_a2=1`（属性 `auto_clean_enabled` 单独无效） | ✅ 滑动时用快速波形、停下后自动清，解决滑动卡顿（见 2.5） |
+| 刷新频率 | `vendor.xrz.clean_frequency` | ❌ 新 vendor 实测 -1、5、43 都没看到周期性全刷，麻点也没被清掉 |
+| 回桌面清屏 | `vendor.xrz.enable_home_clean=1` | ❌ 回桌面没闪（旧 vendor） |
 | 图像平滑 | `vendor.xrz.hwc.enable_image_smoothing=1` | ❓ 没看出变化；新版 HWC 的 `hwc.image_smoothing_suppoort=0`，可能不支持 |
 | 驱动节点 `eink_debug/contrast` | `echo 0～255` | ❌ 画面没变化；原厂也不用这个节点 |
 | 驱动节点 `eink_debug/brightness` | `echo 0～255` | ❌ 不是前光，画面也没变化 |
@@ -335,7 +380,7 @@ adb shell "su -c 'logcat -b all -d -v time'" | grep -E "Going to sleep|SCREEN_OF
 |---|---|---|---|
 | `global_mode` | `mode=0x0` | 全局刷新模式，可直接写模式代码 | 低 |
 | `anti_alias` | `1 0` | 抗锯齿：第一位 = 是否支持，第二位 = 开关 | 低 |
-| `anti_flicker` | `anti_flicker=0/1` | 防闪烁 | 低 |
+| `anti_flicker` | `anti_flicker=N` | 防闪烁**等级**（0 = 关，原厂 1；越高越不闪、残影越多，见 2.5 节） | 低 |
 | `clean_a2` | `clean_a2=0/1` | 自动清残影 | 低 |
 | `eink_animation` | `eink_animation=0/1` | 翻页动画（新版新增） | 低 |
 | `global_dither` | `dither=0x0` | 全局抖动，1 = 非黑即白 | 低 |
@@ -346,10 +391,18 @@ adb shell "su -c 'logcat -b all -d -v time'" | grep -E "Going to sleep|SCREEN_OF
 | `temperature` | 29 | 面板温度（用来选波形） | 中 |
 | `enable` | 1 | 墨水屏驱动开关 | ⚠️ **高，写 0 可能黑屏** |
 | `vcom` | -1860 | 面板公共电压，出厂校准值 | ⚠️ **高，不要改** |
-| `waveform` / `machine_waveform` | `570_VSK029_HU0701_EC103KH3C6_SC1452-KCE_TC.awf` | 波形文件 | ⚠️ **高，不要写** |
+| `waveform` / `machine_waveform` | `570_VSK029_HU0701_EC103KH3C6_SC1452-KCE_TC.awf 2024.10.7` | 当前使用的波形（机器自带） | ⚠️ **高，不要写** |
 | `wf_ota` | 读取报错 | 波形更新 | ⚠️ **高，不要写** |
 | `version` | `v5.19_20260521` | 驱动版本 | 只读 |
 | `panel_type` / `print_level` / `save_level` / `dc_count` | — | 信息、调试用 | 只读 |
+
+**`/system/eink_key`**：原厂 system 分区里的一个 5.4 MB 文件，文件头是另一个波形 `470_VSF009_HM7F01_EC103KH2C1_SC1452-KCD_TC.awf 2023.05.11`（1.9.6 和 3.4.6 两个版本的文件完全一样）。驱动每次刷新都会去读它做校验，GSI 里没有这个文件，所以 logcat 每帧都有 `fail to open waveform file(/system/eink_key)` 和 `eink_pre_process: eink verify fail`。驱动实际用的还是机器自带的波形，校验失败具体会影响什么还不清楚，没测。原厂文件已经提取到 `D:\BIGME\B651_CN_3.4.6_system\files\system\eink_key`，需要时可以用 Magisk 模块放到 `/system/eink_key` 再测。
+
+**驱动每帧日志**（`logcat -b all | grep "update image"`）能看到当前实际用的参数，排查时很有用：
+```
+update image: order=6852,panel=0,mode=0xb2(map=0x2),dither=0(def=3),an=0,area(0,0)~(1647,823),auto_clean(1, 1, 0)
+```
+`mode=0xb2` 就是 178（NORMAL），`an` 是抗锯齿，`auto_clean(...)` 跟 `clean_a2` 有关。
 
 ---
 
@@ -376,7 +429,8 @@ settings list system; settings list secure; settings list global                
 
 ## 9. 资料来源
 
-- 原厂 `framework.jar` 反编译（`xrz/framework/manager/`）、原厂 `libXrzFramework_runtime.so`、手机上的 `hwcomposer.mt6877.so` 和 `libimage_process.so`，以及原厂 1.9.6 / 3.4.6 上的实测抓取
+- 原厂 1.9.6 `framework.jar` 反编译（`xrz/framework/manager/`）、原厂 `libXrzFramework_runtime.so`、手机上的 `hwcomposer.mt6877.so` 和 `libimage_process.so`，以及原厂 1.9.6 / 3.4.6 上的实测抓取
+- 原厂 3.4.6 OTA 全量包（`B651_CN_3.4.6-OTA-FULL-*.zip`）解出的 system 镜像：`framework.jar`、`services.jar`（含服务端 `xrz/framework/server/DisplayPolicyController.java`、`DisplayPolicyService.java`）、`libXrzFramework_runtime.so`、`libxrzUtil.so`、`init.eink.rc`、`eink_key`。反编译出的 xrz 源码在 `D:\BIGME\B651_CN_3.4.6_system\src_xrz\`
 - Vasu：Hibreak Pro Guide 4（刷机、前光、刷新模式）— https://vbh.ai/hibreak-pro-guide-4-flashing-the-android-15-gsi/
 - HibreakProPatchingService（HiBreak Pro 墨水屏功能补丁）— https://github.com/vbbot/HibreakProPatchingService
 - XDA：Bigme Hibreak Pro Development Thread — https://xdaforums.com/t/bigme-hibreak-pro-development-thread.4731041/
